@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LQS — Estudio creativo · Medellín</title>
+<meta name="description" content="LQS es un estudio creativo de Medellín. Marca, web, automatización, audiovisual y producto: gente que resuelve. Cotiza, agenda y sigue tus proyectos.">
+<meta name="theme-color" content="#06070f">
+<meta property="og:title" content="LQS — Estudio creativo · Medellín">
+<meta property="og:description" content="Gente que resuelve: marca, web, automatización, audiovisual y producto.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&family=Anton&family=Chakra+Petch:wght@400;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&family=Anton&family=Chakra+Petch:wght@400;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"></noscript>
+<style>
+:root{
+ --bg:#06070f;--bg2:#0a0c17;--bg3:#0e1120;--ink:#f2efe8;--dim:#9aa0b8;--faint:#5f6480;
+ --gold:#e6c877;--line:rgba(210,215,240,.11);--line2:rgba(210,215,240,.22);
+ --ok:#4ade80;--warn:#f0b34a;--err:#ff6b6b;
+ --grain:.055;--atm:.38;
+ /* una grotesca variable que se deja apretar y engordar según el sitio */
+ --disp:'Bricolage Grotesque','Arial Narrow',system-ui,sans-serif;
+ --sport:'Anton','Arial Narrow',Impact,sans-serif;
+ --edit:'Instrument Serif',Georgia,serif;
+ --tech:'Chakra Petch',ui-monospace,monospace;--sans:'Manrope',system-ui,sans-serif;
+ --pad:clamp(20px,5vw,62px);
+ /* movimiento */
+ --ease-out:cubic-bezier(0.23,1,0.32,1);--ease-in-out:cubic-bezier(0.77,0,0.175,1);
+ --ease-drawer:cubic-bezier(0.32,0.72,0,1);
+ --dur-fast:160ms;--dur-ui:200ms;--dur-panel:300ms;
+ /* temperamento de forma: cuánto se desvía una curva de su versión circular.
+    Lo fija el universo de la sección, nunca la pieza. */
+ --curva:1;--u1:#7c5cff;--u2:#00d4ff;--u3:#ff3d7f;
+ --velo:6,7,15;
+}
+/* que --curva se pueda interpolar: sin esto una sección se convierte en la
+   siguiente de golpe, y el recorrido se lee como siete láminas sueltas */
+@property --curva{syntax:'<number>';inherits:true;initial-value:1}
+:root{transition:--curva 900ms var(--ease-out)}
+/* los cinco universos. Uno nunca se mezcla con otro dentro del mismo elemento:
+   conviven en el encuadre, no en la forma. */
+[data-universo="flujo"]{--curva:1;  --u1:#7c5cff;--u2:#00d4ff;--u3:#ff3d7f}
+[data-universo="brasa"]{--curva:.82;--u1:#ff8a3d;--u2:#ffd166;--u3:#e0264a}
+[data-universo="trama"]{--curva:.34;--u1:#4ade80;--u2:#2fb8a3;--u3:#0f5132}
+[data-universo="hielo"]{--curva:.20;--u1:#dff6ff;--u2:#5b8def;--u3:#1b3fb8}
+[data-universo="pulso"]{--curva:.64;--u1:#e6c877;--u2:#d98aa6;--u3:#8b5cf6}
+/* el mismo mundo con la luz encendida: no es un filtro, es otra paleta */
+:root[data-tema="claro"]{
+ --bg:#efece4;--bg2:#f6f4ee;--bg3:#e6e2d8;--ink:#0c0e18;--dim:#54596e;--faint:#8a8fa3;
+ --gold:#9a6b12;--line:rgba(12,14,24,.13);--line2:rgba(12,14,24,.26);
+ --grain:.028;--atm:.17;
+ --velo:246,244,238;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.62;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+canvas,svg{display:block;max-width:100%}
+button,input,select,textarea{font-family:inherit}
+::selection{background:var(--gold);color:#0a0810}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+html{scrollbar-color:var(--line2) var(--bg);scrollbar-width:thin}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#242a42;border:3px solid var(--bg);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+input,textarea{caret-color:var(--gold)}
+.pz,.tbl td,.meta b{font-variant-numeric:tabular-nums}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:80;transition:background var(--dur-panel) var(--ease-out),border-color var(--dur-panel) var(--ease-out)}
+nav.solid{background:rgba(6,7,15,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav .in{max-width:1280px;margin:0 auto;padding:14px var(--pad);display:flex;align-items:center;justify-content:space-between;gap:14px}
+.logo{font-family:var(--disp);font-size:1.7rem;letter-spacing:.05em;line-height:1;display:flex;cursor:pointer}
+.logo .l{color:#ff6b6b}.logo .q{color:var(--gold)}.logo .s{color:#3fd0e6}
+.nlinks{display:flex;gap:20px;align-items:center;font-family:var(--tech);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.13em;color:var(--dim)}
+.nlinks a{transition:color var(--dur-fast) ease;position:relative;cursor:pointer}
+.nlinks a:hover,.nlinks a.on{color:var(--ink)}
+.nlinks a::after{content:'';position:absolute;left:0;right:100%;bottom:-6px;height:1px;background:var(--gold);transition:right var(--dur-ui) var(--ease-out)}
+.nlinks a:hover::after,.nlinks a.on::after{right:0}
+.nbtn{border:1px solid var(--line2);border-radius:999px;padding:9px 17px;color:var(--ink);transition:background var(--dur-fast) ease,color var(--dur-fast) ease,border-color var(--dur-fast) ease;white-space:nowrap}
+.nbtn:hover{background:var(--ink);color:#06070f;border-color:var(--ink)}
+.nbtn.gold{background:var(--gold);border-color:var(--gold);color:#1a1408}
+.burger{display:none;width:42px;height:42px;border:1px solid var(--line2);border-radius:11px;background:none;cursor:pointer;place-items:center}
+.burger span{display:block;width:17px;height:1.6px;background:var(--ink);position:relative;transition:transform var(--dur-ui) var(--ease-out),opacity var(--dur-ui) var(--ease-out)}
+.burger span::before,.burger span::after{content:'';position:absolute;left:0;width:17px;height:1.6px;background:var(--ink);transition:transform var(--dur-ui) var(--ease-out),opacity var(--dur-ui) var(--ease-out)}
+.burger span::before{top:-6px}.burger span::after{top:6px}
+body.menu .burger span{background:transparent}
+body.menu .burger span::before{top:0;transform:rotate(45deg)}
+body.menu .burger span::after{top:0;transform:rotate(-45deg)}
+@media(max-width:940px){
+ .nlinks{position:fixed;inset:0;flex-direction:column;justify-content:center;gap:4px;background:rgba(6,7,15,.98);backdrop-filter:blur(20px);
+  font-family:var(--disp);font-size:2.1rem;letter-spacing:.04em;color:var(--ink);opacity:0;visibility:hidden;transition:opacity var(--dur-panel) var(--ease-out),visibility var(--dur-panel);z-index:-1}
+ body.menu .nlinks{opacity:1;visibility:visible}
+ .nlinks a{padding:9px 20px}
+ .nlinks .nbtn{font-family:var(--tech);font-size:.85rem;margin-top:14px}
+ .burger{display:grid}
+}
+/* layout */
+.wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 var(--pad)}
+h1,h2,h3{font-weight:400}
+.disp{font-family:var(--disp);line-height:.9;letter-spacing:.012em;text-transform:uppercase}
+h1.disp{font-size:clamp(3.2rem,11vw,9rem)}
+h2.disp{font-size:clamp(2.3rem,6vw,4.6rem)}
+h3.disp{font-size:clamp(1.5rem,3vw,2.2rem)}
+.gold{color:var(--gold)}
+.body-l{font-size:clamp(1rem,1.6vw,1.16rem);color:var(--dim);max-width:56ch}
+.sec{padding:clamp(64px,8vw,110px) 0;position:relative;z-index:2}
+.head{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:flex-end;margin-bottom:40px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--tech);font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+ padding:15px 25px;border-radius:999px;transition:background var(--dur-fast) ease,color var(--dur-fast) ease,border-color var(--dur-fast) ease,transform 90ms var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);border:1px solid transparent;cursor:pointer}
+.btn.p{background:var(--ink);color:#06070f}
+/* el movimiento de hover solo donde hay mouse: en táctil se queda pegado */
+@media (hover:hover) and (pointer:fine){
+ .btn.p:hover{box-shadow:0 16px 38px -14px rgba(242,239,232,.42)}
+}
+.btn.g{border-color:var(--line2);color:var(--ink);background:none}
+.btn.g:hover{border-color:var(--gold);color:var(--gold)}
+.btn.gold{background:var(--gold);color:#1a1408}
+.btn.gold:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.5;cursor:not-allowed;translate:none;scale:none}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2}
+.hbtns{display:flex;flex-wrap:wrap;gap:11px}
+/* vistas */
+.view{display:none}
+.view.on{display:block;animation:vin var(--dur-ui) var(--ease-out)}
+@keyframes vin{from{opacity:0}}
+#top{padding-top:78px}
+
+/* ═══ atmósfera: el degradé no es un fondo, es el clima de la sección ═══ */
+.atmos{position:fixed;inset:0;z-index:-2;overflow:hidden;background:var(--bg);pointer-events:none}
+/* cada masa lleva dos hojas de color superpuestas: al cambiar de vista se
+   cruzan por opacidad en 300ms. Animar `background` sobre tres discos de
+   62vmax desenfocados repinta la pantalla entera en cada cuadro. */
+.atmos b{position:absolute;width:62vmax;height:62vmax;filter:blur(90px);opacity:var(--atm);
+ mix-blend-mode:screen;will-change:transform}
+.atmos b i{position:absolute;inset:0;border-radius:50%;opacity:0;
+ transition:opacity var(--dur-panel) var(--ease-out)}
+.atmos b i.on{opacity:1}
+:root[data-tema="claro"] .atmos b{mix-blend-mode:normal;filter:blur(120px) saturate(1.5) brightness(2.1)}
+.atmos b:nth-child(1){left:-16vmax;top:-20vmax;animation:deriva1 27s ease-in-out infinite alternate}
+.atmos b:nth-child(2){right:-20vmax;top:-8vmax;animation:deriva2 33s ease-in-out infinite alternate}
+.atmos b:nth-child(3){left:22vmax;bottom:-30vmax;animation:deriva3 39s ease-in-out infinite alternate}
+@keyframes deriva1{to{transform:translate3d(26vmax,18vmax,0) scale(1.25)}}
+@keyframes deriva2{to{transform:translate3d(-22vmax,26vmax,0) scale(.8)}}
+@keyframes deriva3{to{transform:translate3d(18vmax,-22vmax,0) scale(1.15)}}
+/* grano: rompe la perfección digital, da tacto de papel */
+/* el grano se desborda 160px por lado: se desplaza con el paralaje de la capa 4
+   y nunca deja ver su propio borde */
+.grano{position:fixed;inset:-160px;z-index:-1;pointer-events:none;opacity:var(--grain);
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ═══ LQS: tres ventanas a universos incompatibles ═══
+   Las letras no son una fuente pintada: son trazo propio, dibujado en el lienzo.
+   Cada una recorta un universo que está corriendo de verdad detrás, y el bisel
+   más la extrusión les dan cuerpo. Toda la geometría vive en el bloque LQS del
+   script; aquí sólo se decide cuánto sitio ocupan. */
+.lqs{display:flex;justify-content:center;width:100%;line-height:0;
+ margin:0 auto clamp(18px,2.6vw,30px)}
+#lqsCv{display:block;width:min(92vw,900px);max-width:calc(48svh * 2.16);height:auto;
+ aspect-ratio:433/200;touch-action:pan-y}
+.hero-in{max-width:1000px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero-in .tagline{margin:0 auto clamp(26px,3vw,34px);max-width:56ch;text-wrap:balance}
+.hero-in .hbtns{justify-content:center}
+.firma{font-family:var(--tech);font-size:clamp(.6rem,1.4vw,.74rem);font-weight:700;letter-spacing:.42em;
+ text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:clamp(26px,4vw,44px)}
+.firma em{font-family:var(--edit);font-style:italic;letter-spacing:0;text-transform:none;font-size:1.5em;color:var(--ink)}
+/* interruptor de luz */
+.luz{width:38px;height:38px;border:1px solid var(--line2);border-radius:999px;background:none;color:var(--dim);
+ cursor:pointer;display:grid;place-items:center;transition:color var(--dur-fast) ease,border-color var(--dur-fast) ease}
+.luz:hover{color:var(--ink);border-color:var(--line2)}
+.luz svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round}
+.luz .sol{display:none}
+:root[data-tema="claro"] .luz .sol{display:block}
+:root[data-tema="claro"] .luz .luna{display:none}
+@media(prefers-reduced-motion:reduce){
+ /* con la misma especificidad que las tres reglas de arriba: si no, `:nth-child`
+    gana y las masas siguen derivando pese a la petición */
+ .atmos b:nth-child(1),.atmos b:nth-child(2),.atmos b:nth-child(3){animation:none}
+}
+/* hero */
+#hero{position:relative;min-height:88svh;display:flex;align-items:center;padding:96px 0 80px;overflow:hidden;margin-top:-78px}
+#heroCv{position:absolute;inset:0;z-index:0;width:100%;height:100%}
+/* el lienzo pinta espacio oscuro: con la luz encendida se invierte, no se apaga */
+:root[data-tema="claro"] #heroCv{filter:invert(1) hue-rotate(180deg);opacity:.42}
+#hero .wrap{z-index:3}
+/* el titular rompe la retícula: masa, desplazamiento, masa, desplazamiento */
+#hero .tit{text-transform:uppercase;line-height:.84;margin-bottom:clamp(26px,3vw,38px)}
+#hero h1 .ln{display:block;overflow:hidden}
+#hero h1 .ln i{display:block;font-style:normal;transform:translateY(105%);animation:up .95s var(--ease-out) forwards}
+#hero h1 .ln.b i{animation-delay:.07s}#hero h1 .ln.c i{animation-delay:.14s}#hero h1 .ln.d i{animation-delay:.21s}
+.tit .a,.tit .c{font-family:var(--sport);font-size:clamp(3rem,10.5vw,6.6rem);letter-spacing:-.03em}
+.tit .c{color:var(--gold)}
+.tit .b,.tit .d{font-family:var(--disp);font-size:clamp(1.7rem,5vw,3.5rem);letter-spacing:.015em;color:var(--dim)}
+.tit .b{margin-left:clamp(0px,15vw,232px)}
+.tit .d{margin-left:clamp(0px,8vw,124px)}
+@keyframes up{to{transform:none}}
+.tagline{font-size:clamp(1rem,1.6vw,1.18rem);color:var(--dim);max-width:50ch;margin:24px 0 30px}
+.tagline b{color:var(--ink);font-weight:600}
+/* ═══ remate del hero: el clima se posa ═══
+   Donde había un marquee girando solo va ahora un borde que no es borde: el
+   clima del hero se derrama en dos curvas y se decanta en las tres familias.
+   Ni una recta, ni un rectángulo, y no se mueve si nadie lo toca — el
+   movimiento del encuadre ya lo ponen las letras. */
+.remate{position:relative;padding:clamp(34px,6vh,62px) 0 clamp(30px,5vh,52px);overflow:hidden}
+.remate .onda{position:absolute;left:-3%;top:0;width:106%;height:100%;z-index:0;pointer-events:none}
+.remate .in{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 var(--pad);
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2.6vw,38px)}
+@media(max-width:800px){.remate .in{grid-template-columns:1fr;gap:16px}}
+.fam{display:flex;align-items:center;gap:clamp(11px,1.4vw,16px);text-align:left;cursor:pointer;
+ background:none;border:0;padding:0;color:inherit;font:inherit;min-width:0}
+.fam .sem{flex:none;width:clamp(40px,4.6vw,56px);height:clamp(40px,4.6vw,56px);
+ transition:transform var(--dur-panel) var(--ease-out)}
+.fam .sem .cuerpo{fill:color-mix(in oklab,var(--ac) 24%,transparent);stroke:var(--ac);stroke-width:1.5;
+ transition:fill var(--dur-ui) var(--ease-out)}
+.fam .sem .veta{fill:none;stroke:var(--ac);stroke-width:1.5;stroke-linecap:round;opacity:.72}
+.fam .tx{display:block;min-width:0}
+.fam b{display:block;font-family:var(--disp);font-size:clamp(1.3rem,2.3vw,1.85rem);line-height:.96;
+ text-transform:uppercase;letter-spacing:.02em;color:var(--ink);transition:color var(--dur-ui) var(--ease-out)}
+.fam em{display:block;font-family:var(--edit);font-style:italic;font-size:clamp(.88rem,1.3vw,1.04rem);
+ line-height:1.2;color:var(--dim);margin-top:4px}
+@media (hover:hover) and (pointer:fine){
+ .fam:hover .sem{transform:rotate(-8deg) scale(1.07)}
+ .fam:hover .sem .cuerpo{fill:color-mix(in oklab,var(--ac) 46%,transparent)}
+ .fam:hover b{color:var(--ac)}
+}
+.fam:active .sem{transform:scale(.95);transition:transform 180ms var(--ease-out)}
+/* portales */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+/* la Losa: pieza apaisada, borde izquierdo casi vertical (su ancla) y la
+   esquina inferior derecha desbordada. El recorte va sobre el elemento porque
+   aquí el contenido ES la imagen; el texto se aparta con padding desigual. */
+.pt{position:relative;border:0;overflow:hidden;background:none;clip-path:url(#f-losa);
+ display:flex;flex-direction:column;justify-content:flex-end;min-height:288px;
+ padding:clamp(30px,3.4vw,40px) clamp(32px,3.6vw,44px) clamp(40px,4.6vw,54px) clamp(34px,3.8vw,46px);
+ transition:translate var(--dur-ui) var(--ease-out);cursor:pointer}
+.pt.wide{grid-column:span 7}.pt.half{grid-column:span 5}
+.pt.half:nth-of-type(3){margin-top:clamp(20px,3.4vw,52px)}
+.pt.half:nth-of-type(5){margin-top:clamp(-52px,-3.4vw,-20px)}
+@media(max-width:960px){.pt.wide{grid-column:span 12}.pt.half{grid-column:span 6}
+ .pt.half:nth-of-type(3),.pt.half:nth-of-type(5){margin-top:0}}
+@media(max-width:640px){.pt.half{grid-column:span 12}.pt{min-height:250px}}
+/* una pieza recortada no puede llevar borde: el filo se lo da una sombra que
+   sigue la silueta. Con la luz encendida es lo único que la separa del papel. */
+.pt{filter:drop-shadow(0 20px 34px rgba(0,0,0,.34))}
+:root[data-tema="claro"] .pt{filter:drop-shadow(0 16px 30px rgba(12,14,24,.16))}
+:root[data-tema="claro"] .pt .art{opacity:.4}
+/* el cuerpo y el tinte del universo, dentro del recorte */
+.pt::before{content:'';position:absolute;inset:0;z-index:0;
+ background:linear-gradient(152deg,rgba(255,255,255,.07),rgba(255,255,255,.012) 58%),color-mix(in oklab,var(--bg2) 84%,transparent)}
+.pt::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;z-index:2;
+ background:radial-gradient(112% 88% at 84% 14%,color-mix(in oklab,var(--pc) 34%,transparent),transparent 64%);
+ transition:opacity var(--dur-ui) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+ .pt:hover{translate:0 -7px}
+ .pt:hover::after{opacity:1}
+}
+.pt .art{position:absolute;inset:0;pointer-events:none;opacity:.82;transition:opacity var(--dur-ui) var(--ease-out),transform var(--dur-ui) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.pt:hover .art{opacity:1;transform:scale(1.045)}}
+.pt .art svg{width:100%;height:100%}
+/* el velo cae del color del papel, no de un negro fijo: con la luz encendida
+   un degradé oscuro dejaba el titular ilegible sobre su propia tarjeta */
+.pt .veil{position:absolute;inset:0;pointer-events:none;z-index:1;
+ background:linear-gradient(180deg,rgba(var(--velo),0) 32%,rgba(var(--velo),.78) 58%,rgba(var(--velo),.96) 100%)}
+.pt .no{font-family:var(--tech);font-size:.64rem;letter-spacing:.2em;color:var(--faint);margin-bottom:auto;position:relative;z-index:3}
+.pt .tp{position:relative;z-index:3}
+.pt h3{font-family:var(--disp);font-size:clamp(1.8rem,3.2vw,2.5rem);line-height:.94;letter-spacing:.02em;text-transform:uppercase;margin-bottom:7px}
+.pt p{font-size:.86rem;color:var(--dim);line-height:1.5;max-width:34ch;margin-bottom:14px}
+.pt .go{display:inline-flex;align-items:center;gap:8px;font-family:var(--tech);font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pc)}
+.pt .go svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.4;transition:transform var(--dur-ui) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.pt:hover .go svg{transform:translateX(6px)}}
+/* áreas: cada una con su ficha propia */
+.tira{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.tira a{font-family:var(--tech);font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+ border:1px solid var(--line);border-radius:999px;padding:9px 15px;color:var(--dim);transition:color var(--dur-fast) ease,border-color var(--dur-fast) ease;cursor:pointer}
+@media (hover:hover) and (pointer:fine){.tira a:hover{border-color:var(--ac);color:var(--ac)}}
+.tira a.soon{opacity:.5}
+.acto{position:relative;z-index:20;min-height:56vh;display:grid;place-items:center;text-align:center;
+ padding:clamp(40px,8vh,90px) 0;margin:clamp(30px,6vh,70px) 0;scroll-margin-top:96px}
+/* Cresta: la masa de fondo del acto. No lleva contenido, lleva color — es lo
+   que hace que el acto se sienta como un estrato y no como un div. */
+.acto .cresta{position:absolute;left:-18vw;right:-18vw;top:8%;height:84%;z-index:0;pointer-events:none;
+ clip-path:url(#f-cresta);
+ background:radial-gradient(54% 62% at 40% 74%,color-mix(in oklab,var(--u1) 34%,transparent),transparent 72%);
+ opacity:.5}
+/* nunca dos Crestas seguidas con la onda en el mismo sentido */
+.tramo:nth-of-type(even) .cresta{scale:-1 1}
+.acto h3{font-family:var(--sport);font-size:clamp(3.2rem,12vw,9rem);line-height:.82;letter-spacing:-.045em;
+ text-transform:uppercase;color:var(--ink)}
+.acto-gan{font-family:var(--edit);font-style:italic;font-size:clamp(1.2rem,3.4vw,2.2rem);color:var(--gold);
+ margin:6px 0 14px;line-height:1.15}
+.acto-des{font-size:clamp(.92rem,1.4vw,1.05rem);color:var(--dim);max-width:44ch;margin:0 auto}
+@supports (animation-timeline:view()){
+ .acto-in{animation:actoEntra linear both;animation-timeline:view();animation-range:entry 10% cover 42%}
+ @keyframes actoEntra{from{opacity:0;transform:translateY(30px) scale(.96)}}
+}
+@media(prefers-reduced-motion:reduce){.acto-in{animation:none}}
+.areas{display:flex;flex-direction:column;gap:0}
+/* cada área se queda fija y la siguiente se le monta encima: el catálogo
+   deja de ser una lista y pasa a ser un recorrido. El estado por defecto es
+   el VISIBLE — si el navegador no soporta líneas de tiempo por scroll, esto
+   se queda como una pila normal en vez de salir en blanco. */
+/* la Cuña: el contenedor que reemplaza a la tarjeta. La máscara NO va sobre el
+   panel sino sobre una capa de fondo — así el copy no se puede recortar por
+   accidente, y de paso se gana un filo de universo de 1,4px que ninguna caja
+   rectangular puede tener. Reparto 60·27·13: texto dominante, pieza
+   subordinada, guijarro de acento. Nada de empate a 50/50. */
+.area{position:sticky;top:clamp(88px,12vh,132px);display:grid;
+ grid-template-columns:minmax(0,1.62fr) minmax(0,.86fr);gap:clamp(20px,4vw,54px);align-items:center;
+ min-height:min(46vh,380px);margin-bottom:clamp(22px,4vh,44px);
+ border:0;padding:clamp(30px,3.6vw,52px) clamp(44px,6vw,96px) clamp(38px,4.4vw,60px) clamp(28px,3.4vw,46px);
+ isolation:isolate;transform-origin:50% 0}
+.area::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:url(#f-cuna);
+ background:radial-gradient(118% 88% at 86% 14%,color-mix(in oklab,var(--ac) 30%,transparent),transparent 62%),
+  linear-gradient(150deg,color-mix(in oklab,var(--ac) 13%,var(--bg2)),var(--bg2) 62%)}
+/* el filo: 1,4px del universo, nunca un borde de color grueso al costado */
+.area::after{content:'';position:absolute;inset:-1.4px;z-index:-2;clip-path:url(#f-cuna);pointer-events:none;
+ background:linear-gradient(148deg,color-mix(in oklab,var(--ac) 52%,transparent),transparent 62%)}
+/* la Cuña del medio va volteada: dos siluetas idénticas seguidas se leen como
+   una plantilla, no como una composición */
+.area.espejo::before,.area.espejo::after{scale:-1 1}
+.area>*{position:relative;z-index:2}
+@supports (animation-timeline:view()){
+ .area{animation:apilar linear both,aparece linear both;
+  animation-timeline:view(),view();animation-range:exit 0% exit 90%,entry 4% entry 96%}
+ @keyframes apilar{to{transform:scale(.93) translateY(-16px);filter:brightness(.62) saturate(.7)}}
+ @keyframes aparece{from{opacity:0}}
+}
+/* en una columna el apilado se come renglones de lectura: en pantalla chica
+   los paneles se sueltan y el recorrido se queda para el escritorio */
+@media(max-width:820px){.area{grid-template-columns:1fr;min-height:0;align-items:start;gap:16px;
+ position:relative;top:auto;animation:none;filter:none;margin-bottom:clamp(30px,5vh,48px);
+ padding:clamp(26px,5vw,38px) clamp(30px,7vw,46px) clamp(34px,7vw,44px) clamp(22px,5vw,32px)}
+ /* en una columna la pieza queda apaisada: una Gota estirada a 3:1 deja de ser
+    una Gota. A esa proporción la forma que corresponde es la Losa. */
+ .area.p1 .a-lado,.area.p2 .a-lado,.area.p3 .a-lado{clip-path:url(#f-losa);min-height:120px}}
+@media(prefers-reduced-motion:reduce){.area{animation:none;position:relative;top:auto}}
+.area .tagd{color:var(--faint)}
+.area h3{font-family:var(--sport);font-size:clamp(2.4rem,6.2vw,4.6rem);line-height:.88;letter-spacing:-.035em;text-transform:uppercase;color:var(--ink);margin:6px 0 14px;hyphens:auto;overflow-wrap:break-word}
+.area .tagd{border-color:var(--ac);color:var(--ac);align-self:flex-start}
+.area .a-txt{display:flex;flex-direction:column;justify-content:center}
+/* la pieza subordinada. Cada una toma una forma distinta del léxico según su
+   sitio en el acto: Losa para la dominante, Gota para la segunda, Hoja para el
+   acento. Ninguna hace el oficio de la vecina. */
+.area .a-lado{position:relative;align-self:stretch;min-height:150px;border:0;overflow:hidden;
+ background:repeating-linear-gradient(128deg,color-mix(in oklab,var(--ac) 30%,transparent) 0 3px,transparent 3px 16px),
+  radial-gradient(130% 120% at 22% 18%,color-mix(in oklab,var(--ac) 55%,transparent),transparent 64%),var(--bg3);
+ transition:scale 640ms var(--ease-out)}
+.area.p1 .a-lado{clip-path:url(#f-losa)}
+.area.p2 .a-lado{clip-path:url(#f-gota)}
+.area.p3 .a-lado{clip-path:url(#f-hoja)}
+.area.p3 .a-lado .ini{margin-top:6%}
+.area .a-lado .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sport);
+ font-size:clamp(5rem,13vw,10rem);line-height:1;color:color-mix(in oklab,var(--ac) 82%,var(--ink));opacity:.9;
+ mix-blend-mode:overlay;letter-spacing:-.05em}
+.area .lks{margin-top:20px}
+@media(max-width:820px){.area .a-lado{min-height:104px}}
+.area p{font-size:clamp(.92rem,1.2vw,1.06rem);color:var(--dim);line-height:1.6;max-width:34ch}
+.area .lks{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
+.area .lk{font-family:var(--tech);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+ border:1px solid var(--line2);border-radius:999px;padding:8px 13px;color:var(--dim);cursor:pointer;transition:color var(--dur-fast) ease,border-color var(--dur-fast) ease,background var(--dur-fast) ease;white-space:nowrap}
+.area .lk.pri{border-color:var(--ac);color:var(--ac)}
+@media (hover:hover) and (pointer:fine){
+ .area .lk:hover{border-color:var(--ac);color:var(--ac)}
+ .area .lk.pri:hover{background:var(--ac);color:#06070f}}
+/* área sin página todavía: se ve, pero no promete lo que no hay */
+.area.pend{background:rgba(255,255,255,.015)}
+.area.pend h3,.area.pend .tagd{opacity:.55}
+.area .lk.mudo{border-style:dashed;color:var(--faint);cursor:default}
+.area .lk.mudo:hover{border-color:var(--line2);color:var(--faint)}
+/* los precios no golpean de entrada: se piden */
+.todo{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+ margin-top:56px;padding:clamp(30px,3.2vw,38px) clamp(38px,4.4vw,58px) clamp(34px,3.6vw,44px) clamp(28px,3vw,36px);
+ border:0;background:none;scroll-margin-top:92px}
+.todo::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:url(#f-cuna);
+ background:linear-gradient(148deg,rgba(255,255,255,.07),rgba(255,255,255,.012) 58%),color-mix(in oklab,var(--bg2) 84%,transparent)}
+.todo::after{content:'';position:absolute;inset:-1.4px;z-index:-2;clip-path:url(#f-cuna);pointer-events:none;
+ background:linear-gradient(148deg,color-mix(in oklab,var(--u2) 46%,transparent),transparent 62%)}
+@media(max-width:640px){.todo{padding:26px 34px 32px 24px}#btnPrecios{width:100%;justify-content:center}}
+#btnPrecios svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.4;transition:transform var(--dur-ui) var(--ease-out)}
+#btnPrecios.abierto svg{transform:rotate(180deg)}
+#precios{display:grid;grid-template-rows:0fr;opacity:0;
+ transition:grid-template-rows var(--dur-panel) var(--ease-out),opacity var(--dur-panel) var(--ease-out)}
+#precios .precios-in{overflow:hidden;min-height:0}
+#precios.on{grid-template-rows:1fr;opacity:1}
+/* franja datos */
+/* la franja de datos deja de ser una tabla de celdas con filete: el corte
+   entre secciones lo hace una Cresta, y cada cifra se apoya en un Guijarro */
+.band{position:relative;border:0;background:none;overflow-x:clip;padding:clamp(18px,3vh,34px) 0}
+.band::before{content:'';position:absolute;left:-14vw;right:-14vw;top:0;bottom:0;z-index:0;pointer-events:none;
+ clip-path:url(#f-cresta);background:rgba(255,255,255,.026)}
+.band .in{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 var(--pad);display:grid;grid-template-columns:repeat(4,1fr)}
+.bi{position:relative;padding:30px 16px;text-align:center}
+.bi::before{content:'';position:absolute;left:50%;top:16%;width:clamp(54px,5vw,74px);height:clamp(54px,5vw,74px);
+ translate:-50% 0;z-index:-1;pointer-events:none;opacity:.34;background:var(--u2);
+ border-radius:calc(50% + 24% * var(--curva)) calc(50% - 24% * var(--curva))
+  calc(50% + 9% * var(--curva)) calc(50% - 9% * var(--curva)) /
+  calc(50% + 11% * var(--curva)) calc(50% - 5% * var(--curva))
+  calc(50% + 5% * var(--curva)) calc(50% - 11% * var(--curva));
+ animation:respira 15s var(--ease-in-out) infinite alternate}
+.bi:nth-child(2)::before{background:var(--u1);animation-duration:19s}
+.bi:nth-child(3)::before{background:var(--u3);animation-duration:13s}
+.bi:nth-child(4)::before{background:var(--u2);animation-duration:17s}
+.bi b{display:block;position:relative;font-family:var(--sport);font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1;margin-bottom:6px}
+.bi span{font-family:var(--tech);font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;color:var(--faint)}
+@media(max-width:700px){.band .in{grid-template-columns:repeat(2,1fr)}}
+/* tarjetas genéricas */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px}
+.card{position:relative;isolation:isolate;border:0;background:none;
+ padding:clamp(24px,2.6vw,30px) clamp(30px,3.4vw,42px) clamp(30px,3vw,36px) clamp(22px,2.4vw,28px);
+ transition:translate var(--dur-ui) var(--ease-out)}
+.card::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:url(#f-cuna);
+ background:linear-gradient(148deg,rgba(255,255,255,.085),rgba(255,255,255,.016) 58%),color-mix(in oklab,var(--bg2) 84%,transparent)}
+.card::after{content:'';position:absolute;inset:-1.4px;z-index:-2;clip-path:url(#f-cuna);pointer-events:none;
+ background:linear-gradient(148deg,color-mix(in oklab,var(--u1) 42%,transparent),transparent 62%);
+ opacity:.75;transition:opacity var(--dur-ui) var(--ease-out)}
+.cards>.card:nth-child(even)::before,.cards>.card:nth-child(even)::after{scale:-1 1}
+@media (hover:hover) and (pointer:fine){.card:hover{translate:0 -3px}.card:hover::after{opacity:1}}
+.card h3{font-family:var(--disp);font-size:1.5rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:7px}
+.card p{font-size:.87rem;color:var(--dim);line-height:1.55}
+.card .pz{font-family:var(--sport);font-size:1.5rem;margin:12px 0 4px}
+.card .un{font-family:var(--tech);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.card ul{list-style:none;margin:14px 0 0;display:flex;flex-direction:column;gap:7px}
+.card li{font-size:.83rem;color:var(--dim);display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+.card li::before{content:'';flex:none;width:13px;height:13px;margin-top:4px;border-radius:4px;background:rgba(230,200,119,.16);border:1px solid rgba(230,200,119,.5);
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 13 4 4 10-10'/%3E%3C/svg%3E");background-size:10px;background-position:center;background-repeat:no-repeat}
+.tagd{display:inline-block;font-family:var(--tech);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid currentColor;margin-bottom:10px}
+/* formularios */
+.form{display:grid;gap:14px;max-width:560px}
+.fld label{display:block;font-family:var(--tech);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:7px}
+.inp{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:13px;color:var(--ink);padding:13px 15px;font-size:.94rem;transition:border-color var(--dur-fast) ease,background var(--dur-fast) ease}
+.inp:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.07)}
+textarea.inp{min-height:104px;resize:vertical}
+select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239aa0b8' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:16px;padding-right:40px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.msg{border-radius:13px;padding:13px 16px;font-size:.88rem;display:none}
+.msg.on{display:block}
+.msg.ok{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.4);color:#a7f3c4}
+.msg.er{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.4);color:#ffb3b3}
+/* portal */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px}
+.proj{position:relative;isolation:isolate;border:0;background:none;
+ padding:clamp(26px,2.8vw,32px) clamp(32px,3.6vw,44px) clamp(30px,3vw,38px) clamp(24px,2.6vw,30px)}
+.proj::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:url(#f-cuna);
+ background:linear-gradient(148deg,rgba(255,255,255,.07),rgba(255,255,255,.012) 58%),color-mix(in oklab,var(--bg2) 84%,transparent)}
+.proj::after{content:'';position:absolute;inset:-1.4px;z-index:-2;clip-path:url(#f-cuna);pointer-events:none;
+ background:linear-gradient(148deg,color-mix(in oklab,var(--u2) 40%,transparent),transparent 62%);
+ opacity:.7;transition:opacity var(--dur-ui) var(--ease-out)}
+.pgrid>.proj:nth-child(even)::before,.pgrid>.proj:nth-child(even)::after{scale:-1 1}
+@media (hover:hover) and (pointer:fine){.proj:hover::after{opacity:1}}
+.proj .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.proj h3{font-family:var(--disp);font-size:1.7rem;letter-spacing:.02em;text-transform:uppercase;line-height:1}
+.st{font-family:var(--tech);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:5px 11px;border-radius:999px;white-space:nowrap}
+.st.propuesta{background:rgba(230,200,119,.14);color:var(--gold);border:1px solid rgba(230,200,119,.4)}
+.st.en_curso{background:rgba(91,141,239,.14);color:#8fb2f5;border:1px solid rgba(91,141,239,.4)}
+.st.revision{background:rgba(240,179,74,.14);color:var(--warn);border:1px solid rgba(240,179,74,.4)}
+.st.entregado{background:rgba(74,222,128,.14);color:var(--ok);border:1px solid rgba(74,222,128,.4)}
+.st.pausado,.st.cancelado{background:rgba(154,160,184,.12);color:var(--dim);border:1px solid var(--line2)}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;margin:6px 0 4px}
+.bar i{display:block;height:100%;width:100%;transform-origin:left center;transform:scaleX(0);border-radius:99px;background:linear-gradient(90deg,var(--gold),#3fd0e6);transition:transform var(--dur-panel) var(--ease-out)}
+.meta{display:flex;flex-wrap:wrap;gap:10px 20px;font-size:.79rem;color:var(--faint);margin-top:12px}
+.meta b{color:var(--dim);font-weight:600}
+.hit{list-style:none;margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:9px}
+.hit li{display:flex;gap:10px;align-items:center;font-size:.85rem;color:var(--dim)}
+.hit i{flex:none;width:15px;height:15px;border-radius:5px;border:1px solid var(--line2)}
+.hit li.listo i{background:var(--ok);border-color:var(--ok)}
+.hit li.en_curso i{background:var(--warn);border-color:var(--warn)}
+.hit li.listo{color:var(--ink);text-decoration:line-through;text-decoration-color:var(--faint)}
+.empty{position:relative;isolation:isolate;padding:48px 34px 52px 30px;text-align:center;color:var(--dim)}
+.empty::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:url(#f-cuna);
+ background:color-mix(in oklab,var(--bg2) 62%,transparent)}
+.empty::after{content:'';position:absolute;inset:-1.2px;z-index:-2;clip-path:url(#f-cuna);pointer-events:none;
+ background:linear-gradient(148deg,var(--line2),transparent 68%)}
+/* banner suscripción */
+#promo{position:fixed;right:18px;bottom:18px;z-index:75;width:min(340px,calc(100vw - 36px));
+ background:linear-gradient(165deg,#141829,#0a0c17);border:1px solid var(--line2);border-radius:20px;padding:22px;
+ box-shadow:0 26px 70px -24px #000;transform:translateY(140%);transition:transform 420ms var(--ease-drawer)}
+#promo.on{transform:none}
+#promo .x{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer;font-size:1rem;line-height:1;transition:color var(--dur-fast) ease,border-color var(--dur-fast) ease}
+#promo .x:hover{color:var(--ink);border-color:var(--line2)}
+#promo .pk{font-family:var(--tech);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+#promo h4{font-family:var(--disp);font-size:1.6rem;letter-spacing:.02em;text-transform:uppercase;line-height:.95;margin-bottom:8px}
+#promo p{font-size:.84rem;color:var(--dim);margin-bottom:14px;line-height:1.5}
+#promo .row{display:flex;gap:8px}
+#promo .inp{padding:11px 13px;font-size:.87rem}
+#promo .btn{padding:11px 16px;font-size:.72rem;white-space:nowrap}
+@media(max-width:520px){#promo{right:12px;left:12px;bottom:12px;width:auto}}
+/* modal auth */
+.scrim{position:fixed;inset:0;z-index:85;background:rgba(4,5,12,.82);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity var(--dur-panel) var(--ease-out),visibility var(--dur-panel)}
+.scrim.on{opacity:1;visibility:visible}
+.modal{position:fixed;z-index:86;top:50%;left:50%;transform:translate(-50%,-46%) scale(.97);width:min(430px,94vw);
+ background:linear-gradient(170deg,#111524,#0a0c16);border:1px solid var(--line2);border-radius:24px;padding:30px 28px;
+ opacity:0;visibility:hidden;transition:opacity var(--dur-panel) var(--ease-out),transform var(--dur-panel) var(--ease-out),visibility var(--dur-panel);max-height:90vh;overflow:auto}
+.modal.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+.modal h3{font-family:var(--disp);font-size:2rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:6px;line-height:1}
+.modal .sub{font-size:.88rem;color:var(--dim);margin-bottom:20px}
+.tabs{display:flex;gap:6px;margin-bottom:20px;background:rgba(255,255,255,.04);padding:4px;border-radius:13px}
+.tabs button{flex:1;padding:10px;border:none;background:none;color:var(--dim);font-family:var(--tech);font-size:.72rem;font-weight:700;
+ letter-spacing:.1em;text-transform:uppercase;border-radius:10px;cursor:pointer;transition:background var(--dur-fast) ease,color var(--dur-fast) ease}
+.tabs button.on{background:var(--ink);color:#06070f}
+.modal .x{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer}
+/* footer */
+footer{border-top:1px solid var(--line);padding:38px 0 48px;position:relative;z-index:2}
+.fg{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between}
+.fc h4{font-family:var(--tech);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;font-weight:700}
+.fc a{display:block;font-size:.85rem;color:var(--dim);padding:4px 0;transition:color var(--dur-fast) ease;cursor:pointer}
+.fc a:hover{color:var(--gold)}
+.fb{margin-top:32px;padding-top:19px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:11px;justify-content:space-between;
+ font-family:var(--tech);font-size:.68rem;letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+/* visor interno: las muestras se abren dentro del sitio */
+#visor{position:fixed;inset:0;z-index:88;background:var(--bg);display:flex;flex-direction:column;
+ opacity:0;visibility:hidden;transform:scale(.985);
+ transition:opacity var(--dur-panel) var(--ease-out),transform var(--dur-panel) var(--ease-out),visibility var(--dur-panel)}
+#visor.on{opacity:1;visibility:visible;transform:none}
+#visor .vtop{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px var(--pad);
+ border-bottom:1px solid var(--line);background:rgba(6,7,15,.94);backdrop-filter:blur(12px)}
+#visor .vt{font-family:var(--tech);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+#visor .vbody{flex:1;position:relative;display:flex}
+#visor iframe{flex:1;width:100%;border:0;background:var(--bg)}
+#visorFall{display:none;position:absolute;inset:0;z-index:2;background:var(--bg);
+ flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:32px}
+#visorFall.on{display:flex}
+#visorFall h3{font-size:1.9rem;letter-spacing:.02em;text-transform:uppercase}
+#visorFall p{color:var(--dim);max-width:46ch;font-size:.92rem}
+/* WhatsApp: resumen para decisores, ficha abajo */
+.wa-hero{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,5vw,58px);align-items:center;margin-bottom:56px}
+@media(max-width:900px){.wa-hero{grid-template-columns:1fr}}
+.fases{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;position:relative}
+.fase{position:relative;isolation:isolate;border:0;background:none;
+ padding:clamp(24px,2.6vw,30px) clamp(30px,3.4vw,42px) clamp(30px,3vw,36px) clamp(22px,2.4vw,28px);
+ transition:translate var(--dur-ui) var(--ease-out)}
+.fase::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:url(#f-cuna);
+ background:linear-gradient(148deg,rgba(255,255,255,.075),rgba(255,255,255,.014) 58%),color-mix(in oklab,var(--bg2) 84%,transparent)}
+.fase::after{content:'';position:absolute;inset:-1.4px;z-index:-2;clip-path:url(#f-cuna);pointer-events:none;
+ background:linear-gradient(148deg,color-mix(in oklab,var(--u1) 44%,transparent),transparent 62%);opacity:.72}
+.fases>.fase:nth-child(even)::before,.fases>.fase:nth-child(even)::after{scale:-1 1}
+@media (hover:hover) and (pointer:fine){.fase:hover{translate:0 -3px}}
+.fase .fn{font-family:var(--sport);font-size:2rem;line-height:1;color:var(--gold);opacity:.5;margin-bottom:10px}
+.fase h4{font-family:var(--disp);font-size:1.3rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:7px}
+.fase p{font-size:.85rem;color:var(--dim);line-height:1.5}
+.fase .dur{font-family:var(--tech);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:11px}
+.ficha{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.022);overflow:hidden;margin-top:14px}
+.ficha>summary{padding:20px 24px;cursor:pointer;font-family:var(--tech);font-size:.76rem;letter-spacing:.14em;
+ text-transform:uppercase;font-weight:700;color:var(--dim);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:color var(--dur-fast) ease}
+.ficha>summary::-webkit-details-marker{display:none}
+.ficha>summary:hover{color:var(--ink)}
+.ficha>summary::after{content:'+';font-size:1.3rem;color:var(--gold);transition:transform var(--dur-ui) var(--ease-out)}
+.ficha[open]>summary::after{transform:rotate(45deg)}
+.ficha .fbody{padding:0 24px 24px;border-top:1px solid var(--line)}
+.ficha h5{font-family:var(--disp);font-size:1.15rem;letter-spacing:.02em;text-transform:uppercase;margin:20px 0 8px}
+.ficha p,.ficha li{font-size:.87rem;color:var(--dim);line-height:1.6}
+.ficha ul{margin:8px 0 0 18px}
+.ficha code{font-family:var(--tech);font-size:.82rem;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:6px;color:var(--gold)}
+.tbl{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:12px}
+.tbl th,.tbl td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line)}
+.tbl th{font-family:var(--tech);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.tbl td{color:var(--dim)}
+.scrollx{overflow-x:auto}
+/* respuesta al pulsar: en táctil no hay hover, esto es todo el feedback */
+.area .lk:active,.tira a:active,.chip:active{transform:scale(.96);transition:transform 180ms var(--ease-out)}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out)}
+.rv.in{opacity:1;transform:none}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PIEL ORGÁNICA
+   El esqueleto no se toca: cambia la piel. Siete formas propias, cinco capas
+   de profundidad y un solo requestAnimationFrame. El sistema completo está
+   en docs/direccion-organica.md; aquí sólo se aplica.
+
+   Por qué máscaras SVG en objectBoundingBox y no clip-path:path(): path()
+   lleva coordenadas en píxeles fijos, así que la forma no acompaña al
+   contenedor. objectBoundingBox dibuja entre 0 y 1 y el navegador lo estira:
+   una definición sirve para una tarjeta de 320px y para una de 900px.
+   ═══════════════════════════════════════════════════════════════════════ */
+.f-gota{clip-path:url(#f-gota)}
+.f-losa{clip-path:url(#f-losa)}
+.f-hoja{clip-path:url(#f-hoja)}
+.f-cresta{clip-path:url(#f-cresta)}
+.f-astilla{clip-path:url(#f-astilla)}
+
+/* Guijarro: la única forma animable del léxico, y por eso vive en un
+   border-radius de ocho valores y no en una máscara. Nunca lleva contenido:
+   es peso visual puro. --curva lo tempera — a 1 (flujo) queda francamente
+   lopsidado, a 0,2 (hielo) es casi un círculo. */
+.guijarro{position:absolute;pointer-events:none;z-index:0;
+ border-radius:
+  calc(50% + 24% * var(--curva)) calc(50% - 24% * var(--curva))
+  calc(50% + 9%  * var(--curva)) calc(50% - 9%  * var(--curva)) /
+  calc(50% + 11% * var(--curva)) calc(50% - 5%  * var(--curva))
+  calc(50% + 5%  * var(--curva)) calc(50% - 11% * var(--curva));
+ animation:respira 15s var(--ease-in-out) infinite alternate}
+@keyframes respira{
+ to{border-radius:
+  calc(50% - 20% * var(--curva)) calc(50% + 20% * var(--curva))
+  calc(50% - 13% * var(--curva)) calc(50% + 13% * var(--curva)) /
+  calc(50% - 8%  * var(--curva)) calc(50% + 14% * var(--curva))
+  calc(50% - 14% * var(--curva)) calc(50% + 8%  * var(--curva))}}
+
+/* Astilla: el filamento de la capa más cercana. Siempre cortada por el borde
+   de la pantalla — una Astilla entera se lee como un logo perdido. */
+.astilla{position:absolute;pointer-events:none;z-index:0;clip-path:url(#f-astilla)}
+/* Estrato: campo de color de la capa 1. No lleva contenido, lleva atmósfera.
+   Nunca pasa de .34 de opacidad: las capas lejanas pierden contraste con la
+   distancia — la perspectiva aérea de un pintor, aplicada a un div. Va colgado
+   de la sección, no del .wrap: dentro del wrap dejaba un canto recto a la vista. */
+.estrato{position:absolute;pointer-events:none;z-index:0;opacity:.34}
+/* con la luz encendida los acentos pierden fuerza sobre papel claro: el
+   factor --fo los sube sin tocar el peso relativo que tiene cada uno */
+:root{--fo:1}
+:root[data-tema="claro"]{--fo:1.5}
+:root[data-tema="claro"] .estrato{opacity:.5}
+.guijarro,.astilla{opacity:calc(var(--o,.3) * var(--fo))}
+
+/* las cinco capas del sistema de profundidad: 0,15 · 0,42 · 1,00 · 1,16 · 1,34.
+   El salto entre vecinas se mantiene entre 0,16 y 0,42: por debajo de 0,15 no
+   se percibe y por encima de 0,7 marea. */
+[data-vel]{will-change:transform}
+.sec,#hero,.remate,.view>section{overflow-x:clip}
+
+/* cada acto hereda su universo; los paneles de adentro sólo leen --curva */
+.tramo{position:relative;display:block}
+.tramo .guijarro,.tramo .estrato,.tramo .astilla{z-index:0}
+
+/* ── botón orgánico ─────────────────────────────────────────────────────
+   El radio no es decorativo: al pasar el puntero la forma se reacomoda, que
+   es la manera de que un control se sienta vivo sin desplazarse. */
+.btn{border-radius:
+ calc(14px + 16px * var(--curva)) calc(24px - 5px * var(--curva))
+ calc(12px + 14px * var(--curva)) calc(22px - 7px * var(--curva));
+ transition:background var(--dur-fast) ease,color var(--dur-fast) ease,border-color var(--dur-fast) ease,
+  border-radius 520ms var(--ease-out),translate 90ms var(--ease-out),scale 90ms var(--ease-out),
+  box-shadow var(--dur-fast) var(--ease-out)}
+.nbtn{border-radius:calc(10px + 14px * var(--curva)) calc(20px - 5px * var(--curva))
+ calc(9px + 12px * var(--curva)) calc(18px - 6px * var(--curva));
+ transition:background var(--dur-fast) ease,color var(--dur-fast) ease,border-color var(--dur-fast) ease,
+  border-radius 480ms var(--ease-out)}
+.luz,.burger{border-radius:
+ calc(38% + 16% * var(--curva)) calc(54% - 12% * var(--curva))
+ calc(42% + 10% * var(--curva)) calc(50% - 8% * var(--curva)) /
+ calc(50% + 8% * var(--curva)) calc(40% + 12% * var(--curva))
+ calc(52% - 10% * var(--curva)) calc(44% + 6% * var(--curva));
+ transition:color var(--dur-fast) ease,border-color var(--dur-fast) ease,border-radius 520ms var(--ease-out)}
+.inp{border-radius:calc(8px + 9px * var(--curva)) calc(15px - 5px * var(--curva))
+ calc(7px + 8px * var(--curva)) calc(14px - 5px * var(--curva))}
+.tabs{border-radius:16px 10px 16px 10px}
+.tabs button{border-radius:12px 7px 12px 7px}
+.ficha{border-radius:calc(12px + 14px * var(--curva)) calc(26px - 8px * var(--curva))
+ calc(14px + 12px * var(--curva)) calc(24px - 7px * var(--curva));border-color:var(--line)}
+.modal{border-radius:calc(16px + 18px * var(--curva)) calc(32px - 9px * var(--curva))
+ calc(18px + 16px * var(--curva)) calc(30px - 8px * var(--curva))}
+#promo{border-radius:calc(14px + 16px * var(--curva)) calc(28px - 8px * var(--curva))
+ calc(16px + 14px * var(--curva)) calc(26px - 7px * var(--curva))}
+.hit i{border-radius:60% 40% 52% 48% / 55% 50% 50% 45%}
+.card li::before{border-radius:58% 42% 50% 50% / 52% 48% 52% 48%}
+.area .a-lado .ini{mix-blend-mode:overlay}
+
+/* ── coreografía por scroll, con líneas de tiempo nativas ────────────────
+   El estado por defecto es el VISIBLE: si el navegador no las soporta, la
+   página se ve entera. La animación se suma encima, nunca al revés. */
+@supports (animation-timeline:view()){
+ @media not (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none;
+   animation:brota linear both;animation-timeline:view();animation-range:entry 2% cover 32%}
+  .card,.proj,.acto-in,.todo,.fam,.wa-hero>*{
+   animation:brota linear both;animation-timeline:view();animation-range:entry 4% cover 34%}
+  .head,.ficha{animation:brotaLat linear both;animation-timeline:view();animation-range:entry 4% cover 30%}
+  @keyframes brota{from{opacity:.06;transform:translate3d(0,42px,0) scale(.966)}}
+  @keyframes brotaLat{from{opacity:.06;transform:translate3d(-34px,0,0)}}
+ }
+}
+
+/* ── microinteracciones, sólo donde hay puntero fino ─────────────────────
+   Se mueven con `translate`/`scale`, no con `transform`: así el hover y la
+   coreografía de scroll no se pisan la misma propiedad. */
+@media (hover:hover) and (pointer:fine){
+ .btn:hover{border-radius:
+  calc(24px - 6px * var(--curva)) calc(14px + 16px * var(--curva))
+  calc(22px - 8px * var(--curva)) calc(12px + 15px * var(--curva))}
+ .btn.p:hover,.btn.gold:hover{translate:0 -2px}
+ .nbtn:hover{border-radius:calc(20px - 6px * var(--curva)) calc(10px + 14px * var(--curva))
+  calc(18px - 5px * var(--curva)) calc(9px + 13px * var(--curva))}
+ .luz:hover{border-radius:54% 40% 46% 52% / 42% 52% 44% 56%}
+ .area:hover .a-lado{scale:1.035}
+ .pt:hover .go svg{transform:translateX(6px)}
+}
+/* respuesta al pulsar: en táctil es el único feedback que existe */
+.btn:active{translate:0 1px;scale:.97}
+.pt:active{scale:.99}
+.card:active,.area:active,.fase:active{scale:.99}
+.load{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:var(--ink);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){
+ /* se conserva opacidad y color; se quita todo desplazamiento */
+ .rv{opacity:1;transform:none;transition:opacity var(--dur-ui) var(--ease-out)}
+ #hero h1 .ln i{transform:none;animation:none}
+ .view.on{animation:none}
+ .pt:hover,.card:hover,.area:hover,.btn.p:hover{transform:none}
+ .pt:hover .art{transform:none}
+ .btn:active,.pt:active,.card:active,.area:active,.area .lk:active,.tira a:active,.chip:active{transform:none}
+ /* piel orgánica: se apaga el desplazamiento, nunca el color ni la forma.
+    Las reglas van con la misma especificidad que las que animan — si no,
+    `:nth-child` gana y el bucle sigue corriendo pese a la petición. */
+ .guijarro,.bi::before,.bi:nth-child(2)::before,.bi:nth-child(3)::before,.bi:nth-child(4)::before{animation:none}
+ :root{transition:none}
+ .area,.acto-in,.card,.proj,.todo,.fam,.head,.ficha,.wa-hero>*,.rv{animation:none;opacity:1;transform:none}
+ .area{position:relative;top:auto;filter:none}
+ .pt:hover,.card:hover,.fase:hover,.btn.p:hover,.btn.gold:hover{translate:none}
+ .area:hover .a-lado{scale:none}
+ .btn:active,.pt:active,.card:active,.area:active,.fase:active{translate:none;scale:none}
+ /* el paralaje no se apaga con !important: el lazo ni siquiera lo escribe */
+ [data-vel]{will-change:auto}
+ #promo{transform:none;opacity:0;pointer-events:none;transition:opacity var(--dur-ui) var(--ease-out)}
+ #promo.on{transform:none;opacity:1;pointer-events:auto}
+ .modal{transition:opacity var(--dur-ui) var(--ease-out)}
+ .modal.on{transform:translate(-50%,-50%) scale(1)}
+ #visor{transform:none}
+ .fam:hover .sem,.fam:active .sem{transform:none}
+ /* los bucles infinitos se detienen, no se aceleran */
+ .load{animation-duration:1.6s}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ el léxico de formas ═══
+     clipPathUnits="objectBoundingBox": el trazo vive entre 0 y 1 y el navegador
+     lo estira al tamaño real del elemento. Una sola definición sirve para una
+     pieza de 320px en móvil y una de 900px en escritorio, sin JavaScript.
+     Siete formas con oficio declarado — ninguna se llama "blob". -->
+<svg class="formas" aria-hidden="true" focusable="false" width="0" height="0"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <clipPath id="f-gota" clipPathUnits="objectBoundingBox">
+      <path d="M.4 0C.73 0 1 .19 1 .46C1 .73 .93 .9 .78 1L.26 1C.09 .92 0 .74 0 .48C0 .18 .13 0 .4 0Z"/>
+    </clipPath>
+    <clipPath id="f-losa" clipPathUnits="objectBoundingBox">
+      <path d="M0 .16C.16 0 .44 .13 .64 .06C.86 0 1 .12 1 .4C1 .68 .96 .87 .86 .95C.74 1 .48 .92 .26 .97C.08 1 0 .9 0 .66Z"/>
+    </clipPath>
+    <clipPath id="f-hoja" clipPathUnits="objectBoundingBox">
+      <path d="M1 0C1 .4 .8 .74 .5 .92C.3 1 .08 .94 .03 .78C0 .58 .16 .34 .44 .16C.66 .03 .86 0 1 0Z"/>
+    </clipPath>
+    <clipPath id="f-cresta" clipPathUnits="objectBoundingBox">
+      <path d="M0 .26C.16 .08 .34 .2 .52 .14C.7 .08 .85 0 1 .05L1 1L0 1Z"/>
+    </clipPath>
+    <clipPath id="f-cuna" clipPathUnits="objectBoundingBox">
+      <path d="M0 .06C.3 0 .62 .02 .82 .07C.96 .1 1 .22 .99 .4C.98 .62 .94 .83 .86 .94C.77 1 .3 1 .12 .98C.02 .96 0 .88 0 .76Z"/>
+    </clipPath>
+    <clipPath id="f-astilla" clipPathUnits="objectBoundingBox">
+      <path d="M.02 .4C.2 .12 .58 0 .92 .04C.99 .05 1 .12 .95 .15C.62 .13 .28 .26 .13 .48C.07 .58 .11 .76 .21 .88C.24 .93 .17 .97 .12 .92C0 .78 0 .56 .02 .4Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<nav id="nav"><div class="in">
+  <div class="logo" data-go="inicio"><span class="l">L</span><span class="q">Q</span><span class="s">S</span></div>
+  <div class="nlinks" id="nl">
+    <a data-go="inicio">Inicio</a>
+    <a data-go="servicios">Servicios</a>
+    <a data-go="muestras">Muestras</a>
+    <a data-go="whatsapp">Automatización</a>
+    <a data-go="estudio">Nosotros</a>
+    <a data-go="cotizar">Cotizar</a>
+    <a class="nbtn" id="authBtn">Ingresar</a>
+  </div>
+  <button class="luz" aria-label="Cambiar entre claro y oscuro" title="Claro / oscuro"><svg class="luna" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg><svg class="sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2M12 19.6v2M2.4 12h2M19.6 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></svg></button>
+      <button class="burger" id="bg" aria-label="Menú"><span></span></button>
+</div></nav>
+
+<!-- capa 0 · el clima, a 0,15 del scroll. Lo lejano casi no se mueve: es lo que
+     hace que la pantalla se sienta con fondo y no con papel tapiz. -->
+<div class="atmos" aria-hidden="true" data-vel=".15" data-fija><b><i></i><i></i></b><b><i></i><i></i></b><b><i></i><i></i></b></div>
+<!-- capa 4 · la piel. El grano corre a 1,34, adelantándose al contenido. -->
+<div class="grano" aria-hidden="true" data-vel="1.34" data-fija></div>
+<div id="top">
+
+<!-- ═══════ INICIO ═══════ -->
+<div class="view on" id="v-inicio">
+  <header id="hero" data-universo="flujo">
+    <canvas id="heroCv"></canvas>
+    <!-- capa 1 · estrato, 0,42 — capa 3 · guijarros, 1,16 — capa 4 · astilla, 1,34.
+         El cuadrante de silencio del hero es el de abajo a la izquierda: ahí no
+         entra ninguna pieza. -->
+    <div class="estrato" data-vel=".42" aria-hidden="true"
+         style="left:-16vw;right:-16vw;bottom:-18%;height:88%;z-index:1;
+                background:radial-gradient(56% 60% at 30% 76%,color-mix(in oklab,var(--u1) 30%,transparent),transparent 70%)"></div>
+    <div class="guijarro" data-vel="1.16" aria-hidden="true"
+         style="right:7%;top:16%;width:9vw;height:9vw;max-width:118px;max-height:118px;background:var(--u3);--o:.34;z-index:1"></div>
+    <div class="guijarro" data-vel="1.24" aria-hidden="true"
+         style="right:21%;top:29%;width:4.4vw;height:4.4vw;max-width:56px;max-height:56px;background:var(--u2);--o:.4;z-index:1"></div>
+    <div class="astilla" data-vel="1.34" aria-hidden="true"
+         style="left:-9vw;bottom:8%;width:30vw;height:20vw;background:var(--u2);--o:.16;z-index:1"></div>
+    <div class="wrap"><div class="hero-in">
+      <h1 class="lqs" id="lqs" aria-label="LQS">
+        <canvas id="lqsCv" width="900" height="408">LQS</canvas>
+      </h1>
+      <p class="firma">Creamos lo que sea. <em>Resolvemos</em> lo que venga.</p>
+      <p class="tagline">Estudio creativo en Medellín. Marca, sitio web, automatización, audiovisual y producto. <b>Un solo taller detrás de todo</b> — desde un flyer de $45.000 hasta la marca completa de un hotel.</p>
+      <div class="hbtns">
+        <a class="btn gold" data-go="cotizar">Cotizar mi proyecto <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn g" data-go="servicios">Ver servicios</a>
+      </div>
+    </div></div>
+  </header>
+  <!-- remate del hero: dos curvas del mismo clima y las tres familias -->
+  <div class="remate">
+    <svg class="onda" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="ondaA" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style="stop-color:var(--c1);stop-opacity:.22"/>
+          <stop offset="1" style="stop-color:var(--c1);stop-opacity:0"/>
+        </linearGradient>
+        <linearGradient id="ondaB" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style="stop-color:var(--c3);stop-opacity:.18"/>
+          <stop offset="1" style="stop-color:var(--c3);stop-opacity:0"/>
+        </linearGradient>
+      </defs>
+      <path d="M0 62C168 8 302 96 470 78 654 58 762 4 942 26c126 16 196 58 258 34V200H0Z" fill="url(#ondaA)"/>
+      <path d="M0 112C148 68 336 148 524 124 706 101 846 46 1016 74c98 16 146 44 184 30V200H0Z" fill="url(#ondaB)"/>
+      <path d="M0 62C168 8 302 96 470 78 654 58 762 4 942 26c126 16 196 58 258 34" fill="none"
+            style="stroke:var(--c2);opacity:.5" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <div class="in" id="remate"></div>
+  </div>
+  <section class="sec" data-universo="flujo">
+    <div class="estrato" data-vel=".42" aria-hidden="true"
+         style="right:-14vw;top:2%;width:60vw;height:60vw;max-height:760px;
+                background:radial-gradient(circle at 46% 44%,color-mix(in oklab,var(--u2) 26%,transparent),transparent 66%)"></div>
+    <div class="guijarro" data-vel="1.18" aria-hidden="true"
+         style="left:4%;top:6%;width:6vw;height:6vw;max-width:76px;max-height:76px;background:var(--u3);--o:.3"></div>
+   <div class="wrap">
+    <div class="head rv">
+      <div>      <h2 class="disp">Cada área,<br>su <span class="gold">propio espacio</span>.</h2></div>
+      <p class="body-l" style="max-width:36ch">Nada de scroll infinito. Entra directo a lo que necesitas.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div style="margin-top:44px">
+      <div class="tira" id="tira"></div>
+    </div>
+  </div></section>
+  <div class="band"><div class="in">
+    <div class="bi rv"><b>8</b><span>áreas activas</span></div>
+    <div class="bi rv"><b>48h</b><span>para tu propuesta</span></div>
+    <div class="bi rv"><b>−40%</b><span>vs. precio de agencia</span></div>
+    <div class="bi rv"><b>1</b><span>interlocutor, siempre</span></div>
+  </div></div>
+</div>
+
+<!-- ═══════ ESTUDIO ═══════ -->
+<div class="view" id="v-estudio"><section class="sec" data-universo="flujo">
+  <div class="estrato" data-vel=".42" aria-hidden="true"
+       style="left:-12vw;top:10%;width:54vw;height:54vw;max-height:700px;
+              background:radial-gradient(circle at 50% 50%,color-mix(in oklab,var(--u1) 26%,transparent),transparent 64%)"></div>
+  <div class="guijarro" data-vel="1.2" aria-hidden="true"
+       style="right:5%;top:8%;width:7vw;height:7vw;max-width:92px;max-height:92px;background:var(--u3);--o:.3"></div>
+  <div class="astilla" data-vel="1.34" aria-hidden="true"
+       style="right:-8vw;top:44%;width:26vw;height:17vw;background:var(--u2);--o:.14;scale:-1 1"></div>
+<div class="wrap">
+  <h2 class="disp" style="max-width:16ch">No somos una agencia.<br>Somos un <span class="gold">taller</span>.</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,64px);margin-top:44px" class="two">
+    <div>
+      <p class="body-l" style="margin-bottom:18px">LQS nació de una idea simple: <b style="color:var(--ink)">las buenas marcas no deberían costar una fortuna</b>. La mayoría de negocios en Colombia no necesita una agencia con cinco capas de gente — necesita a alguien que entienda, diseñe y entregue.</p>
+      <p class="body-l" style="margin-bottom:18px">Por eso trabajamos como estudio compacto: <b style="color:var(--ink)">hablas con quien hace el trabajo</b>. Eso baja el precio y sube la calidad, porque nada se pierde en la traducción.</p>
+      <p class="body-l">Somos toderos por convicción: resolvemos desde un flyer hasta la marca completa de un hotel, pasando por joyería y uniformes. Si tu proyecto lo necesita, lo hacemos.</p>
+    </div>
+    <div class="cards" style="grid-template-columns:1fr 1fr;align-content:start">
+      <div class="card"><div class="pz">8</div><div class="un">áreas activas</div></div>
+      <div class="card"><div class="pz">48h</div><div class="un">para tu propuesta</div></div>
+      <div class="card"><div class="pz">−40%</div><div class="un">vs. agencia</div></div>
+      <div class="card"><div class="pz">1</div><div class="un">interlocutor</div></div>
+    </div>
+  </div>
+  <div style="margin-top:64px">
+    <h3 class="disp" style="margin-bottom:26px">Un proceso sin sorpresas</h3>
+    <div class="cards" id="proc"></div>
+  </div>
+</div></section></div>
+
+<!-- ═══════ SERVICIOS ═══════ -->
+<div class="view" id="v-servicios"><section class="sec" data-universo="trama">
+  <div class="estrato" data-vel=".42" aria-hidden="true"
+       style="right:-14vw;top:0;width:62vw;height:62vw;max-height:820px;
+              background:radial-gradient(circle at 42% 42%,color-mix(in oklab,var(--u2) 30%,transparent),transparent 66%)"></div>
+  <div class="astilla" data-vel="1.34" aria-hidden="true"
+       style="right:-8vw;top:6%;width:26vw;height:17vw;background:var(--u1);--o:.18;scale:-1 1"></div>
+<div class="wrap">
+  <h2 class="disp">Todo lo que hacemos,<br>en <span class="gold">nueve mundos</span>.</h2>
+  <p class="body-l" style="margin:16px 0 30px">Entra al que se parezca a lo tuyo: adentro está cómo trabajamos, qué entregamos y una muestra que puedes tocar. Los precios están al final, cuando quieras verlos.</p>
+  <div class="areas" id="areas"></div>
+
+  <div class="todo" id="todo">
+    <div>
+      <h3 class="disp" style="font-size:clamp(1.7rem,3vw,2.3rem);margin-bottom:8px">Mira la lista completa <span class="gold">con precios</span>.</h3>
+      <p style="color:var(--dim);font-size:.92rem;max-width:44ch">Todos los paquetes con precio cerrado en pesos colombianos, sin costos ocultos.</p>
+    </div>
+    <button class="btn g" id="btnPrecios">Ver todos los servicios <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+  </div>
+
+  <div id="precios">
+   <div class="precios-in">
+    <div id="uniChips" style="display:flex;flex-wrap:wrap;gap:8px;margin:34px 0 30px"></div>
+    <div class="cards" id="paks"><div class="empty"><span class="load"></span></div></div>
+    <p style="color:var(--faint);font-size:.84rem;margin-top:26px">¿No encaja ninguno? Casi todo se puede armar a la medida — <a data-go="cotizar" style="color:var(--gold);cursor:pointer;text-decoration:underline">cuéntanos qué necesitas</a>.</p>
+   </div>
+  </div>
+</div></section></div>
+
+<!-- ═══════ MUESTRAS ═══════ -->
+<div class="view" id="v-muestras"><section class="sec" data-universo="pulso">
+  <div class="estrato" data-vel=".42" aria-hidden="true"
+       style="left:-14vw;top:4%;width:58vw;height:58vw;max-height:760px;
+              background:radial-gradient(circle at 54% 46%,color-mix(in oklab,var(--u3) 28%,transparent),transparent 66%)"></div>
+  <div class="guijarro" data-vel="1.16" aria-hidden="true"
+       style="right:6%;top:5%;width:8vw;height:8vw;max-width:104px;max-height:104px;background:var(--u1);--o:.32"></div>
+  <div class="guijarro" data-vel="1.26" aria-hidden="true"
+       style="right:20%;top:15%;width:4vw;height:4vw;max-width:50px;max-height:50px;background:var(--u2);--o:.4"></div>
+<div class="wrap">
+  <h2 class="disp">Pruébalo antes<br>de <span class="gold">contratar</span>.</h2>
+  <p class="body-l" style="margin:16px 0 34px">Todo se abre aquí mismo, sin salir de la página. Crea una identidad, arma un pedido, previsualiza tu merch o escríbele al bot. Si prefieres verlo en pestaña aparte, usa el enlace ↗ de cada tarjeta.</p>
+  <div class="cards" id="demos"></div>
+  <p class="body-l" style="margin-top:30px;font-size:.9rem">¿Buscabas las fichas de cada área con sus precios? Están en <a data-go="servicios" style="color:var(--gold);cursor:pointer;text-decoration:underline">Servicios</a>.</p>
+</div></section></div>
+
+<!-- ═══════ COTIZAR ═══════ -->
+<div class="view" id="v-cotizar"><section class="sec" data-universo="trama">
+  <div class="estrato" data-vel=".42" aria-hidden="true"
+       style="right:-16vw;top:6%;width:56vw;height:56vw;max-height:720px;
+              background:radial-gradient(circle at 44% 48%,color-mix(in oklab,var(--u1) 28%,transparent),transparent 66%)"></div>
+  <div class="guijarro" data-vel="1.18" aria-hidden="true"
+       style="right:9%;top:22%;width:6.5vw;height:6.5vw;max-width:84px;max-height:84px;background:var(--u2);--o:.3"></div>
+<div class="wrap">
+  <h2 class="disp">Cotiza tu <span class="gold">proyecto</span>.</h2>
+  <p class="body-l" style="margin:16px 0 34px">Respondemos con un plan concreto en 48 horas. Sin compromiso.</p>
+  <form class="form" id="fSol">
+    <div class="two">
+      <div class="fld"><label>Tu nombre *</label><input class="inp" name="nombre" required maxlength="80" placeholder="¿Cómo te llamas?"></div>
+      <div class="fld"><label>WhatsApp</label><input class="inp" name="telefono" maxlength="30" placeholder="300 000 0000"></div>
+    </div>
+    <div class="fld"><label>Correo</label><input class="inp" type="email" name="email" maxlength="120" placeholder="tucorreo@ejemplo.com"></div>
+    <div class="two">
+      <div class="fld"><label>¿Qué área necesitas?</label><select class="inp" name="universo_id" id="solUni"></select></div>
+      <div class="fld"><label>Presupuesto aproximado (COP)</label><select class="inp" name="presupuesto">
+        <option value="">Aún no lo sé</option><option value="300000">Menos de $500.000</option>
+        <option value="1000000">$500.000 – $1.500.000</option><option value="2500000">$1.500.000 – $4.000.000</option>
+        <option value="6000000">Más de $4.000.000</option></select></div>
+    </div>
+    <div class="fld"><label>Cuéntanos tu idea *</label><textarea class="inp" name="detalle" required maxlength="1200" placeholder="Qué necesitas, para cuándo, y cualquier detalle que nos sirva…"></textarea></div>
+    <label style="display:flex;gap:10px;align-items:flex-start;font-size:.86rem;color:var(--dim);cursor:pointer;line-height:1.5">
+      <input type="checkbox" name="acepta" required style="margin-top:4px;width:17px;height:17px;accent-color:var(--gold);flex:none">
+      <span>Autorizo el tratamiento de mis datos personales conforme a la
+      <a href="legal.html#politica" target="_blank" rel="noopener" style="color:var(--gold)">política de datos</a> de LQS.</span>
+    </label>
+    <div class="msg" id="mSol"></div>
+    <div class="hbtns"><button class="btn gold" type="submit" id="bSol">Enviar solicitud</button>
+    <a class="btn g" href="https://wa.me/573332791710?text=Hola%20LQS%20%F0%9F%91%8B%20quiero%20cotizar%20un%20proyecto." target="_blank" rel="noopener">Prefiero WhatsApp</a></div>
+  </form>
+</div></section></div>
+
+<!-- ═══════ MI CUENTA ═══════ -->
+<div class="view" id="v-cuenta"><section class="sec" data-universo="hielo">
+  <div class="estrato" data-vel=".42" aria-hidden="true"
+       style="left:-12vw;top:8%;width:52vw;height:52vw;max-height:680px;
+              background:radial-gradient(circle at 50% 50%,color-mix(in oklab,var(--u2) 26%,transparent),transparent 64%)"></div>
+<div class="wrap">
+  <div class="head">
+    <div><h2 class="disp" id="hola">Tus proyectos</h2></div>
+    <button class="btn g" id="salir">Cerrar sesión</button>
+  </div>
+  <div id="portal"><div class="empty"><span class="load"></span></div></div>
+</div></section></div>
+
+
+<!-- ═══════ WHATSAPP AUTOMÁTICO ═══════ -->
+<div class="view" id="v-whatsapp"><section class="sec" data-universo="hielo">
+  <div class="estrato" data-vel=".42" aria-hidden="true"
+       style="right:-15vw;top:2%;width:60vw;height:60vw;max-height:780px;
+              background:radial-gradient(circle at 44% 44%,color-mix(in oklab,var(--u2) 30%,transparent),transparent 66%)"></div>
+  <div class="astilla" data-vel="1.34" aria-hidden="true"
+       style="left:-9vw;top:32%;width:28vw;height:18vw;background:var(--u1);--o:.15"></div>
+  <div class="guijarro" data-vel="1.2" aria-hidden="true"
+       style="right:7%;top:56%;width:7vw;height:7vw;max-width:92px;max-height:92px;background:var(--u2);--o:.34"></div>
+<div class="wrap">
+  <h2 class="disp">Tu negocio responde,<br>aunque tú <span class="gold">no estés</span>.</h2>
+  <div class="wa-hero" style="margin-top:34px">
+    <div>
+      <p class="body-l" style="margin-bottom:20px">Conectamos tu WhatsApp a un sistema que <b style="color:var(--ink)">contesta al instante</b>, muestra lo que vendes, toma pedidos y reservas, y avisa a tu equipo. Funciona a las 3 de la mañana, un domingo festivo, sin que nadie esté pendiente.</p>
+      <div class="cards" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div class="card"><div class="pz">24/7</div><div class="un">siempre disponible</div></div>
+        <div class="card"><div class="pz">30 seg</div><div class="un">tiempo de respuesta</div></div>
+        <div class="card"><div class="pz">0</div><div class="un">clientes sin contestar</div></div>
+        <div class="card"><div class="pz">2-3</div><div class="un">semanas de montaje</div></div>
+      </div>
+    </div>
+    <div style="border:1px solid var(--line2);border-radius:26px;background:linear-gradient(170deg,#141829,#0a0c17);padding:16px 14px 20px;max-width:330px;margin:0 auto;width:100%">
+      <div style="display:flex;align-items:center;gap:9px;padding:4px 8px 13px;border-bottom:1px solid var(--line)">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ade80,#3fd0e6);display:grid;place-items:center">🤖</div>
+        <div><b style="font-size:.84rem;display:block;line-height:1.2">Tu negocio</b><span style="font-size:.68rem;color:#4ade80">● en línea</span></div>
+      </div>
+      <div id="waChat" style="padding:15px 4px 0;display:flex;flex-direction:column;gap:9px;min-height:250px"></div>
+    </div>
+  </div>
+
+  <h3 class="disp" style="margin-bottom:24px">El plan en cuatro fases</h3>
+  <div class="fases" id="fases"></div>
+
+  <div style="margin-top:56px">
+    <h3 class="disp" style="margin-bottom:24px">Lo que tu cliente podrá hacer solo</h3>
+    <div class="cards" id="waCaps"></div>
+  </div>
+
+  <div style="margin-top:56px">
+    <h3 class="disp" style="margin-bottom:10px">Precios del montaje</h3>
+    <p class="body-l" style="margin-bottom:24px">El montaje se paga una vez. La mensualidad cubre el mantenimiento, los ajustes y el costo que cobra Meta por conversación.</p>
+    <div class="cards" id="waPlanes"></div>
+  </div>
+
+  <div style="margin-top:56px">
+    <h3 class="disp" style="margin-bottom:6px">Detalle de la implementación</h3>
+    <p class="body-l" style="margin-bottom:18px">Para quien vaya a revisar el montaje a fondo.</p>
+    <details class="ficha"><summary>Arquitectura y puesta en marcha</summary><div class="fbody">
+      <h5>Sobre qué se monta</h5>
+      <p>Usamos la <b style="color:var(--ink)">API oficial de WhatsApp Business (Cloud API)</b> de Meta — no una app no oficial. Eso significa número verificado, sin riesgo de bloqueo y con historial de conversaciones respaldado.</p>
+      <h5>Pasos del montaje</h5>
+      <ul>
+        <li>Cuenta de <code>Meta Business</code> verificada a nombre del negocio.</li>
+        <li>Alta del número en la plataforma. <b style="color:var(--ink)">Importante:</b> el número no puede estar activo en la app de WhatsApp personal; si lo está, primero se libera.</li>
+        <li>Configuración del webhook que recibe los mensajes y dispara las respuestas.</li>
+        <li>Envío de plantillas a aprobación de Meta (24-48h típicamente).</li>
+        <li>Pruebas con números reales antes de abrir al público.</li>
+      </ul>
+      <h5>Sin dominio propio</h5>
+      <p>Se puede arrancar sin dominio: el webhook corre en infraestructura nuestra. Cuando el negocio tenga su dominio, se migra sin perder el historial ni los flujos.</p>
+    </div></details>
+    <details class="ficha"><summary>Plantillas de mensaje</summary><div class="fbody">
+      <p>Meta exige que los mensajes que inicia el negocio usen plantillas aprobadas. Estas son las que dejamos listas:</p>
+      <h5>Bienvenida</h5>
+      <p><i>Hola {{1}} 👋 Gracias por escribir a {{2}}. ¿En qué te ayudamos hoy?</i></p>
+      <h5>Confirmación de pedido o reserva</h5>
+      <p><i>Listo {{1}} ✅ Tu {{2}} quedó confirmado para el {{3}}. Cualquier cambio, escríbenos por aquí.</i></p>
+      <h5>Recordatorio</h5>
+      <p><i>Hola {{1}}, te recordamos tu {{2}} de mañana {{3}}. ¿Todo sigue en pie?</i></p>
+      <h5>Estado del pedido</h5>
+      <p><i>{{1}}, tu pedido {{2}} pasó a estado: {{3}}. Te avisamos cuando avance.</i></p>
+      <p style="margin-top:12px">Las categorías que aplican son <code>utility</code> (avisos de servicio) y <code>marketing</code> (promociones). La categoría afecta el costo por conversación.</p>
+    </div></details>
+    <details class="ficha"><summary>Costos por conversación</summary><div class="fbody">
+      <p>Meta cobra aparte del montaje, por conversación iniciada. Las conversaciones que <b style="color:var(--ink)">inicia el cliente</b> escribiéndote son gratis en la ventana de servicio; se cobran las que inicia el negocio.</p>
+      <div class="scrollx"><table class="tbl">
+        <tr><th>Tipo</th><th>Cuándo aplica</th><th>Costo aprox.</th></tr>
+        <tr><td>Servicio</td><td>El cliente escribe primero</td><td>Sin costo</td></tr>
+        <tr><td>Utilidad</td><td>Confirmaciones, recordatorios, estados</td><td>~$3 COP c/u</td></tr>
+        <tr><td>Marketing</td><td>Promociones y novedades</td><td>~$50 COP c/u</td></tr>
+        <tr><td>Autenticación</td><td>Códigos de verificación</td><td>~$10 COP c/u</td></tr>
+      </table></div>
+      <p style="margin-top:14px">Ejemplo real: un negocio con 400 confirmaciones al mes gasta cerca de <b style="color:var(--ink)">$1.200 COP</b> en costos de Meta. Las tarifas las fija Meta y pueden cambiar; se revisan al montar.</p>
+    </div></details>
+    <details class="ficha"><summary>Instagram y Facebook</summary><div class="fbody">
+      <p>La misma cuenta de Meta Business permite conectar los mensajes directos de Instagram y Facebook al mismo sistema, así todo llega a un solo lugar.</p>
+      <ul>
+        <li>Respuestas automáticas a mensajes directos.</li>
+        <li>Respuesta a comentarios con envío al privado.</li>
+        <li><b style="color:var(--ink)">Límite a tener en cuenta:</b> Instagram exige cuenta profesional vinculada a una página de Facebook.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <div style="margin-top:48px" class="hbtns">
+    <a class="btn gold" data-go="cotizar">Quiero automatizar mi negocio</a>
+    <button class="btn g" data-demo="mundos/automatizacion.html" data-titulo="Chatbot · probar en vivo">Probar el chatbot</button>
+  </div>
+</div></section></div>
+
+</div><!-- /top -->
+
+<footer><div class="wrap">
+  <div class="fg">
+    <div class="fc" style="max-width:262px">
+      <div class="logo" data-go="inicio" style="margin-bottom:11px"><span class="l">L</span><span class="q">Q</span><span class="s">S</span></div>
+      <p style="font-size:.84rem;color:var(--faint);line-height:1.6">Estudio creativo en Medellín. Gente que resuelve: marca, web, automatización, audiovisual y producto.</p>
+    </div>
+    <div class="fc"><h4>Secciones</h4>
+      <a data-go="servicios">Servicios</a><a data-go="muestras">Muestras</a>
+      <a data-go="estudio">Nosotros</a><a data-go="cotizar">Cotizar</a></div>
+    <div class="fc"><h4>Servicios</h4>
+      <a data-demo="mundos/empresas.html" data-titulo="Empresas">Empresas</a>
+      <a data-demo="mundos/express.html" data-titulo="Express">Express</a>
+      <a data-demo="mundos/productora.html" data-titulo="Productora">Productora</a>
+      <a data-demo="mundos/creadores.html" data-titulo="Creadores">Creadores</a></div>
+    <div class="fc"><h4>Herramientas</h4>
+      <a data-go="whatsapp">Automatización</a>
+      <a data-demo="mundos/productora-calculadora.html" data-titulo="Calculadora de rodaje">Calculadora de rodaje</a>
+      <a data-demo="mundos/foma.html" data-titulo="Ropa y merch">Ropa y merch</a></div>
+    <div class="fc"><h4>Contacto</h4>
+      <a href="https://wa.me/573332791710" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="mailto:cdparravargas@gmail.com">Correo</a></div>
+    <div class="fc"><h4>Legal</h4>
+      <a href="legal.html#politica">Política de datos</a>
+      <a href="legal.html#privacidad">Aviso de privacidad</a>
+      <a href="legal.html#terminos">Términos y condiciones</a>
+      <a href="legal.html#derechos">Ejercer mis derechos</a></div>
+  </div>
+  <div class="fb"><span>© <span id="yr"></span> LQS · Medellín</span><span>Hecho en casa, con criterio</span></div>
+</div></footer>
+
+<!-- visor interno -->
+<div id="visor">
+  <div class="vtop"><div class="vt" id="visorT">Muestra</div>
+    <div style="display:flex;gap:8px">
+      <a class="btn g" id="visorAbrir" target="_blank" rel="noopener" style="padding:9px 16px;font-size:.7rem">Abrir aparte</a>
+      <button class="btn p" id="visorX" style="padding:9px 16px;font-size:.7rem">✕ Cerrar</button>
+    </div></div>
+  <div class="vbody">
+    <iframe id="visorF" title="Muestra"></iframe>
+    <div id="visorFall">
+      <h3 class="disp">Esta muestra no cargó aquí dentro</h3>
+      <p>Suele pasar cuando el sitio se abre con doble clic en lugar de servirse por internet, o cuando el navegador bloquea contenido incrustado.</p>
+      <a class="btn gold" target="_blank" rel="noopener">Abrirla en una pestaña nueva</a>
+    </div>
+  </div>
+</div>
+
+<!-- banner de suscripción -->
+<div id="promo">
+  <button class="x" id="promoX" aria-label="Cerrar">✕</button>
+  <div class="pk">Novedades LQS</div>
+  <h4>Entérate primero</h4>
+  <p>Promos, nuevas cápsulas y cupos abiertos. Sin spam — solo cuando hay algo bueno.</p>
+  <form class="row" id="fSus">
+    <input class="inp" type="email" name="email" required placeholder="tucorreo@ejemplo.com">
+    <button class="btn gold" type="submit">Sí</button>
+  </form>
+  <p style="font-size:.7rem;color:var(--faint);margin-top:9px;line-height:1.45">Al suscribirte aceptas nuestra
+  <a href="legal.html#politica" target="_blank" rel="noopener" style="color:var(--gold)">política de datos</a>.</p>
+  <div class="msg" id="mSus" style="margin-top:10px"></div>
+</div>
+
+<!-- modal de acceso -->
+<div class="scrim" id="scrim"></div>
+<div class="modal" id="modal">
+  <button class="x" id="modalX" aria-label="Cerrar">✕</button>
+  <h3 id="mTit">Ingresar</h3>
+  <p class="sub" id="mSub">Entra para seguir tus proyectos con nosotros.</p>
+  <div class="tabs"><button id="tIn" class="on">Ingresar</button><button id="tUp">Crear cuenta</button></div>
+  <form class="form" id="fAuth" style="max-width:none;gap:13px">
+    <div class="fld" id="wNombre" style="display:none"><label>Nombre</label><input class="inp" name="nombre" maxlength="80" placeholder="Tu nombre"></div>
+    <div class="fld" id="wTel" style="display:none"><label>WhatsApp</label><input class="inp" name="telefono" maxlength="30" placeholder="300 000 0000"></div>
+    <div class="fld"><label>Correo</label><input class="inp" type="email" name="email" required placeholder="tucorreo@ejemplo.com"></div>
+    <div class="fld"><label>Contraseña</label><input class="inp" type="password" name="password" required minlength="6" placeholder="Mínimo 6 caracteres"></div>
+    <label id="wLegal" style="display:none;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--dim);cursor:pointer;line-height:1.5">
+      <input type="checkbox" name="acepta" style="margin-top:3px;width:16px;height:16px;accent-color:var(--gold);flex:none">
+      <span>Acepto los <a href="legal.html#terminos" target="_blank" rel="noopener" style="color:var(--gold)">términos</a>
+      y la <a href="legal.html#politica" target="_blank" rel="noopener" style="color:var(--gold)">política de datos</a>.</span>
+    </label>
+    <div class="msg" id="mAuth"></div>
+    <button class="btn gold" type="submit" id="bAuth" style="width:100%">Ingresar</button>
+  </form>
+</div>
+
+<script>
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* ═══ un solo lector de scroll ═══
+   El navegador dispara `scroll` muchas veces por cuadro. Aquí se apunta una
+   sola vez por cuadro de pintado: los suscriptores reciben la posición ya
+   consolidada y nadie escribe fuera del ritmo del compositor. */
+const SUS=[];let scrollPend=false;
+function alScroll(f){SUS.push(f);f(scrollY);}
+addEventListener('scroll',()=>{
+ if(scrollPend)return;scrollPend=true;
+ requestAnimationFrame(()=>{scrollPend=false;const y=scrollY;for(let i=0;i<SUS.length;i++)SUS[i](y);});
+},{passive:true});
+
+document.getElementById('yr').textContent=new Date().getFullYear();
+const fmt=n=>'$'+Number(n||0).toLocaleString('es-CO');
+
+/* ═══ conexión ═══ */
+const SB_URL='https://blzzzklljdvsyudlrvbt.supabase.co';
+const SB_KEY='sb_publishable_VFpQh4QhCcc2pxhBkyGDUA_hjyX8gPA';
+const TKEY='lqs_sesion';
+/* Cliente propio sobre la API REST de Supabase — sin librerías externas */
+const API={
+ tok(){try{return JSON.parse(localStorage.getItem(TKEY)||'null');}catch(e){return null;}},
+ guardar(s){try{s?localStorage.setItem(TKEY,JSON.stringify(s)):localStorage.removeItem(TKEY);}catch(e){}},
+ cab(auth){const t=this.tok();const h={'apikey':SB_KEY,'Content-Type':'application/json'};
+  h['Authorization']='Bearer '+((auth&&t&&t.access_token)?t.access_token:SB_KEY);return h;},
+ async pedir(ruta,op={}){
+  const r=await fetch(SB_URL+ruta,{...op,headers:{...this.cab(true),...(op.headers||{})}});
+  const txt=await r.text();let js=null;try{js=txt?JSON.parse(txt):null;}catch(e){}
+  if(!r.ok)throw new Error((js&&(js.message||js.error_description||js.msg))||('Error '+r.status));
+  return js;},
+ /* datos */
+ async leer(tabla,q=''){return this.pedir('/rest/v1/'+tabla+(q?'?'+q:''));},
+ async crear(tabla,fila){return this.pedir('/rest/v1/'+tabla,{method:'POST',
+   headers:{'Prefer':'return=minimal'},body:JSON.stringify(fila)});},
+ /* sesión */
+ async entrar(email,password){
+  const s=await this.pedir('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
+  this.guardar(s);return s;},
+ async registrar(email,password,data){
+  return this.pedir('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password,data})});},
+ async yo(){const t=this.tok();if(!t||!t.access_token)return null;
+  try{return await this.pedir('/auth/v1/user');}catch(e){this.guardar(null);return null;}},
+ async refrescar(){const t=this.tok();if(!t||!t.refresh_token)return null;
+  try{const s=await this.pedir('/auth/v1/token?grant_type=refresh_token',{method:'POST',
+   body:JSON.stringify({refresh_token:t.refresh_token})});this.guardar(s);return s;}catch(e){this.guardar(null);return null;}},
+ salir(){this.guardar(null);}
+};
+let sb=true; // hay capa de datos disponible
+
+/* ═══ ilustraciones ═══ */
+const ART={
+ estudio:c=>`<svg viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice"><defs>
+  <linearGradient id="a1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".22"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient>
+  <radialGradient id="lp"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".5"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient></defs>
+  <rect width="420" height="300" fill="url(#a1)"/><ellipse cx="300" cy="140" rx="112" ry="90" fill="url(#lp)"/>
+  <path d="M238 92 l56-28 21 25 -52 29z" fill="#1b2136" stroke="${c}" stroke-width="1.4"/><path d="M294 64 l21 25" stroke="${c}" stroke-width="1.4"/>
+  <circle cx="288" cy="114" r="6" fill="#ffe9a8" opacity=".9"/><path d="M262 118 v56 M262 174 h-32" stroke="#3a4260" stroke-width="3" fill="none"/>
+  <rect x="150" y="190" width="230" height="9" rx="3" fill="#39415f"/><rect x="150" y="199" width="230" height="5" fill="#252b44"/>
+  <rect x="184" y="146" width="72" height="44" rx="3" fill="#f2efe8" opacity=".88" transform="rotate(-4 220 168)"/>
+  <path d="M194 162 h48 M194 172 h36 M194 182 h42" stroke="#8e96b5" stroke-width="1.6" transform="rotate(-4 220 168)"/>
+  <g transform="rotate(24 300 172)"><rect x="292" y="140" width="7" height="42" rx="2" fill="${c}"/><path d="M292 182 l3.5 9 3.5-9z" fill="#f2efe8"/></g>
+  <circle cx="342" cy="182" r="11" fill="none" stroke="${c}" stroke-width="1.6"/></svg>`,
+ servicios:c=>`<svg viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice"><defs>
+  <linearGradient id="a2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".2"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>
+  <rect width="420" height="300" fill="url(#a2)"/><g transform="translate(212 142)">
+  <path d="M0-54 L84-14 0 26 -84-14z" fill="#141a2e" stroke="${c}" stroke-width="1.6"/>
+  <path d="M0-54 L84-14 0 2 -84-14z" fill="${c}" opacity=".26"/>
+  <path d="M-84 2 L0 42 84 2" fill="none" stroke="${c}" stroke-width="1.5" opacity=".72"/>
+  <path d="M-84 20 L0 60 84 20" fill="none" stroke="${c}" stroke-width="1.5" opacity=".48"/>
+  <path d="M-84 38 L0 78 84 38" fill="none" stroke="${c}" stroke-width="1.5" opacity=".28"/></g>
+  <g stroke="${c}" stroke-width="1.4" fill="none" opacity=".8"><circle cx="80" cy="68" r="14"/><path d="M73 68h14M80 61v14"/>
+  <rect x="318" y="56" width="28" height="22" rx="4"/><path d="M318 64h28"/></g></svg>`,
+ muestras:c=>`<svg viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice"><defs>
+  <linearGradient id="a4" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${c}" stop-opacity=".2"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>
+  <rect width="420" height="300" fill="url(#a4)"/>
+  <g transform="translate(122 58)"><rect width="104" height="128" rx="4" fill="#0f1426" stroke="${c}" stroke-width="1.6"/>
+  <rect x="10" y="10" width="84" height="108" fill="#161d34"/><circle cx="37" cy="42" r="12" fill="${c}" opacity=".8"/>
+  <path d="M14 104 l27-31 21 21 16-14 19 24z" fill="${c}" opacity=".45"/></g>
+  <g transform="translate(236 92)"><rect width="90" height="90" rx="4" fill="#0f1426" stroke="${c}" stroke-width="1.4" opacity=".9"/>
+  <rect x="9" y="9" width="72" height="72" fill="#161d34"/><path d="M20 64 l17-21 14 16 12-10 13 15z" fill="#f2efe8" opacity=".28"/>
+  <circle cx="30" cy="29" r="8" fill="#f2efe8" opacity=".4"/></g>
+  <rect x="98" y="206" width="252" height="6" rx="3" fill="#2b3350"/>
+  <g stroke="${c}" stroke-width="1.4" fill="none" opacity=".75"><circle cx="352" cy="58" r="12"/><path d="M361 67 l11 11"/></g></svg>`,
+ cotizar:c=>`<svg viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice"><defs>
+  <linearGradient id="a5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".2"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>
+  <rect width="420" height="300" fill="url(#a5)"/>
+  <rect x="128" y="52" width="164" height="196" rx="10" fill="#0f1426" stroke="${c}" stroke-width="1.7"/>
+  <path d="M150 88 h120 M150 110 h96 M150 132 h116 M150 154 h74" stroke="#39415f" stroke-width="3" stroke-linecap="round"/>
+  <rect x="150" y="182" width="76" height="30" rx="8" fill="${c}" opacity=".8"/>
+  <g transform="rotate(-28 316 176)"><rect x="308" y="112" width="15" height="80" rx="3" fill="#c9ccd6"/>
+  <rect x="308" y="112" width="15" height="18" rx="3" fill="${c}"/><path d="M308 192 l7.5 16 7.5-16z" fill="#f2efe8"/></g>
+  <circle cx="88" cy="94" r="17" fill="none" stroke="${c}" stroke-width="1.6" opacity=".8"/><path d="M80 94 l6 6 10-12" stroke="${c}" stroke-width="2" fill="none"/></svg>`,
+ automat:c=>`<svg viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice"><defs>
+  <linearGradient id="a6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".2"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>
+  <rect width="420" height="300" fill="url(#a6)"/>
+  <rect x="154" y="48" width="112" height="196" rx="19" fill="#0d1223" stroke="${c}" stroke-width="1.8"/>
+  <rect x="163" y="66" width="94" height="162" rx="10" fill="#151c31"/>
+  <rect x="172" y="82" width="56" height="21" rx="9" fill="#212a44"/>
+  <rect x="192" y="112" width="56" height="19" rx="9" fill="${c}" opacity=".85"/>
+  <rect x="172" y="140" width="68" height="23" rx="9" fill="#212a44"/>
+  <rect x="188" y="172" width="62" height="17" rx="9" fill="${c}" opacity=".55"/>
+  <g transform="translate(326 94)" stroke="${c}" stroke-width="2" fill="none"><circle r="19"/><circle r="6.5" fill="${c}" fill-opacity=".3"/>
+  <g stroke-linecap="round"><path d="M0-27v8M0 19v8M-27 0h8M19 0h8M-19-19l6 6M13 13l6 6M19-19l-6 6M-13 13l-6 6"/></g></g>
+  <g transform="translate(82 172)" stroke="${c}" stroke-width="1.8" fill="none" opacity=".85"><circle r="14"/><circle r="5" fill="${c}" fill-opacity=".3"/>
+  <g stroke-linecap="round"><path d="M0-21v6M0 15v6M-21 0h6M15 0h6"/></g></g>
+  <path d="M100 164 q22-38 60-50" stroke="${c}" stroke-width="1.4" fill="none" stroke-dasharray="4 5" opacity=".7"/></svg>`,
+ cuenta:c=>`<svg viewBox="0 0 420 300" preserveAspectRatio="xMidYMid slice"><defs>
+  <linearGradient id="a7" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".2"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>
+  <rect width="420" height="300" fill="url(#a7)"/>
+  <rect x="112" y="70" width="196" height="150" rx="12" fill="#0f1426" stroke="${c}" stroke-width="1.7"/>
+  <path d="M112 100 h196" stroke="${c}" stroke-width="1.4" opacity=".55"/>
+  <circle cx="132" cy="85" r="4" fill="${c}"/><circle cx="146" cy="85" r="4" fill="#39415f"/>
+  <rect x="132" y="120" width="120" height="9" rx="4" fill="#39415f"/>
+  <rect x="132" y="140" width="156" height="7" rx="3.5" fill="#232a44"/>
+  <rect x="132" y="140" width="98" height="7" rx="3.5" fill="${c}"/>
+  <rect x="132" y="162" width="86" height="7" rx="3.5" fill="#232a44"/>
+  <rect x="132" y="162" width="42" height="7" rx="3.5" fill="${c}" opacity=".7"/>
+  <rect x="132" y="184" width="140" height="7" rx="3.5" fill="#232a44"/>
+  <circle cx="330" cy="196" r="24" fill="none" stroke="${c}" stroke-width="1.6" opacity=".7"/>
+  <path d="M322 196 l6 6 12-14" stroke="${c}" stroke-width="2.4" fill="none"/></svg>`
+};
+const AREAS=[
+ {k:'servicios',t:'Nuestras áreas',c:'#5b8def',go:'servicios',cls:'wide',d:'Nueve mundos. Entra al que se parezca a lo tuyo y mira cómo trabajamos.'},
+ {k:'automat',t:'Automatización',c:'#3fd0e6',go:'whatsapp',cls:'half',d:'Tu negocio contesta solo, todos los días.'},
+ {k:'muestras',t:'Muestras',c:'#a97bd6',go:'muestras',cls:'half',d:'Pruébalo tú mismo antes de contratar.'},
+ {k:'cotizar',t:'Pedir cotización',c:'#4ade80',go:'cotizar',cls:'half',d:'Cuéntanos tu idea. Respondemos en 48 horas.'},
+ {k:'estudio',t:'Nosotros',c:'#e6c877',go:'estudio',cls:'half',d:'Quiénes somos y cómo trabajamos.'},
+ {k:'cuenta',t:'Mi cuenta',c:'#ff6b6b',go:'cuenta',cls:'half',d:'Mira el avance de tus proyectos.'}
+];
+document.getElementById('grid').innerHTML=AREAS.map(a=>{
+ const attr=a.href?`href="${a.href}"`:`data-go="${a.go}"`;
+ return `<a class="pt rv ${a.cls}" ${attr} style="--pc:${a.c}">
+  <div class="art">${ART[a.k](a.c)}</div><div class="veil"></div>
+  <div class="tp"><h3>${a.t}</h3><p>${a.d}</p>
+  <span class="go">Entrar <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>`;}).join('');
+document.getElementById('proc').innerHTML=[
+ ['01','Diagnóstico','Una conversación de 40 minutos para entender el negocio y a dónde quieres llegar.'],
+ ['02','Propuesta','En 48 horas tienes alcance, precio cerrado y cronograma. Sin letra pequeña.'],
+ ['03','Producción','Trabajamos por entregas parciales: ves avances y ajustas sobre la marcha.'],
+ ['04','Lanzamiento','Publicamos, capacitamos a tu equipo y medimos qué está funcionando.']
+].map(([n,t,d])=>`<div class="card"><div class="un">${n}</div><h3>${t}</h3><p>${d}</p></div>`).join('');
+/* ═══ las áreas y su ficha propia ═══
+   cada una es un enlace real: si el visor interno falla, el href sigue funcionando */
+const FICHAS=[
+ ['Empresas','Marca completa','Identidad, sitio web y atención automática para negocios que necesitan verse serios desde el primer día.','mundos/empresas.html','mundos/empresas-muestras.html','#5b8def','marca'],
+ ['Express','Diseño día a día','Piezas sueltas y combos con precio cerrado, listos en 48–72 horas. Sin reuniones, sin cotización previa.','mundos/express.html','mundos/express-muestras.html','#39c07a','produccion'],
+ ['Productora','Video y foto','Reels, foto de producto y contenido para redes. Incluye calculadora de rodaje con transporte y viáticos.','mundos/productora.html','mundos/productora-muestras.html','#3fc6d6','produccion'],
+ ['Creadores','Marca personal','Identidad de canal, portada, foto de perfil y plantillas editables para publicar sin frenar.','mundos/creadores.html','','#a97bd6','marca'],
+ ['Ropa y merch','foma','Uniformes y merch: diseño aplicado, muestra física antes de producir y entrega en 3–4 semanas.','mundos/foma.html','mundos/marcas-muestras.html','#b6ad98','marca'],
+ ['Automatización','WhatsApp y redes','Tu negocio contesta solo: reservas, pedidos, precios y preguntas frecuentes, todos los días del año.','mundos/automatizacion.html','','#3fd0e6','presencia'],
+ /* ↓ Restaurantes y Hoteles quedan sin página a propósito.
+    Cuando tengas la definitiva, pon la ruta en el 4º campo (ficha) y,
+    si hay demo, en el 5º (muestra). Ejemplo: 'mundos/carta.html'.
+    Mientras estén vacíos la tarjeta se muestra igual, pero sin enlaces. */
+ ['Restaurantes','Carta','Carta digital, pedidos y reservas desde el celular, con la carta siempre al día.','','','#e0614a','presencia'],
+ ['Hoteles','Aloja','Reservas, check-in con QR y llave digital. Plataforma completa para hospedaje.','','','#2fb8a3','presencia'],
+ ['Joyería','Mercury · pronto','Piezas en plata y acero, y regalos corporativos con tu marca grabada. Línea en preparación.','mundos/mercury.html','','#d98aa6','produccion']
+];
+/* quinto campo: el color de la familia. Se usa en el remate del hero;
+   la agrupación por el séptimo campo de FICHAS no cambia. */
+const FAMILIAS=[
+ ['marca','Marca','Cómo te ven','Identidad, piezas y todo lo que hace que un negocio se vea como lo que es.','#5b8def'],
+ ['presencia','Presencia','Que te encuentren y te compren','El sitio, la carta, las reservas y la atención que responde sola.','#3fd0e6'],
+ ['produccion','Producción','Piezas que salen','Diseño día a día, video, foto y objeto físico con tu marca.','#e6c877']];
+/* cada acto es un tramo con su propio universo: la sección hereda el universo,
+   la pieza sólo lee --curva, --u1/2/3. Por eso dos universos no se pueden
+   mezclar dentro de la misma forma. */
+const UNI_ACTO={marca:'pulso',presencia:'hielo',produccion:'brasa'};
+document.getElementById('areas').innerHTML=FAMILIAS.map(([k,tit,gan,des])=>
+ `<div class="tramo" data-universo="${UNI_ACTO[k]||'flujo'}">
+  <div class="acto" data-fam="${k}">
+   <div class="cresta" data-vel=".42" aria-hidden="true"></div>
+   <div class="acto-in">
+    <h3>${tit}</h3><p class="acto-gan">${gan}</p><p class="acto-des">${des}</p>
+   </div></div>`+FICHAS.filter(f=>f[6]===k).map(([t,sub,d,ficha,muestra,c],n)=>
+ /* el trío: dominante, subordinada, acento. Cada panel toma una forma distinta
+    del léxico según su sitio, y el del medio va volteado. */
+ `<div class="area p${n+1}${n===1?' espejo':''}${ficha?'':' pend'}" style="--ac:${c};z-index:${n+1}">
+  <div class="a-txt"><span class="tagd">${sub}</span><h3>${t}</h3><p>${d}</p>
+   <div class="lks">${ficha?
+    `<a class="lk pri" href="${ficha}" data-demo="${ficha}" data-titulo="${t} · ${sub}">Ver ficha</a>
+     ${muestra?`<a class="lk" href="${muestra}" data-demo="${muestra}" data-titulo="${t} · muestra">Probar muestra</a>`:''}
+     <a class="lk" href="${ficha}" target="_blank" rel="noopener" title="Abrir en una pestaña nueva">↗</a>`
+    :`<span class="lk mudo">Ficha en camino</span>
+      <a class="lk" data-go="cotizar">Preguntar por esta área</a>`}
+   </div></div>
+  <div class="a-lado" aria-hidden="true"><span class="ini">${t.charAt(0)}</span></div></div>`).join('')
+ +`<div class="guijarro" data-vel="1.16" aria-hidden="true"
+     style="right:4%;top:18%;width:7vw;height:7vw;max-width:92px;max-height:92px;background:var(--u2);--o:.44"></div>
+   <div class="guijarro" data-vel="1.26" aria-hidden="true"
+     style="left:6%;bottom:12%;width:4.2vw;height:4.2vw;max-width:52px;max-height:52px;background:var(--u1);--o:.58"></div>
+  </div>`).join('');
+/* ═══ remate del hero ═══
+   Tres semillas de contorno irregular — ninguna igual a otra, ninguna un
+   círculo perfecto — y la promesa de cada familia. Quietas: sólo responden a
+   quien las toca, y llevan al tramo del catálogo que les corresponde. */
+const SEM=[
+ ['M32 3c14 2 25 13 26 27 1 15-11 30-26 31C17 60 5 47 5 31 5 15 18 1 32 3Z','M15 42c5-14 16-23 31-25'],
+ ['M32 8c18-1 29 9 29 24 0 16-13 26-30 26C15 58 3 46 4 31 5 17 16 9 32 8Z','M11 28c11-7 24-6 36 4'],
+ ['M32 2c15 0 24 12 25 27 1 16-9 33-25 33S6 46 6 30 17 2 32 2Z','M20 52c-3-16 2-28 15-36']
+];
+document.getElementById('remate').innerHTML=FAMILIAS.map(([k,tit,gan,des,col],i)=>
+ `<button class="fam" type="button" data-fam-go="${k}" style="--ac:${col}">
+   <svg class="sem" viewBox="0 0 64 64" aria-hidden="true">
+    <path class="cuerpo" d="${SEM[i][0]}"/><path class="veta" d="${SEM[i][1]}"/></svg>
+   <span class="tx"><b>${tit}</b><em>${gan}</em></span>
+  </button>`).join('');
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-fam-go]');if(!el)return;
+ const k=el.dataset.famGo;
+ go('servicios');
+ setTimeout(()=>{
+  const d=document.querySelector('#areas [data-fam="'+k+'"]');
+  if(d)d.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+ },RM?0:340);
+});
+document.getElementById('tira').innerHTML=FICHAS.map(([t,sub,d,ficha,m,c])=>ficha
+ ? `<a style="--ac:${c}" href="${ficha}" data-demo="${ficha}" data-titulo="${t} · ${sub}"${t==='Joyería'?' class="soon"':''}>${t}</a>`
+ : `<a style="--ac:${c}" class="soon" data-go="servicios">${t}</a>`).join('');
+
+const DEMOS=[
+ ['Empresas','Marca, web y bot','Crea una identidad en vivo, navega un sitio de prueba y mira el bot atendiendo.','mundos/empresas-muestras.html','#5b8def'],
+ ['Express','Piezas y precios','Mira piezas reales y arma tu pedido: el precio se calcula al instante.','mundos/express-muestras.html','#39c07a'],
+ ['Productora','Rodaje y formatos','Reel de ejemplo, antes/después de foto de producto y la pieza en 4 formatos.','mundos/productora-muestras.html','#3fc6d6'],
+ ['Ropa y merch','Merch y uniformes','Previsualiza tu merch, elige color y aplicación, y cotiza el lote en segundos.','mundos/marcas-muestras.html','#b6ad98'],
+ ['Automatización','Chatbot en vivo','Escríbele al bot y mira cómo toma una reserva o resuelve una duda.','mundos/automatizacion.html','#3fd0e6'],
+ ['Productora','Calculadora de rodaje','Arma tu presupuesto con transporte, viáticos y extras.','mundos/productora-calculadora.html','#e6c877'],
+ ['Empresas','Servicios en detalle','La ficha completa de branding, web y automatización.','mundos/empresas.html','#8fb2f5']
+ /* Restaurantes y Hoteles: cuando tengas la muestra, agrégala con este formato →
+    ['Restaurantes','Menú digital','Cómo queda la carta en el celular.','mundos/carta-muestras.html','#e0614a'], */
+];
+document.getElementById('demos').innerHTML=DEMOS.map(([tag,t,d,u,c])=>
+ `<div class="card" data-demo="${u}" data-titulo="${tag} · ${t}" style="cursor:pointer">
+  <span class="tagd" style="color:${c}">${tag}</span><h3>${t}</h3><p>${d}</p>
+  <div class="un" style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:${c}">Abrir →
+   <a href="${u}" target="_blank" rel="noopener" title="Abrir en una pestaña nueva" onclick="event.stopPropagation()" style="color:inherit;padding:2px 8px;border:1px solid var(--line2);border-radius:999px">↗</a>
+  </div></div>`).join('');
+
+
+/* ═══ los universos ═══
+   cinco mundos incompatibles entre sí. Cada letra habita uno y se muda cada
+   pocos segundos; la regla es que nunca coincidan. Eso es el caos organizado:
+   tres sistemas que no combinan, sostenidos en un solo encuadre.
+
+   Ya no son degradés: cada universo es una escena que se pinta entera, cuadro a
+   cuadro, dentro del recorte de su letra. La letra es la ventana. */
+function azar(n){const s=Math.sin(n*12.9898)*43758.5453;return s-Math.floor(s);}
+
+function uFlujo(x,t,w,h){
+ const g=x.createLinearGradient(0,0,w*.35,h);
+ g.addColorStop(0,'#4a1fb0');g.addColorStop(1,'#120832');
+ x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.globalCompositeOperation='lighter';
+ const R=Math.max(w,h),bl=[[.24,.20,'#8b6bff',.62],[.80,.34,'#00d4ff',.50],[.48,.92,'#ff3d7f',.58]];
+ for(let i=0;i<3;i++){
+  const b=bl[i],cx=(b[0]+Math.sin(t*.42+i*2.1)*.17)*w,cy=(b[1]+Math.cos(t*.35+i*1.4)*.15)*h;
+  const rr=R*b[3]*(.85+.15*Math.sin(t*.6+i));
+  const rg=x.createRadialGradient(cx,cy,0,cx,cy,rr);
+  rg.addColorStop(0,b[2]);rg.addColorStop(1,'rgba(0,0,0,0)');
+  x.globalAlpha=.85;x.fillStyle=rg;x.fillRect(0,0,w,h);
+ }
+ x.globalAlpha=1;x.globalCompositeOperation='source-over';
+}
+function uBrasa(x,t,w,h){
+ const g=x.createLinearGradient(0,h,0,0);
+ g.addColorStop(0,'#ff9440');g.addColorStop(.42,'#c2172f');g.addColorStop(1,'#3a0710');
+ x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.globalCompositeOperation='lighter';
+ const u=Math.min(w,h);
+ for(let i=0;i<30;i++){
+  const sx=azar(i*7.13),sp=.26+azar(i*3.7)*.46,vida=(t*sp+azar(i*11.9))%1;
+  x.globalAlpha=Math.sin(vida*Math.PI)*.8;
+  x.fillStyle=i%3?'#ffd166':'#ff8a3d';
+  x.beginPath();
+  x.arc((sx+Math.sin(t*.9+i)*.05)*w,h*(1.02-vida*1.04),u*(.014+azar(i*5.3)*.022)*(.5+vida),0,6.2832);
+  x.fill();
+ }
+ const rg=x.createRadialGradient(w*.5,h*1.04,0,w*.5,h*1.04,Math.max(w,h)*.85);
+ rg.addColorStop(0,'rgba(255,222,140,'+(.46+.13*Math.sin(t*1.7)).toFixed(3)+')');
+ rg.addColorStop(1,'rgba(0,0,0,0)');
+ x.globalAlpha=1;x.fillStyle=rg;x.fillRect(0,0,w,h);
+ x.globalCompositeOperation='source-over';
+}
+function uTrama(x,t,w,h){
+ const g=x.createLinearGradient(0,0,w,h);
+ g.addColorStop(0,'#12603c');g.addColorStop(1,'#03130b');
+ x.fillStyle=g;x.fillRect(0,0,w,h);
+ const C=Math.max(7,Math.min(w,h)/8),off=(t*C*.5)%C;
+ const cols=Math.ceil(w/C)+2,rows=Math.ceil(h/C)+2;
+ for(let cy=0;cy<rows;cy++)for(let cx=0;cx<cols;cx++){
+  const k=cx*17+cy*31,a=Math.sin(t*1.5+azar(k)*6.283);
+  if(a<.55)continue;
+  x.globalAlpha=(a-.55)/.45*.85;
+  x.fillStyle=azar(k+3)>.6?'#7bf5a8':'#25c977';
+  x.fillRect(cx*C-C,cy*C-C+off,C*.84,C*.84);
+ }
+ x.globalAlpha=1;
+ x.strokeStyle='rgba(123,245,168,.3)';x.lineWidth=Math.max(1,C*.055);x.beginPath();
+ for(let i=-1;i<cols;i++){x.moveTo(i*C,0);x.lineTo(i*C,h);}
+ for(let j=-1;j<rows;j++){const yy=j*C+off;x.moveTo(0,yy);x.lineTo(w,yy);}
+ x.stroke();
+ const sy=((t*.34)%1)*h*1.4-h*.2;
+ const sg=x.createLinearGradient(0,sy-h*.16,0,sy+h*.16);
+ sg.addColorStop(0,'rgba(123,245,168,0)');sg.addColorStop(.5,'rgba(123,245,168,.36)');sg.addColorStop(1,'rgba(123,245,168,0)');
+ x.fillStyle=sg;x.fillRect(0,sy-h*.16,w,h*.32);
+}
+function uHielo(x,t,w,h){
+ const g=x.createLinearGradient(0,0,w*.6,h);
+ g.addColorStop(0,'#c9f2ff');g.addColorStop(.45,'#5b8def');g.addColorStop(1,'#0b1650');
+ x.fillStyle=g;x.fillRect(0,0,w,h);
+ const D=Math.max(w,h)*1.8,paso=Math.max(11,Math.min(w,h)/6.5),off=(t*paso*.55)%(paso*2);
+ x.save();x.translate(w/2,h/2);x.rotate(-1.02);x.translate(-D/2,-D/2);
+ for(let i=-2;i*paso<D+paso*2;i++){
+  x.globalAlpha=i%3===0?.55:(i%2?.2:.34);
+  x.fillStyle=i%3===0?'#ffffff':'#dff6ff';
+  x.fillRect(i*paso+off,0,paso*(i%2?.3:.16),D);
+ }
+ x.restore();x.globalAlpha=1;
+ const sx=((t*.27)%1)*w*1.5-w*.25;
+ const sg=x.createLinearGradient(sx-w*.16,0,sx+w*.16,h);
+ sg.addColorStop(0,'rgba(255,255,255,0)');sg.addColorStop(.5,'rgba(255,255,255,.5)');sg.addColorStop(1,'rgba(255,255,255,0)');
+ x.fillStyle=sg;x.fillRect(0,0,w,h);
+}
+function uPulso(x,t,w,h){
+ x.fillStyle='#3a2058';x.fillRect(0,0,w,h);
+ const cx=w*.44,cy=h*.5,R=Math.hypot(w,h)*.72,N=9,banda=R/N;
+ x.lineWidth=banda*.42;
+ for(let i=0;i<N;i++){
+  const r=(((i/N)+t*.11)%1)*R;
+  x.globalAlpha=.26+.5*(1-r/R);
+  x.strokeStyle=i%2?'#e6c877':'#d98aa6';
+  x.beginPath();x.arc(cx,cy,r+1,0,6.2832);x.stroke();
+ }
+ x.globalAlpha=1;
+ const ang=t*.85;
+ const wg=x.createLinearGradient(cx,cy,cx+Math.cos(ang)*R,cy+Math.sin(ang)*R);
+ wg.addColorStop(0,'rgba(255,233,168,.6)');wg.addColorStop(1,'rgba(139,92,246,0)');
+ x.fillStyle=wg;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,R,ang-.55,ang+.05);x.closePath();x.fill();
+ const rg=x.createRadialGradient(cx,cy,0,cx,cy,R*.42);
+ rg.addColorStop(0,'rgba(255,233,168,.8)');rg.addColorStop(1,'rgba(255,233,168,0)');
+ x.fillStyle=rg;x.fillRect(0,0,w,h);
+}
+const UNIV=[
+ {n:'flujo', c:['#7c5cff','#00d4ff','#ff3d7f'], p:uFlujo},
+ {n:'brasa', c:['#ff8a3d','#ffd166','#e0264a'], p:uBrasa},
+ {n:'trama', c:['#4ade80','#2fb8a3','#0f5132'], p:uTrama},
+ {n:'hielo', c:['#dff6ff','#5b8def','#1b3fb8'], p:uHielo},
+ {n:'pulso', c:['#e6c877','#d98aa6','#8b5cf6'], p:uPulso}
+];
+let mundoDe=[0,2,3];               /* qué universo lleva cada letra ahora */
+
+/* ═══ las tres letras ═══
+   Trazo monolineal propio de 34 unidades sobre una altura de mayúscula de 140:
+   ninguna fuente interviene. La L lleva su terminal cortado en diagonal, la Q
+   sale de la caja con la cola y la S se traza con seis curvas. */
+(function(){
+ const cv=document.getElementById('lqsCv');
+ if(!cv||!cv.getContext)return;
+ const cx=cv.getContext('2d');
+ if(!cx)return;
+
+ const DW=433,DH=200,GRUESO=34,PAD=22,BISEL=2.4,CAPAS=12,EXX=.9,EXY=1.05;
+ /* el recorte va a resolución plena; el universo se pinta a 0,72 y se estira.
+    Son escenas blandas: nadie nota el estirón y el relleno cae a la mitad. */
+ const Q=.72;
+ /* apretadas como un logotipo, no separadas como tres objetos sueltos */
+ const GL=[
+  {k:'L',x:14, y:14,w:118,h:140,rot:0,   hondo:.62},
+  {k:'Q',x:143,y:20,w:150,h:161,rot:-3.4,hondo:1},
+  {k:'S',x:301,y:10,w:120,h:140,rot:2.2, hondo:.8}
+ ];
+ /* ═══ el pulso propio de cada letra ═══
+    Tres relojes que no comparten múltiplo: periodos primos entre sí y fases
+    distintas, así que las tres nunca vuelven a coincidir dentro de una visita.
+    `res` respira (escala), `fx`/`fy` derivan (±3px) y `lerp` decide cuánto
+    tarda la letra en obedecer al puntero: la Q pesa y llega tarde, la S es la
+    primera en moverse. El paralaje es de cada letra, no del lienzo entero. */
+ const VIDA=[
+  {res:5.9,fx:7.4,fy:6.1,f0:0,  f1:2.3,f2:4.1,lerp:.085},
+  {res:8.3,fx:9.7,fy:8.9,f0:1.7,f1:5.2,f2:0.6,lerp:.040},
+  {res:4.7,fx:5.3,fy:4.1,f0:3.4,f1:1.1,f2:5.7,lerp:.130}
+ ];
+ GL.forEach((g,i)=>{g.ua=mundoDe[i];g.ub=mundoDe[i];g.mix=1;g.t=0;
+  g.v=VIDA[i];g.mx=0;g.my=0;g.sp=0;g.pulso=0;});
+
+ function lienzo(w,h){const c=document.createElement('canvas');c.width=Math.max(1,w|0);c.height=Math.max(1,h|0);return c;}
+ function rgba(hex,a){
+  const n=parseInt(hex.slice(1),16);
+  return 'rgba('+(n>>16&255)+','+(n>>8&255)+','+(n&255)+','+a+')';
+ }
+ /* el trazo de cada letra, en unidades de diseño escaladas por s */
+ function trazo(x,k,s){
+  x.lineWidth=GRUESO*s;x.lineJoin='miter';x.lineCap='butt';x.miterLimit=6;
+  if(k==='L'){
+   x.beginPath();x.moveTo(17*s,0);x.lineTo(17*s,123*s);x.lineTo(100*s,123*s);x.stroke();
+  }else if(k==='Q'){
+   x.beginPath();x.arc(70*s,70*s,53*s,0,6.2832);x.stroke();
+   x.beginPath();x.moveTo(92*s,92*s);x.lineTo(136*s,150*s);x.stroke();
+  }else{
+   x.beginPath();x.moveTo(98*s,42*s);
+   x.bezierCurveTo(98*s,24*s,82*s,17*s,60*s,17*s);
+   x.bezierCurveTo(37*s,17*s,19*s,27*s,19*s,45*s);
+   x.bezierCurveTo(19*s,61*s,33*s,67*s,60*s,70*s);
+   x.bezierCurveTo(87*s,73*s,101*s,80*s,101*s,96*s);
+   x.bezierCurveTo(101*s,114*s,83*s,123*s,60*s,123*s);
+   x.bezierCurveTo(38*s,123*s,21*s,116*s,21*s,98*s);
+   x.stroke();
+  }
+  if(k==='L'){                     /* el corte diagonal del pie: eso es diseño, no fuente */
+   x.globalCompositeOperation='destination-out';
+   x.beginPath();x.moveTo(93*s,142*s);x.lineTo(116*s,104*s);x.lineTo(162*s,104*s);x.lineTo(162*s,152*s);x.closePath();x.fill();
+   x.globalCompositeOperation='source-over';
+  }
+ }
+ function tallar(x,g,s,color){
+  x.save();
+  x.translate(PAD*s,PAD*s);
+  if(g.rot){x.translate(g.w*s/2,g.h*s/2);x.rotate(g.rot*Math.PI/180);x.translate(-g.w*s/2,-g.h*s/2);}
+  x.strokeStyle=color;x.fillStyle=color;
+  trazo(x,g.k,s);
+  x.restore();
+ }
+
+ let S=1,W=0,H=0,calidad=1,listo=false;
+ const MK=[],BEV=[],EX=[],SC=[],UB=[];
+ let TMP=null;
+
+ function construir(){
+  const r=cv.getBoundingClientRect();
+  if(!r.width||!r.height)return false;
+  const dpr=Math.min(window.devicePixelRatio||1,r.width>640?1.4:2)*calidad;
+  W=Math.round(r.width*dpr);H=Math.round(r.height*dpr);
+  cv.width=W;cv.height=H;S=W/DW;
+  const claro=document.documentElement.getAttribute('data-tema')==='claro';
+  let maxW=0,maxH=0;
+  for(let i=0;i<3;i++){
+   const g=GL[i],bw=Math.ceil((g.w+PAD*2)*S),bh=Math.ceil((g.h+PAD*2)*S);
+   /* 1· la silueta, que hace de recorte */
+   const mk=lienzo(bw,bh);tallar(mk.getContext('2d'),g,S,'#fff');
+   MK[i]=mk;SC[i]=lienzo(bw,bh);
+   UB[i]=lienzo(Math.ceil(bw*Q),Math.ceil(bh*Q));
+   maxW=Math.max(maxW,UB[i].width);maxH=Math.max(maxH,UB[i].height);
+   /* 2· el bisel: banda clara arriba-izquierda, banda oscura abajo-derecha */
+   const bev=lienzo(bw,bh),bc=bev.getContext('2d');
+   const banda=(dx,dy,col)=>{
+    const c=lienzo(bw,bh),k=c.getContext('2d');
+    k.drawImage(mk,0,0);
+    k.globalCompositeOperation='destination-out';k.drawImage(mk,dx,dy);
+    k.globalCompositeOperation='source-in';k.fillStyle=col;k.fillRect(0,0,bw,bh);
+    return c;
+   };
+   const B=BISEL*S;
+   bc.drawImage(banda(B,B,'rgba(255,255,255,.4)'),0,0);
+   bc.drawImage(banda(-B,-B,claro?'rgba(30,24,14,.34)':'rgba(3,4,12,.4)'),0,0);
+   BEV[i]=bev;
+   /* 3· la extrusión: catorce copias apiladas hacia el fondo, más su sombra */
+   const ex=lienzo(bw,bh),ec=ex.getContext('2d');
+   const pila=lienzo(bw,bh),pc=pila.getContext('2d');
+   for(let k=CAPAS;k>=1;k--)pc.drawImage(mk,k*EXX*S,k*EXY*S);
+   pc.globalCompositeOperation='destination-out';pc.drawImage(mk,0,0);
+   pc.globalCompositeOperation='source-in';
+   const pg=pc.createLinearGradient(0,0,bw*.4,bh);
+   if(claro){pg.addColorStop(0,'#6b6252');pg.addColorStop(1,'#241f18');}
+   else{pg.addColorStop(0,'#2b2e52');pg.addColorStop(1,'#05060f');}
+   pc.fillStyle=pg;pc.fillRect(0,0,bw,bh);
+   if(typeof ec.filter==='string'){
+    ec.filter='blur('+(6*S).toFixed(2)+'px)';
+    ec.globalAlpha=claro?.4:.55;
+    ec.drawImage(mk,9*S,13*S);
+    ec.filter='none';ec.globalAlpha=1;
+    ec.globalCompositeOperation='source-in';
+    ec.fillStyle=claro?'rgba(40,34,24,1)':'rgba(0,0,0,1)';ec.fillRect(0,0,bw,bh);
+    ec.globalCompositeOperation='source-over';
+   }
+   ec.drawImage(pila,0,0);
+   EX[i]=ex;
+  }
+  TMP=lienzo(maxW,maxH);
+  listo=true;
+  return true;
+ }
+
+ /* puntero y scroll: sólo se guarda el destino. Cada letra lo persigue a su
+    propio ritmo dentro del bucle, y por eso no se lee como un lienzo que se
+    inclina sino como tres cuerpos que reaccionan. */
+ let dmx=0,dmy=0,dsp=0;
+ if(!RM){
+  addEventListener('pointermove',e=>{
+   const r=cv.getBoundingClientRect();
+   if(!r.width)return;
+   dmx=Math.max(-1,Math.min(1,((e.clientX-r.left)/r.width-.5)*2));
+   dmy=Math.max(-1,Math.min(1,((e.clientY-r.top)/r.height-.5)*2));
+  },{passive:true});
+  alScroll(y=>{dsp=Math.min(1,Math.max(0,y/Math.max(1,innerHeight)));});
+ }
+ const TAU=6.2831853;
+
+ function pinta(x,u,t,w,h){UNIV[u].p(x,t,w,h);}
+
+ function cuadro(t,ap){
+  cx.setTransform(1,0,0,1,0,0);
+  cx.globalAlpha=1;cx.globalCompositeOperation='source-over';
+  cx.clearRect(0,0,W,H);
+  for(let i=0;i<3;i++){
+   const g=GL[i],sc=SC[i],bw=sc.width,bh=sc.height;
+   const X=(g.x-PAD)*S,Y=(g.y-PAD)*S;
+   const p=Math.max(0,Math.min(1,(t-i*.11-.12)/.95));
+   const ent=1-Math.pow(1-p,3);
+   const q=p-1,back=p>=1?1:1+2.7*q*q*q+1.7*q*q;
+   /* respiración: el cuerpo del glifo también vive. Casi no se ve — y sin
+      ella la letra se lee como una calcomanía pegada sobre el universo. */
+   const v=g.v;
+   const resp=RM?0:.5+.5*Math.sin(t*TAU/v.res+v.f0);
+   const drx=RM?0:Math.sin(t*TAU/v.fx+v.f1)*3;
+   const dry=RM?0:Math.sin(t*TAU/v.fy+v.f2)*3;
+   /* y al mudarse de universo da un tirón mínimo, que se apaga solo */
+   const esc=(.84+.16*back)*(1+.012*resp+.006*g.pulso);
+   /* la letra se mueve poco; el universo de adentro, al revés y más */
+   const ox=(g.mx*7*g.hondo+drx)*S,oy=((1-ent)*46+dry+g.my*5*g.hondo-g.sp*26*g.hondo)*S;
+   const ux=(-g.mx*15*g.hondo-g.sp*8)*S,uy=(-g.my*11*g.hondo)*S;
+   const tl=t+i*3.1;               /* cada letra vive su universo en otra fase */
+
+   /* el universo, a resolución reducida: se pinta desbordado para que el
+      desplazamiento del paralaje nunca deje esquina vacía */
+   const ub=UB[i],uw=ub.width,uh=ub.height,M=uw*.05;
+   const u2=ub.getContext('2d');
+   u2.setTransform(1,0,0,1,0,0);u2.globalAlpha=1;u2.globalCompositeOperation='source-over';
+   u2.save();u2.translate(-M+ux*Q,-M+uy*Q);pinta(u2,g.ua,tl,uw+M*2,uh+M*2);u2.restore();
+   if(g.mix<1){
+    const t2=TMP.getContext('2d');
+    t2.setTransform(1,0,0,1,0,0);t2.globalAlpha=1;t2.globalCompositeOperation='source-over';
+    t2.save();t2.translate(-M+ux*Q,-M+uy*Q);pinta(t2,g.ub,tl,uw+M*2,uh+M*2);t2.restore();
+    u2.globalAlpha=g.mix;u2.drawImage(TMP,0,0,uw,uh,0,0,uw,uh);u2.globalAlpha=1;
+   }
+   /* se estira sobre el recorte: la letra es la ventana */
+   const s2=sc.getContext('2d');
+   s2.setTransform(1,0,0,1,0,0);s2.globalAlpha=1;s2.globalCompositeOperation='source-over';
+   s2.drawImage(ub,0,0,uw,uh,0,0,bw,bh);
+   s2.globalCompositeOperation='destination-in';s2.drawImage(MK[i],0,0);
+   s2.globalCompositeOperation='source-over';
+
+   const cxx=X+bw/2,cyy=Y+bh*.62;
+   cx.save();
+   cx.translate(cxx,cyy);cx.scale(esc,esc);cx.translate(-cxx,-cyy);
+   cx.globalAlpha=ent*ap;
+   cx.drawImage(EX[i],X+ox,Y+oy);
+   cx.shadowColor=rgba(UNIV[g.ub].c[0],.55);cx.shadowBlur=Math.min(38,13*S);
+   cx.drawImage(sc,X+ox,Y+oy);
+   cx.shadowBlur=0;cx.shadowColor='rgba(0,0,0,0)';
+   cx.drawImage(BEV[i],X+ox,Y+oy);
+   cx.restore();
+  }
+ }
+
+ /* la mudanza: una letra a la vez, y nunca a un universo ya ocupado.
+    El intervalo es distinto cada vez (2,8–5,2 s): un metrónomo se oye, una
+    respiración no. */
+ let turno=0,prox=0;
+ function esperaMudanza(){return 2.8+Math.random()*2.4;}
+ function mudar(){
+  const i=turno%3;turno++;
+  const libres=UNIV.map((_,k)=>k).filter(k=>mundoDe.indexOf(k)<0);
+  if(!libres.length)return;
+  const u=libres[Math.floor(Math.random()*libres.length)];
+  GL[i].ua=GL[i].ub;GL[i].ub=u;GL[i].mix=0;GL[i].pulso=1;mundoDe[i]=u;
+ }
+
+ let visible=true,t0=0,prev=0,acum=0,cont=0,bajado=false,corriendo=false;
+
+ function bucle(now){
+  if(!corriendo)return;
+  requestAnimationFrame(bucle);
+  if(!visible||document.hidden||!listo)return;
+  if(!t0)t0=prev=now;
+  const dt=Math.min(50,now-prev);prev=now;
+  const t=(now-t0)/1000;
+  /* cada letra persigue el puntero con su propio retardo, normalizado por dt
+     para que un cuadro perdido no la teletransporte */
+  for(let i=0;i<3;i++){
+   const g=GL[i],k=1-Math.pow(1-g.v.lerp,dt/16.667);
+   g.mx+=(dmx-g.mx)*k;g.my+=(dmy-g.my)*k;g.sp+=(dsp-g.sp)*k;
+   if(g.pulso>0)g.pulso=g.pulso<.002?0:g.pulso*Math.pow(.93,dt/16.667);
+  }
+  if(t>=prox){mudar();prox=t+esperaMudanza();}
+  /* al cerrar la mezcla el destino pasa a ser el de base: si no, la letra se
+     devolvía a su universo anterior y dos letras podían coincidir */
+  for(let i=0;i<3;i++)if(GL[i].mix<1){
+   GL[i].mix=Math.min(1,GL[i].mix+dt/1100);
+   if(GL[i].mix>=1)GL[i].ua=GL[i].ub;
+  }
+  cuadro(t,1);
+  acum+=dt;cont++;
+  if(cont===70){
+   if(acum/70>22&&!bajado){bajado=true;calidad=.7;construir();}
+   acum=0;cont=0;
+  }
+ }
+
+ function arranca(){
+  if(!construir())return;
+  if(RM){cuadro(3.4,1);return;}
+  prox=esperaMudanza();
+  corriendo=true;requestAnimationFrame(bucle);
+ }
+
+ let ro;
+ const rehacer=()=>{if(construir()&&RM)cuadro(3.4,1);};
+ if('ResizeObserver'in window){
+  let w0=0,h0=0;
+  ro=new ResizeObserver(es=>{
+   const r=es[0].contentRect;
+   if(Math.abs(r.width-w0)<1&&Math.abs(r.height-h0)<1)return;
+   w0=r.width;h0=r.height;rehacer();
+  });
+  ro.observe(cv);
+ }else addEventListener('resize',rehacer);
+ if('IntersectionObserver'in window)
+  new IntersectionObserver(es=>{visible=es[0].isIntersecting;},{threshold:0}).observe(cv);
+ new MutationObserver(rehacer).observe(document.documentElement,{attributes:true,attributeFilter:['data-tema']});
+
+ arranca();
+})();
+
+/* ═══ el clima de cada sección ═══
+   el fondo toma los colores del sitio donde estás. No es decoración:
+   es cómo sabes que cambiaste de mundo sin que nadie te lo diga. */
+const CLIMA={
+ inicio:['#7c5cff','#00d4ff','#ff3d7f'], servicios:['#5b8def','#39c07a','#3fc6d6'],
+ muestras:['#a97bd6','#e6c877','#5b8def'], whatsapp:['#3fd0e6','#4ade80','#2fb8a3'],
+ estudio:['#e6c877','#d98aa6','#7c5cff'], cotizar:['#4ade80','#3fd0e6','#e6c877'],
+ cuenta:['#ff6b6b','#e6c877','#5b8def']
+};
+/* el clima también trae temperamento de forma: cada vista hereda el universo
+   que le corresponde, y con él cuánto se curvan sus piezas.
+   flujo 1,00 · brasa 0,82 · pulso 0,64 · trama 0,34 · hielo 0,20 */
+const UNIVISTA={
+ inicio:'flujo', servicios:'trama', muestras:'pulso', whatsapp:'hielo',
+ estudio:'flujo', cotizar:'trama', cuenta:'hielo'
+};
+const MASAS=[].slice.call(document.querySelectorAll('.atmos b'));
+let capaClima=1;
+function clima(v){
+ const c=CLIMA[v]||CLIMA.inicio,r=document.documentElement;
+ r.style.setProperty('--c1',c[0]);r.style.setProperty('--c2',c[1]);r.style.setProperty('--c3',c[2]);
+ /* --curva y los tres colores del universo se interpolan (ver @property):
+    una sección se convierte en la siguiente, no se cambia de golpe */
+ r.setAttribute('data-universo',UNIVISTA[v]||'flujo');
+ /* el color no se transiciona: se cruzan dos capas por opacidad */
+ capaClima^=1;
+ MASAS.forEach((b,i)=>{
+  const entra=b.children[capaClima],sale=b.children[capaClima^1];
+  if(!entra)return;
+  entra.style.background=c[i];entra.classList.add('on');
+  if(sale)sale.classList.remove('on');
+ });
+}
+clima('inicio');
+
+/* ═══ luz ═══ */
+const TEMAKEY='lqs_tema';
+function tema(t,guardar){
+ document.documentElement.setAttribute('data-tema',t);
+ document.querySelector('meta[name=theme-color]').setAttribute('content',t==='claro'?'#efece4':'#06070f');
+ if(guardar)try{localStorage.setItem(TEMAKEY,t);}catch(e){}
+}
+tema('oscuro',false);
+try{const g=localStorage.getItem(TEMAKEY);if(g)tema(g,false);}catch(e){}
+document.addEventListener('click',e=>{
+ if(!e.target.closest('.luz'))return;
+ tema(document.documentElement.getAttribute('data-tema')==='claro'?'oscuro':'claro',true);
+});
+
+/* ═══ router ═══ */
+const VIEWS=['inicio','estudio','servicios','muestras','whatsapp','cotizar','cuenta'];
+function go(v,push=true){
+ // #precios entra a servicios con la lista ya desplegada
+ const directo=(v==='precios');if(directo)v='servicios';
+ if(!VIEWS.includes(v))v='inicio';
+ if(v==='cuenta'&&!sesion){abrirAuth();return;}
+ VIEWS.forEach(x=>document.getElementById('v-'+x).classList.toggle('on',x===v));
+ document.querySelectorAll('#nl a[data-go]').forEach(a=>a.classList.toggle('on',a.dataset.go===v));
+ document.body.classList.remove('menu');
+ if(push&&location.hash!=='#'+v)history.pushState({},'','#'+v);
+ window.scrollTo({top:0,behavior:RM?'auto':'smooth'});
+ armar();clima(v);
+ if(v==='servicios'){cargarPaquetes();verPrecios(directo?true:false,!directo);}
+ if(v==='whatsapp')animarWA();
+ if(v==='cuenta')cargarPortal();
+}
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-go]');if(!el)return;
+ e.preventDefault();go(el.dataset.go);
+});
+addEventListener('popstate',()=>go((location.hash||'#inicio').slice(1),false));
+
+/* ═══ catálogo ═══ */
+let UNIS=[],PAKS=[],uniSel='todos';
+/* respaldo por si la base no responde: el sitio nunca queda vacío */
+const RESPALDO_U=[
+ {id:'empresas',nombre:'Empresas',categoria:'Empresas',color:'#5b8def',orden:1},
+ {id:'express',nombre:'Express',categoria:'Express',color:'#39c07a',orden:2},
+ {id:'productora',nombre:'Productora',categoria:'Productora',color:'#3fc6d6',orden:3},
+ {id:'creadores',nombre:'Creadores',categoria:'Creadores',color:'#a97bd6',orden:4},
+ {id:'carta',nombre:'Carta',categoria:'Restaurantes',color:'#e0614a',orden:5},
+ {id:'aloja',nombre:'Aloja',categoria:'Hoteles',color:'#2fb8a3',orden:6},
+ {id:'foma',nombre:'Ropa y merch',categoria:'Ropa y merch',color:'#b6ad98',orden:7},
+ {id:'mercury',nombre:'Joyería',categoria:'Joyería',color:'#d98aa6',orden:8,proximamente:true}];
+const RESPALDO_P=[
+ {id:'r1',universo_id:'express',nombre:'Pieza suelta',descripcion:'Necesitas una sola cosa, bien hecha.',precio_cop:45000,unidad:'desde · 48-72h',incluye:['1 pieza a elección','2 rondas de ajustes','Archivos en alta']},
+ {id:'r2',universo_id:'express',nombre:'Combo Emprendedor',descripcion:'Arrancas y necesitas lo básico ya.',precio_cop:390000,unidad:'pago único',incluye:['Logo básico','Paleta y tipografías','6 posts','Tarjeta personal']},
+ {id:'r3',universo_id:'creadores',nombre:'Kit Arranque',descripcion:'Empiezas y necesitas verte profesional.',precio_cop:450000,unidad:'pago único',incluye:['Identidad de canal','Foto de perfil y banners','10 plantillas editables']},
+ {id:'r4',universo_id:'productora',nombre:'Foto Producto',descripcion:'Tienes productos o carta que mostrar.',precio_cop:320000,unidad:'20 fotos',incluye:['Hasta 20 fotos editadas','Retoque incluido','Formatos web y redes']},
+ {id:'r5',universo_id:'empresas',nombre:'Identidad Esencial',descripcion:'Empresas que necesitan verse serias ya.',precio_cop:890000,unidad:'pago único',incluye:['Logo (3 propuestas)','Paleta y tipografías','Mini manual de marca','Papelería digital']},
+ {id:'r6',universo_id:'empresas',nombre:'Despegue Total',descripcion:'Marca, web y atención resueltas de una.',precio_cop:3900000,unidad:'pago único',incluye:['Identidad Esencial','Presencia Digital','Automatización de WhatsApp','3 meses de soporte']},
+ {id:'r8',universo_id:'foma',nombre:'Merch de Marca',descripcion:'Ropa que la gente sí usa.',precio_cop:46000,unidad:'por unidad · mín. 20',incluye:['Diseño aplicado','Muestra física previa','Entrega 3-4 semanas']}];
+async function cargarCatalogo(){
+ try{
+  const [u,p]=await Promise.all([
+   API.leer('universos','select=*&activo=eq.true&order=orden'),
+   API.leer('paquetes','select=*&activo=eq.true&order=precio_cop')]);
+  UNIS=(u&&u.length)?u:RESPALDO_U; PAKS=(p&&p.length)?p:RESPALDO_P;
+ }catch(e){ UNIS=RESPALDO_U; PAKS=RESPALDO_P; }
+ const sel=document.getElementById('solUni');
+ sel.innerHTML='<option value="">No estoy seguro</option>'+UNIS.filter(x=>!x.proximamente).map(x=>`<option value="${x.id}">${x.categoria}</option>`).join('');
+ document.getElementById('uniChips').innerHTML=
+  `<button class="btn g chip on" data-u="todos" style="padding:9px 16px;font-size:.72rem">Todos</button>`+
+  UNIS.map(x=>`<button class="btn g chip" data-u="${x.id}" style="padding:9px 16px;font-size:.72rem${x.proximamente?';opacity:.55':''}">${x.categoria}${x.proximamente?' · pronto':''}</button>`).join('');
+ document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{
+  uniSel=b.dataset.u;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.chip').forEach(x=>x.style.borderColor=x===b?'var(--gold)':'');
+  document.querySelectorAll('.chip').forEach(x=>x.style.color=x===b?'var(--gold)':'');
+  cargarPaquetes();});
+}
+function cargarPaquetes(){
+ const box=document.getElementById('paks');
+ const lista=uniSel==='todos'?PAKS:PAKS.filter(p=>p.universo_id===uniSel);
+ if(!lista.length){const u=UNIS.find(x=>x.id===uniSel)||{};
+  box.innerHTML=`<div class="empty"><h3 class="disp" style="margin-bottom:8px">${u.proximamente?u.categoria+' viene en camino':'Aún no hay paquetes aquí'}</h3>
+   <p style="margin-bottom:18px">${u.proximamente?'Estamos preparando esta línea. Déjanos tus datos y eres de los primeros en saber.':'Escríbenos y lo armamos a tu medida.'}</p>
+   <button class="btn gold" data-go="cotizar">Escribirnos</button></div>`;return;}
+ box.innerHTML=lista.map(p=>{
+  const u=UNIS.find(x=>x.id===p.universo_id)||{};
+  const inc=Array.isArray(p.incluye)?p.incluye:[];
+  return `<div class="card"><span class="tagd" style="color:${u.color||'#e6c877'}">${u.categoria||u.nombre||''}</span>
+   <h3>${p.nombre}</h3><p>${p.descripcion||''}</p>
+   <div class="pz">${fmt(p.precio_cop)}</div><div class="un">${p.unidad}</div>
+   <ul>${inc.map(i=>`<li>${i}</li>`).join('')}</ul>
+   <button class="btn g" style="width:100%;margin-top:16px" data-pak="${p.id}">Cotizar este paquete</button></div>`;}).join('');
+ box.querySelectorAll('[data-pak]').forEach(b=>b.onclick=()=>{
+  const p=PAKS.find(x=>x.id===b.dataset.pak);
+  go('cotizar');
+  setTimeout(()=>{const f=document.getElementById('fSol');
+   f.universo_id.value=p.universo_id;
+   f.detalle.value=`Me interesa el paquete "${p.nombre}" (${fmt(p.precio_cop)} · ${p.unidad}).\n\n`;
+   f.detalle.focus();},420);});
+}
+
+/* la lista de precios se despliega solo si la piden */
+function verPrecios(abrir,sinScroll){
+ const box=document.getElementById('precios'),b=document.getElementById('btnPrecios');
+ box.classList.toggle('on',abrir);b.classList.toggle('abierto',abrir);
+ b.firstChild.nodeValue=abrir?'Ocultar precios ':'Ver todos los servicios ';
+ if(!abrir)return;
+ cargarPaquetes();
+ if(sinScroll)return;
+ setTimeout(()=>document.getElementById('todo').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'}),RM?0:320);
+}
+document.getElementById('btnPrecios').onclick=()=>
+ verPrecios(!document.getElementById('precios').classList.contains('on'));
+
+/* ═══ sesión ═══ */
+let sesion=null,perfil=null,modo='in';
+function pintarSesion(){
+ const b=document.getElementById('authBtn');
+ if(sesion){b.textContent='Mi cuenta';b.classList.add('gold');b.onclick=()=>go('cuenta');}
+ else{b.textContent='Ingresar';b.classList.remove('gold');b.onclick=abrirAuth;}
+}
+function abrirAuth(){document.getElementById('scrim').classList.add('on');document.getElementById('modal').classList.add('on');}
+function cerrarAuth(){document.getElementById('scrim').classList.remove('on');document.getElementById('modal').classList.remove('on');}
+document.getElementById('scrim').onclick=cerrarAuth;
+document.getElementById('modalX').onclick=cerrarAuth;
+function setModo(m){
+ modo=m;
+ document.getElementById('tIn').classList.toggle('on',m==='in');
+ document.getElementById('tUp').classList.toggle('on',m==='up');
+ document.getElementById('wNombre').style.display=m==='up'?'block':'none';
+ document.getElementById('wTel').style.display=m==='up'?'block':'none';
+ const wl=document.getElementById('wLegal');wl.style.display=m==='up'?'flex':'none';
+ wl.querySelector('input').required=(m==='up');
+ document.getElementById('mTit').textContent=m==='in'?'Ingresar':'Crear cuenta';
+ document.getElementById('mSub').textContent=m==='in'?'Entra para seguir tus proyectos con nosotros.':'Crea tu cuenta y sigue el avance de todo lo que hagamos juntos.';
+ document.getElementById('bAuth').textContent=m==='in'?'Ingresar':'Crear mi cuenta';
+}
+document.getElementById('tIn').onclick=()=>setModo('in');
+document.getElementById('tUp').onclick=()=>setModo('up');
+function aviso(id,txt,ok){const el=document.getElementById(id);el.textContent=txt;el.className='msg on '+(ok?'ok':'er');}
+document.getElementById('fAuth').onsubmit=async e=>{
+ e.preventDefault();
+ const f=e.target,b=document.getElementById('bAuth');
+ b.disabled=true;b.innerHTML='<span class="load"></span>';
+ try{
+  if(modo==='up'){
+   await API.registrar(f.email.value.trim(),f.password.value,
+     {nombre:f.nombre.value.trim(),telefono:f.telefono.value.trim()});
+   aviso('mAuth','¡Listo! Revisa tu correo para confirmar la cuenta y luego ingresa.',true);
+   setTimeout(()=>setModo('in'),1800);
+  }else{
+   await API.entrar(f.email.value.trim(),f.password.value);
+   sesion=await API.yo(); pintarSesion();
+   aviso('mAuth','¡Bienvenido de vuelta!',true);
+   setTimeout(()=>{cerrarAuth();go('cuenta');},600);
+  }
+ }catch(err){
+  const m=(err.message||'').toLowerCase();
+  aviso('mAuth', m.includes('invalid')?'Correo o contraseña incorrectos.'
+   : m.includes('already')?'Ese correo ya tiene cuenta. Prueba ingresando.'
+   : m.includes('confirm')?'Confirma tu correo antes de ingresar.'
+   : 'No se pudo completar: '+(err.message||'error'),false);
+ }finally{b.disabled=false;b.textContent=modo==='in'?'Ingresar':'Crear mi cuenta';}
+};
+document.getElementById('salir').onclick=()=>{API.salir();sesion=null;perfil=null;pintarSesion();go('inicio');};
+
+/* ═══ portal ═══ */
+async function cargarPortal(){
+ const box=document.getElementById('portal');
+ if(!sesion){box.innerHTML='<div class="empty">Ingresa para ver tus proyectos.</div>';return;}
+ box.innerHTML='<div class="empty"><span class="load"></span></div>';
+ let proys=[],sols=[];
+ try{
+  const pf=await API.leer('perfiles','select=*&id=eq.'+sesion.id);
+  perfil=(pf&&pf[0])||null;
+  document.getElementById('hola').textContent=perfil&&perfil.nombre?('Hola, '+perfil.nombre.split(' ')[0]):'Tus proyectos';
+  const [pr,so]=await Promise.all([
+   API.leer('proyectos','select=*&order=creado_en.desc'),
+   API.leer('solicitudes','select=*&order=creado_en.desc')]);
+  proys=pr||[];sols=so||[];
+ }catch(e){
+  box.innerHTML='<div class="empty">No pudimos cargar tus proyectos ahora mismo. Vuelve a intentar en un momento.</div>';return;}
+ let html='';
+ if(proys.length){
+  const ids=proys.map(p=>p.id);
+  let hs=[];try{hs=await API.leer('hitos','select=*&proyecto_id=in.('+ids.join(',')+')&order=orden');}catch(e){}
+  html+='<div class="pgrid">'+proys.map(p=>{
+   const mios=(hs||[]).filter(h=>h.proyecto_id===p.id);
+   return `<div class="proj"><div class="top"><h3>${p.nombre}</h3><span class="st ${p.estado}">${p.estado.replace('_',' ')}</span></div>
+    <div class="bar"><i style="transform:scaleX(${(p.avance||0)/100})"></i></div>
+    <div class="un">${p.avance}% completado</div>
+    <div class="meta">${p.precio_cop?`<span><b>Valor:</b> ${fmt(p.precio_cop)}</span>`:''}
+     ${p.pagado_cop?`<span><b>Pagado:</b> ${fmt(p.pagado_cop)}</span>`:''}
+     ${p.entrega_en?`<span><b>Entrega:</b> ${p.entrega_en}</span>`:''}</div>
+    ${mios.length?`<ul class="hit">${mios.map(h=>`<li class="${h.estado}"><i></i>${h.titulo}</li>`).join('')}</ul>`:''}
+   </div>`;}).join('')+'</div>';
+ }else{
+  html+=`<div class="empty"><h3 class="disp" style="margin-bottom:8px">Aún no tienes proyectos activos</h3>
+   <p style="margin-bottom:18px">Cuando arranquemos algo juntos, aquí verás el avance en vivo.</p>
+   <button class="btn gold" data-go="cotizar">Cotizar un proyecto</button></div>`;
+ }
+ if(sols.length){
+  html+=`<div style="margin-top:44px"><h3 class="disp" style="font-size:1.7rem;margin-bottom:16px">Tus solicitudes</h3><div class="pgrid">`+
+  sols.map(s=>`<div class="proj"><div class="top"><h3 style="font-size:1.3rem">${(UNIS.find(u=>u.id===s.universo_id)||{}).nombre||'Solicitud'}</h3>
+   <span class="st ${s.estado==='nueva'?'propuesta':'en_curso'}">${s.estado}</span></div>
+   <p style="font-size:.87rem;color:var(--dim)">${(s.detalle||'').slice(0,140)}${(s.detalle||'').length>140?'…':''}</p>
+   <div class="meta"><span>${new Date(s.creado_en).toLocaleDateString('es-CO')}</span></div></div>`).join('')+'</div></div>';
+ }
+ box.innerHTML=html;
+}
+
+/* ═══ solicitud ═══ */
+document.getElementById('fSol').onsubmit=async e=>{
+ e.preventDefault();
+ const f=e.target,b=document.getElementById('bSol');
+ b.disabled=true;b.innerHTML='<span class="load"></span>';
+ try{
+  const row={nombre:f.nombre.value.trim(),email:f.email.value.trim()||null,telefono:f.telefono.value.trim()||null,
+   universo_id:f.universo_id.value||null,detalle:f.detalle.value.trim(),
+   presupuesto:f.presupuesto.value?Number(f.presupuesto.value):null,
+   cliente_id:sesion?sesion.id:null,origen:'web'};
+  await API.crear('solicitudes',row);
+  aviso('mSol','¡Recibido! Te respondemos en menos de 48 horas. Si tienes afán, escríbenos por WhatsApp.',true);
+  f.reset();
+ }catch(err){aviso('mSol','No se pudo enviar: '+(err.message||'error')+'. Escríbenos por WhatsApp.',false);}
+ finally{b.disabled=false;b.textContent='Enviar solicitud';}
+};
+
+/* ═══ suscripción ═══ */
+const PKEY='lqs_promo_cerrado';
+document.getElementById('promoX').onclick=()=>{
+ document.getElementById('promo').classList.remove('on');
+ try{localStorage.setItem(PKEY,String(Date.now()));}catch(e){}
+};
+document.getElementById('fSus').onsubmit=async e=>{
+ e.preventDefault();
+ try{
+  try{await API.crear('suscriptores',{email:e.target.email.value.trim(),origen:'banner'});}
+  catch(x){if(!/duplicate|unique/i.test(x.message||''))throw x;}
+  aviso('mSus','¡Listo! Te avisamos cuando haya algo bueno.',true);
+  setTimeout(()=>{document.getElementById('promo').classList.remove('on');
+   try{localStorage.setItem(PKEY,String(Date.now()));}catch(e){}},2000);
+ }catch(err){aviso('mSus','No se pudo registrar. Intenta luego.',false);}
+};
+function verPromo(){
+ let last=0;try{last=Number(localStorage.getItem(PKEY)||0);}catch(e){}
+ if(Date.now()-last < 7*24*3600*1000)return;
+ setTimeout(()=>{const b=document.getElementById('promo');if(b)b.classList.add('on');},9000);
+}
+
+/* ═══ hero con scroll ═══ */
+(function(){
+ const c=document.getElementById('heroCv');if(!c)return;
+ const g=c.getContext('2d');let W=0,H=0,t=0,prog=0,tgt=0,stars=[];
+ const OBJ=[{x:.18,y:.30,s:1,k:'screen',col:'#5b8def'},{x:.80,y:.24,s:.9,k:'cam',col:'#3fd0e6'},
+  {x:.88,y:.66,s:.85,k:'gem',col:'#d98aa6'},{x:.12,y:.74,s:.9,k:'shirt',col:'#b6ad98'},
+  {x:.52,y:.16,s:.75,k:'chat',col:'#2fb8a3'},{x:.66,y:.86,s:.8,k:'pen',col:'#e6c877'}];
+ function rz(){const b=c.getBoundingClientRect();W=c.width=b.width;H=c.height=b.height;
+  stars=Array.from({length:Math.min(140,Math.round(W*H/9500))},()=>({x:Math.random()*W,y:Math.random()*H,z:Math.random()*.8+.2,p:Math.random()*6}));}
+ rz();addEventListener('resize',()=>{rz();if(RM)lp();});
+ function shape(k,col){g.lineWidth=2;g.strokeStyle=col;g.fillStyle='rgba(12,16,30,.72)';
+  if(k==='screen'){g.beginPath();g.roundRect(-30,-22,60,44,4);g.fill();g.stroke();
+   g.globalAlpha*=.6;g.beginPath();g.moveTo(-20,-8);g.lineTo(10,-8);g.moveTo(-20,0);g.lineTo(4,0);g.moveTo(-20,8);g.lineTo(14,8);g.stroke();g.globalAlpha/=.6;
+   g.beginPath();g.moveTo(-9,22);g.lineTo(9,22);g.lineTo(12,30);g.lineTo(-12,30);g.closePath();g.fill();g.stroke();}
+  else if(k==='cam'){g.beginPath();g.roundRect(-28,-16,44,32,4);g.fill();g.stroke();
+   g.beginPath();g.moveTo(16,-6);g.lineTo(32,-15);g.lineTo(32,15);g.lineTo(16,6);g.closePath();g.fill();g.stroke();
+   g.beginPath();g.arc(-14,-22,7,0,7);g.stroke();g.beginPath();g.arc(2,-22,7,0,7);g.stroke();}
+  else if(k==='gem'){g.beginPath();g.moveTo(0,-26);g.lineTo(20,-8);g.lineTo(12,24);g.lineTo(-12,24);g.lineTo(-20,-8);g.closePath();g.fill();g.stroke();
+   g.globalAlpha*=.55;g.beginPath();g.moveTo(-20,-8);g.lineTo(20,-8);g.moveTo(0,-26);g.lineTo(-12,24);g.moveTo(0,-26);g.lineTo(12,24);g.stroke();g.globalAlpha/=.55;}
+  else if(k==='shirt'){g.beginPath();g.moveTo(-20,-18);g.lineTo(-8,-24);g.lineTo(8,-24);g.lineTo(20,-18);g.lineTo(28,-6);g.lineTo(18,0);g.lineTo(18,26);g.lineTo(-18,26);g.lineTo(-18,0);g.lineTo(-28,-6);g.closePath();g.fill();g.stroke();
+   g.globalAlpha*=.6;g.beginPath();g.moveTo(-8,-24);g.quadraticCurveTo(0,-15,8,-24);g.stroke();g.globalAlpha/=.6;}
+  else if(k==='chat'){g.beginPath();g.roundRect(-28,-20,56,34,10);g.fill();g.stroke();
+   g.beginPath();g.moveTo(-10,14);g.lineTo(-2,24);g.lineTo(2,14);g.closePath();g.fill();g.stroke();
+   g.globalAlpha*=.7;g.fillStyle=col;g.beginPath();g.arc(-12,-3,2.6,0,7);g.arc(0,-3,2.6,0,7);g.arc(12,-3,2.6,0,7);g.fill();g.globalAlpha/=.7;}
+  else{g.beginPath();g.moveTo(-4,-26);g.lineTo(4,-26);g.lineTo(4,16);g.lineTo(0,26);g.lineTo(-4,16);g.closePath();g.fill();g.stroke();}}
+ if(!RM)alScroll(y=>{tgt=Math.min(1,Math.max(0,y/Math.max(1,innerHeight)));});
+ /* con movimiento reducido esto pinta UN cuadro y se calla: nada de un rAF
+    perpetuo rotando objetos a espaldas de quien pidió que nada se moviera */
+ function lp(){t+=1/60;prog+=(tgt-prog)*.08;g.clearRect(0,0,W,H);
+  const gr=g.createRadialGradient(W*.62,H*.3,20,W*.5,H*.5,Math.max(W,H)*.82);
+  gr.addColorStop(0,'rgba(74,58,150,.3)');gr.addColorStop(.55,'rgba(120,60,100,.1)');gr.addColorStop(1,'rgba(6,7,15,0)');
+  g.fillStyle=gr;g.fillRect(0,0,W,H);
+  for(const s of stars){const tw=RM?.6:(.4+.6*Math.sin(t*1.3+s.p));g.globalAlpha=tw*s.z*.85;
+   g.fillStyle=s.z>.85?'#e6c877':'#c3cdf0';const yy=(s.y+prog*90*s.z)%H;g.fillRect(s.x|0,yy|0,s.z>.85?2:1,s.z>.85?2:1);}
+  g.globalAlpha=1;
+  OBJ.forEach((o,i)=>{const drift=RM?0:Math.sin(t*.5+i*1.7)*7,push=prog*(90+i*26);
+   const S=(Math.min(W,H)/760+.62)*o.s;
+   g.save();g.translate(W*o.x,H*o.y+drift+push);g.rotate((RM?0:Math.sin(t*.3+i)*.07)+prog*.22);g.scale(S,S);
+   g.globalAlpha=Math.max(0,(.2-prog*.22));shape(o.k,o.col);g.restore();});
+  g.globalAlpha=1;
+  const vg=g.createLinearGradient(0,H*.45,0,H);vg.addColorStop(0,'rgba(6,7,15,0)');vg.addColorStop(1,'rgba(6,7,15,.92)');
+  g.fillStyle=vg;g.fillRect(0,H*.45,W,H*.55);
+  if(!RM)requestAnimationFrame(lp);}
+ lp();
+})();
+
+/* ═══ visor interno ═══ */
+const visor=document.getElementById('visor');
+function abrirDemo(url,titulo){
+ document.getElementById('visorT').textContent=titulo||'Muestra';
+ document.getElementById('visorAbrir').href=url;
+ visor.classList.add('on');document.body.style.overflow='hidden';
+ const f=document.getElementById('visorF');
+ // mostrar primero y cargar después: así las animaciones de la muestra sí arrancan
+ const fb=document.getElementById('visorFall');
+ fb.classList.remove('on');fb.querySelector('a').href=url;
+ let ok=false;
+ requestAnimationFrame(()=>{f.src=url;});
+ // si el visor no logra cargar (abierto con doble clic, bloqueo del navegador),
+ // no dejamos pantalla en negro: mostramos el enlace directo.
+ // ojo: una muestra lenta no es una muestra rota — solo avisamos si no llegó nada.
+ clearTimeout(abrirDemo._t);
+ abrirDemo._t=setTimeout(()=>{
+  if(ok)return;
+  let vacio=true;
+  try{const d=f.contentDocument;vacio=!d||!d.body||d.body.children.length===0;}catch(e){vacio=false;}
+  if(vacio)fb.classList.add('on');},5000);
+ f.onload=()=>{
+  ok=true;fb.classList.remove('on');
+  try{
+   const d=f.contentDocument;if(!d)return;
+   // red de seguridad: si algo quedó oculto esperando el scroll, se revela
+   setTimeout(()=>{d.querySelectorAll('.rv:not(.in)').forEach(el=>el.classList.add('in'));
+    f.contentWindow.dispatchEvent(new Event('resize'));
+    f.contentWindow.dispatchEvent(new Event('scroll'));},350);
+  }catch(e){}
+ };
+}
+function cerrarDemo(){clearTimeout(abrirDemo._t);document.getElementById('visorFall').classList.remove('on');
+ visor.classList.remove('on');document.getElementById('visorF').src='about:blank';document.body.style.overflow='';}
+document.getElementById('visorX').onclick=cerrarDemo;
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-demo]');if(!el)return;
+ // ctrl/cmd/shift o clic en el ↗: que el navegador haga lo suyo (pestaña nueva)
+ if(e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0)return;
+ e.preventDefault();abrirDemo(el.dataset.demo,el.dataset.titulo);
+});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&visor.classList.contains('on'))cerrarDemo();});
+
+/* ═══ contenido WhatsApp ═══ */
+document.getElementById('fases').innerHTML=[
+ ['1','Entendemos tu negocio','Miramos qué te preguntan siempre los clientes y qué respuestas repites todos los días.','Semana 1'],
+ ['2','Armamos las respuestas','Escribimos los mensajes y el recorrido: qué contesta el bot y cuándo pasa a una persona.','Semana 1-2'],
+ ['3','Conectamos tu número','Damos de alta tu WhatsApp en el sistema oficial y probamos con casos reales.','Semana 2-3'],
+ ['4','Te lo entregamos andando','Capacitamos a tu equipo y quedamos pendientes el primer mes por si hay ajustes.','Semana 3']
+].map(([n,t,d,dur])=>`<div class="fase rv"><div class="fn">${n}</div><h4>${t}</h4><p>${d}</p><div class="dur">${dur}</div></div>`).join('');
+document.getElementById('waCaps').innerHTML=[
+ ['Preguntar precios','Ver tu catálogo o tu carta sin que nadie tenga que mandarla.'],
+ ['Reservar o pedir','Dejar su pedido o reserva con fecha y datos, confirmado al momento.'],
+ ['Saber cómo va','Consultar el estado de su pedido cuando quiera, sin llamar.'],
+ ['Agendar una cita','Elegir día y hora de una agenda que tú controlas.'],
+ ['Ubicación y horarios','Recibir la dirección, el mapa y a qué hora abren.'],
+ ['Hablar con alguien','Pasar a una persona real cuando el caso lo amerita.']
+].map(([t,d])=>`<div class="card rv"><h3>${t}</h3><p>${d}</p></div>`).join('');
+document.getElementById('waPlanes').innerHTML=[
+ ['Básico','Negocios que solo necesitan contestar rápido.',780000,'montaje',['Respuestas automáticas','Menú de opciones','Horarios y ubicación','Paso a persona real'],false],
+ ['Negocio','Tomas pedidos o reservas por WhatsApp.',1450000,'montaje',['Todo lo del Básico','Catálogo o carta en el chat','Pedidos y reservas','Confirmaciones automáticas','Aviso a tu equipo'],true],
+ ['Multicanal','Además de WhatsApp, atiendes por redes.',2100000,'montaje',['Todo lo del Negocio','Instagram y Facebook','Respuesta a comentarios','Recordatorios programados','Reporte mensual'],false]
+].map(([n,d,p,u,inc,dest])=>`<div class="card rv" ${dest?'style="border-color:var(--gold)"':''}>
+ ${dest?'<span class="tagd" style="color:var(--gold)">Más pedido</span>':''}
+ <h3>${n}</h3><p>${d}</p><div class="pz">${fmt(p)}</div><div class="un">${u} · + $180.000 al mes</div>
+ <ul>${inc.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('');
+let waTimer=null,waPaso=0;
+function animarWA(){
+ const el=document.getElementById('waChat');if(!el)return;
+ clearTimeout(waTimer);el.innerHTML='';waPaso=0;
+ const SEQ=[['b','Hola 👋 Soy el asistente de tu negocio. ¿En qué te ayudo?'],
+  ['q','Quiero reservar para el viernes'],['b','Perfecto. ¿Para cuántas personas?'],['u','4 personas'],
+  ['b','Listo ✅ Mesa para 4 el viernes a las 8:00 p.m. Te llega la confirmación en un minuto.'],
+  ['q','¿Dónde quedan?'],['b','Estamos en Laureles, Medellín 📍 Te paso la ubicación.']];
+ (function paso(){
+  if(waPaso>=SEQ.length){waTimer=setTimeout(()=>{el.innerHTML='';waPaso=0;paso();},3600);return;}
+  const [k,t]=SEQ[waPaso++];
+  const d=document.createElement('div');
+  d.style.cssText='max-width:82%;padding:10px 13px;border-radius:15px;font-size:.85rem;line-height:1.45;animation:vin .28s var(--ease-out)'+
+   (k==='b'?';align-self:flex-start;background:rgba(255,255,255,.07);border:1px solid var(--line);border-bottom-left-radius:5px'
+    :k==='u'?';align-self:flex-end;background:linear-gradient(135deg,#4ade80,#35b46a);color:#06120c;font-weight:600;border-bottom-right-radius:5px'
+    :';align-self:flex-end;background:none;border:1px solid rgba(74,222,128,.55);color:#a7f3c4;font-weight:700');
+  d.textContent=t;el.appendChild(d);
+  waTimer=setTimeout(paso,k==='b'?1500:1000);
+ })();
+}
+
+/* ═══ reveals / nav ═══ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.1,rootMargin:'0px 0px -6% 0px'});
+function armar(){
+ document.querySelectorAll('.view.on .rv:not(.in)').forEach((el,i)=>{el.style.transitionDelay=(Math.min(i,6)*60)+'ms';io.observe(el);});
+ /* la vista cambió: las capas de profundidad se vuelven a medir */
+ if(window.ORG)ORG.medir();
+}
+const nav=document.getElementById('nav');
+alScroll(y=>nav.classList.toggle('solid',y>40));
+document.getElementById('bg').onclick=()=>document.body.classList.toggle('menu');
+
+/* ═══ la vida: un solo cuadro para el scroll suave y las cinco capas ═══
+   Un requestAnimationFrame, no un listener por capa. Dentro pasan dos cosas:
+
+   1· El scroll suave propio. El documento scrollea de verdad — no hay un
+      contenedor fijo que se desplace — porque `position:sticky`, las líneas de
+      tiempo de scroll y el IntersectionObserver de los reveals dejan de
+      funcionar dentro de un `position:fixed` transformado. Lo que se amortigua
+      es el destino: la rueda alimenta un objetivo y el lazo lo persigue con
+      0,11 por cuadro, que a 60fps se asienta en unos 400ms. Por debajo de 0,07
+      el sitio se siente pegajoso; por encima de 0,2 el suavizado no se nota.
+
+      Y sólo escribe mientras hay algo pendiente. Cuando el amortiguador se
+      asienta se calla y vuelve a seguir al documento — por eso `go()` y los
+      `scrollIntoView` del router pueden hacer su propio scroll suave nativo sin
+      que nadie les pelee el volante.
+
+   2· El paralaje de cinco capas: 0,15 · 0,42 · 1,00 · 1,16 · 1,34. La distancia
+      se mide desde el centro de la pantalla, así el desfase queda acotado y no
+      se dispara con el largo del documento.
+
+   En táctil el scroll del sistema ya tiene su propia inercia y pelear contra
+   ella se siente roto: ahí el amortiguador ni se enciende. */
+const ORG=(function(){
+ const finoQ=matchMedia('(hover:hover) and (pointer:fine)');
+ const AMORTIGUA=.11;
+ let suave=finoQ.matches&&!RM;
+ let objetivo=0,actual=0,vh=innerHeight,maxY=0,ultY=-1;
+ const capas=[];
+
+ function topDoc(el){let y=0;for(let n=el;n;n=n.offsetParent)y+=n.offsetTop;return y;}
+ function techo(){return Math.max(0,document.documentElement.scrollHeight-innerHeight);}
+
+ function medir(){
+  vh=innerHeight;maxY=techo();ultY=-1;
+  capas.length=0;
+  if(RM)return;                                  /* con movimiento reducido no se mide ni se escribe */
+  document.querySelectorAll('[data-vel]').forEach(el=>{
+   const v=el.closest('.view');
+   if(v&&!v.classList.contains('on')){el.style.transform='';return;}
+   const fija=el.hasAttribute('data-fija');
+   capas.push({el:el,vel:parseFloat(el.getAttribute('data-vel'))||1,fija:fija,
+    top:fija?0:topDoc(el),alto:fija?0:el.offsetHeight,ult:''});
+  });
+ }
+
+ function pintar(y){
+  for(let i=0;i<capas.length;i++){
+   const c=capas[i];let d;
+   if(c.fija){
+    /* una capa fija no se mueve con el contenido: para que corra a su
+       velocidad hay que desplazarla a mano. El clima satura a 200px — más
+       allá se saldría del encuadre; el grano se mueve en módulo 140, que es
+       el lado de su baldosa, así que su recorrido no tiene fin ni costura. */
+    d=c.vel<1 ? -Math.min(y*c.vel,200) : -((y*c.vel)%140);
+   }else{
+    const rel=(y+vh*.5)-(c.top+c.alto*.5);
+    if(rel<-(vh+c.alto)||rel>(vh+c.alto))continue;
+    d=rel*(1-c.vel);
+   }
+   const t='translate3d(0,'+d.toFixed(2)+'px,0)';
+   if(t!==c.ult){c.el.style.transform=t;c.ult=t;}
+  }
+ }
+
+ let prev=0,aplicado=-1;
+ function cuadro(now){
+  requestAnimationFrame(cuadro);
+  if(document.hidden){prev=0;return;}
+  /* ¿movió la página alguien que no fuimos nosotros? Un `go()`, un
+     `scrollIntoView`, la barra de scroll, el teclado. Entonces el
+     amortiguador suelta el volante y se pone a seguirlo: nadie forcejea. */
+  if(aplicado>=0&&Math.abs(scrollY-aplicado)>2){objetivo=actual=scrollY;aplicado=-1;}
+  /* 0,11 es por cuadro a 60fps. Normalizado por dt para que una pantalla de
+     120Hz no lo vuelva el doble de rápido ni un cuadro perdido teletransporte
+     la página — el mismo truco que usan las tres letras del hero. */
+  const dt=prev?Math.min(50,now-prev):16.667;prev=now;
+  if(suave&&objetivo!==actual){
+   actual+=(objetivo-actual)*(1-Math.pow(1-AMORTIGUA,dt/16.667));
+   if(Math.abs(objetivo-actual)<.4)actual=objetivo;
+   scrollTo(0,actual);
+   aplicado=scrollY;
+  }else{objetivo=actual=scrollY;aplicado=-1;}
+  const y=scrollY;
+  if(y===ultY)return;
+  ultY=y;pintar(y);
+ }
+
+ /* no se secuestra la rueda sobre algo que ya tiene su propio scroll:
+    el visor, el modal, una tabla ancha */
+ function enScroller(t){
+  for(let el=t;el&&el!==document.body;el=el.parentElement){
+   if(el.nodeType!==1)continue;
+   if(el.id==='visor'||el.id==='modal')return true;
+   const s=getComputedStyle(el);
+   if(/auto|scroll/.test(s.overflowY)&&el.scrollHeight>el.clientHeight+2)return true;
+   if(/auto|scroll/.test(s.overflowX)&&el.scrollWidth>el.clientWidth+2)return true;
+  }
+  return false;
+ }
+ addEventListener('wheel',function(e){
+  if(!suave||e.ctrlKey||e.defaultPrevented)return;
+  if(document.body.style.overflow==='hidden'||document.body.classList.contains('menu'))return;
+  if(enScroller(e.target))return;
+  maxY=techo();
+  const paso=e.deltaMode===1?16:e.deltaMode===2?innerHeight:1;
+  if(objetivo===actual)objetivo=actual=scrollY;
+  objetivo=Math.max(0,Math.min(maxY,objetivo+e.deltaY*paso));
+  e.preventDefault();
+ },{passive:false});
+
+ /* si cambia la preferencia a mitad de sesión, el amortiguador se apaga solo */
+ function recalibra(){
+  suave=finoQ.matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!suave)objetivo=actual=scrollY;
+  medir();
+ }
+ if(finoQ.addEventListener)finoQ.addEventListener('change',recalibra);
+ addEventListener('resize',medir,{passive:true});
+ addEventListener('load',medir);
+ if(window.ResizeObserver){
+  let t=0;
+  new ResizeObserver(function(){clearTimeout(t);t=setTimeout(medir,120);}).observe(document.getElementById('top'));
+ }
+ medir();
+ requestAnimationFrame(cuadro);
+ return {medir:medir};
+})();
+
+/* ═══ arranque ═══ */
+(async function init(){
+ setModo('in');pintarSesion();armar();verPromo();
+ try{
+  sesion=await API.yo();
+  if(!sesion&&API.tok()){await API.refrescar();sesion=await API.yo();}
+ }catch(e){}
+ pintarSesion();
+ await cargarCatalogo();
+ go((location.hash||'#inicio').slice(1),false);
+})();
+</script>
+</body>
+</html>
