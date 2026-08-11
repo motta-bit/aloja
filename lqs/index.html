@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Aloja by LQS · Plataforma hotelera todo-en-uno</title>
+<meta name="description" content="Aloja by LQS — el sistema operativo de tu hotel: reservas directas, integraciones API, canales automatizados, check-in QR, llave digital y personalización. Una sola marca, cada momento del huésped." />
+<meta name="theme-color" content="#f3eee1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root, html[data-theme="light"]{
+  --bg:#f3eee1; --bg2:#ece4d2; --bg3:#e2d9c1; --panel:#faf6ec;
+  --text:#2b2620; --dim:#6e6656; --faint:#a99e86;
+  --gold:#9c7a1e; --gold2:#7f6218; --aqua:#1c7a52;
+  --line:rgba(43,38,32,.12); --line2:rgba(43,38,32,.20);
+  --glass:rgba(250,246,236,.82); --shadow:0 34px 80px -40px rgba(120,95,30,.3);
+  --grad-gold:linear-gradient(135deg,#e7cd7c,#c0993c);
+  --em-grad:linear-gradient(120deg,#8a6a1e,#c9a24f 55%,#7a5e18);
+  --marble-op:.24; --marble-filter:none;
+}
+html[data-theme="dark"]{
+  --bg:#13100a; --bg2:#1a160e; --bg3:#231d12; --panel:#191510;
+  --text:#efe7d4; --dim:#b1a78f; --faint:#7d7460;
+  --gold:#e3c088; --gold2:#c9a24f; --aqua:#4fcf97;
+  --line:rgba(239,231,212,.12); --line2:rgba(239,231,212,.22);
+  --glass:rgba(19,16,10,.74); --shadow:0 34px 80px -34px rgba(0,0,0,.85);
+  --grad-gold:linear-gradient(135deg,#f0d9a0,#c9a24f);
+  --em-grad:linear-gradient(120deg,#f0d9a0,#c9a24f 55%,#e3c088);
+  --marble-op:.12; --marble-filter:invert(1) sepia(.5) hue-rotate(2deg) saturate(1.3);
+}
+:root{--serif:'Fraunces',Georgia,serif; --sans:'Manrope',system-ui,sans-serif; --r:18px; --maxw:1180px;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .5s,color .5s}
+body.no-scroll{overflow:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:#0a0e20}
+::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:8px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,5vw,40px)}
+.serif{font-family:var(--serif)}
+.tnum{font-variant-numeric:tabular-nums}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== HEADER ===== */
+header{position:fixed;inset:0 0 auto;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(16px,5vw,48px);transition:.4s}
+header.scrolled{background:var(--glass);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line);padding-top:11px;padding-bottom:11px}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer}
+.brand .logo{width:40px;height:40px;border-radius:11px;background:var(--grad-gold);display:grid;place-items:center;flex:none;box-shadow:0 6px 18px -6px rgba(200,161,95,.6)}
+.brand .logo svg{width:22px;height:22px;fill:#0a0e20}
+.brand b{font-family:var(--serif);font-weight:600;font-size:1.25rem;letter-spacing:-.01em;line-height:1}
+.brand small{display:block;font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.nav-desk{display:flex;align-items:center;gap:26px}
+.nav-desk a{font-size:.9rem;font-weight:500;color:var(--dim);transition:.2s;cursor:pointer}
+.nav-desk a:hover{color:var(--text)}
+.top-actions{display:flex;align-items:center;gap:9px}
+.switches{display:flex;align-items:center;gap:5px;padding:4px;border:1px solid var(--line);border-radius:40px;background:rgba(128,128,128,.05)}
+.switch{height:32px;border:none;background:transparent;color:var(--text);cursor:pointer;border-radius:30px;display:grid;place-items:center;transition:.25s;font-family:var(--sans)}
+.switch:hover{background:rgba(128,128,128,.14)}
+.switch.lang{width:38px;font-weight:700;font-size:.76rem}
+.switch.theme{width:36px}.switch.theme svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+.switch .moon{display:none}html[data-theme="light"] .switch .sun{display:none}html[data-theme="light"] .switch .moon{display:block}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 24px;border-radius:40px;font-weight:600;font-size:.92rem;cursor:pointer;border:none;font-family:var(--sans);transition:.3s cubic-bezier(.16,1,.3,1);white-space:nowrap}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9}
+.btn-gold{background:var(--grad-gold);color:#0a0e20;box-shadow:0 12px 30px -10px rgba(200,161,95,.5)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 18px 40px -12px rgba(200,161,95,.7)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line2)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-lg{padding:16px 30px;font-size:1rem}
+.burger{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(128,128,128,.05);cursor:pointer;position:relative;display:none;flex:none}
+.burger span{position:absolute;left:12px;right:12px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+.burger span:nth-child(1){top:16px}.burger span:nth-child(2){top:22px}.burger span:nth-child(3){top:28px}
+.burger.active span:nth-child(1){top:22px;transform:rotate(45deg)}.burger.active span:nth-child(2){opacity:0}.burger.active span:nth-child(3){top:22px;transform:rotate(-45deg)}
+
+/* mobile nav */
+.mnav{position:fixed;inset:0;z-index:999;background:var(--bg2);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:0 32px;transform:translateY(-100%);transition:transform .5s cubic-bezier(.76,0,.24,1)}
+.mnav.open{transform:none}
+.mnav a{font-family:var(--serif);font-size:2rem;padding:10px 0;color:var(--text);border-bottom:1px solid var(--line)}
+
+/* ===== HERO ===== */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:120px 0 60px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(ellipse 60% 50% at 15% 10%,rgba(201,162,79,.20),transparent 60%),
+  radial-gradient(ellipse 50% 60% at 88% 88%,rgba(28,122,82,.10),transparent 55%),
+  linear-gradient(180deg,transparent,var(--bg) 88%)}
+.hero-bg .glow{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(80px);opacity:.4;background:radial-gradient(circle,rgba(227,192,136,.5),transparent 70%);top:-10%;right:-6%;animation:drift 16s ease-in-out infinite}
+@keyframes drift{50%{transform:translate(-30px,40px) scale(1.1)}}
+.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;width:100%}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:40px;border:1px solid var(--line2);background:rgba(128,128,128,.05);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:22px}
+.eyebrow .pip{width:7px;height:7px;border-radius:50%;background:var(--aqua);box-shadow:0 0 0 4px rgba(95,214,196,.2);animation:pulse 2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(95,214,196,0)}}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.7rem,6vw,4.6rem);line-height:1;letter-spacing:-.02em;text-wrap:balance}
+.hero h1 em,.ctaband h2 em{font-style:italic;background:var(--em-grad);background-size:230% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:230% center}}
+.hero p.lead{color:var(--dim);font-size:clamp(1.02rem,2vw,1.18rem);max-width:46ch;margin:20px 0 30px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:28px;margin-top:34px;flex-wrap:wrap}
+.hero-stats .s b{font-family:var(--serif);font-size:1.7rem;color:var(--gold);display:block;line-height:1}
+.hero-stats .s span{font-size:.76rem;color:var(--dim);letter-spacing:.04em}
+
+/* PHONE MOCKUP */
+.device{position:relative;justify-self:center;width:min(300px,80vw);height:600px;border-radius:42px;background:linear-gradient(160deg,#2c2517,#14110b);border:1px solid rgba(227,192,136,.22);box-shadow:var(--shadow),inset 0 0 0 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(227,192,136,.15);padding:12px;transform:rotate(2deg) translateY(0);transition:transform .6s}
+.device:hover{transform:rotate(0) translateY(-4px)}
+.device::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:80px;height:6px;border-radius:6px;background:rgba(0,0,0,.5);z-index:5}
+.screen{position:relative;width:100%;height:100%;border-radius:32px;overflow:hidden;background:linear-gradient(180deg,#1b160d,#241d12);
+  --gold:#e3c088;--gold2:#c9a24f;--aqua:#4fcf97;--text:#ffffff;--dim:#b7ad93;--line:rgba(255,255,255,.1);--line2:rgba(255,255,255,.16)}
+.screen-page{position:absolute;inset:0;padding:44px 18px 18px;opacity:0;transform:translateY(12px);transition:.5s cubic-bezier(.16,1,.3,1);pointer-events:none;display:flex;flex-direction:column}
+.screen-page.active{opacity:1;transform:none;pointer-events:auto}
+.sp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sp-top .lg{display:flex;align-items:center;gap:7px;font-family:var(--serif);font-size:.9rem;font-weight:600;color:#fff}
+.sp-top .lg i{width:20px;height:20px;border-radius:6px;background:var(--grad-gold);display:inline-block}
+.sp-top .st{font-size:.62rem;color:var(--dim)}
+.sp-h{font-family:var(--serif);font-size:1.15rem;color:#fff;margin-bottom:3px}
+.sp-sub{font-size:.72rem;color:var(--dim);margin-bottom:14px}
+.mini-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;margin-bottom:9px}
+.mini-card .row{display:flex;justify-content:space-between;align-items:center;font-size:.74rem;color:#c7cbe6;margin:3px 0}
+.mini-card .row b{color:#fff;font-weight:600}
+.pill{font-size:.6rem;padding:3px 9px;border-radius:20px;background:rgba(95,214,196,.16);color:var(--aqua);font-weight:700;letter-spacing:.04em}
+.pill.gold{background:rgba(227,192,136,.16);color:var(--gold)}
+.sp-btn{margin-top:auto;background:var(--grad-gold);color:#0a0e20;border:none;border-radius:12px;padding:12px;font-family:var(--sans);font-weight:700;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.sp-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* digital key */
+.keypad{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:8px;flex:1;justify-content:center}
+.key-lock{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 50% 35%,#242c58,#141a3d);border:2px solid var(--line2);display:grid;place-items:center;transition:.5s;position:relative}
+.key-lock{background:radial-gradient(circle at 50% 35%,#242c58,#141a3d)}
+.key-lock svg{width:38px;height:38px;stroke:#fff;fill:none;stroke-width:1.8;transition:.4s}
+.key-lock.open{border-color:var(--aqua);box-shadow:0 0 0 8px rgba(95,214,196,.14),0 0 40px rgba(95,214,196,.4)}
+.key-lock.open svg{stroke:var(--aqua)}
+.key-status{font-size:.8rem;color:var(--dim);text-align:center}
+.key-status b{color:#fff;display:block;font-family:var(--serif);font-size:1.05rem}
+.key-room{font-size:.62rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase}
+.slide{width:180px;height:52px;border-radius:30px;background:rgba(255,255,255,.06);border:1px solid var(--line2);position:relative;cursor:pointer;overflow:hidden;user-select:none}
+.slide .knob{position:absolute;top:4px;left:4px;width:44px;height:44px;border-radius:50%;background:var(--grad-gold);display:grid;place-items:center;transition:left .1s}
+.slide .knob svg{width:20px;height:20px;stroke:#0a0e20;fill:none;stroke-width:2.4}
+.slide .lbl{position:absolute;inset:0;display:grid;place-items:center;font-size:.72rem;color:var(--dim);padding-left:30px;pointer-events:none}
+.slide.done .knob{left:calc(100% - 48px);background:var(--aqua)}
+.slide.done .lbl{color:var(--aqua)}
+
+/* qr */
+.qr-wrap{background:#fff;border-radius:16px;padding:14px;width:150px;height:150px;margin:6px auto 12px;box-shadow:0 12px 30px -12px rgba(0,0,0,.5)}
+.qr-wrap img{width:100%;height:100%}
+.qr-scan{position:relative;overflow:hidden}
+.qr-scan::after{content:"";position:absolute;left:14px;right:14px;height:2px;background:var(--aqua);box-shadow:0 0 12px var(--aqua);top:14px;animation:scan 2.2s ease-in-out infinite}
+@keyframes scan{50%{top:calc(100% - 16px)}}
+
+/* whatsapp chat */
+.chat{flex:1;display:flex;flex-direction:column;gap:7px;overflow:hidden;padding-top:4px}
+.bub{max-width:78%;padding:8px 11px;border-radius:14px;font-size:.72rem;line-height:1.35;opacity:0;transform:translateY(8px);animation:pop .4s forwards}
+.bub.in{background:rgba(255,255,255,.08);color:#e7e9f7;align-self:flex-start;border-bottom-left-radius:4px}
+.bub.out{background:linear-gradient(135deg,#1f6b4a,#134d33);color:#eafff2;align-self:flex-end;border-bottom-right-radius:4px}
+@keyframes pop{to{opacity:1;transform:none}}
+
+/* logos strip */
+.logos{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-top:10px}
+.logos .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+.logos .lb{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--faint);opacity:.9;letter-spacing:.02em;padding:0 6px}
+.logos .lbl{width:100%;text-align:center;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+
+/* section shells */
+section{position:relative}
+.sec{padding:clamp(70px,10vw,120px) 0}
+.sec-head{max-width:640px;margin-bottom:clamp(34px,5vw,52px)}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.kicker{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px}
+.sec-head h2{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,5vw,3.2rem);line-height:1.03;letter-spacing:-.01em;text-wrap:balance}
+.sec-head p{color:var(--dim);font-size:1.05rem;margin-top:14px}
+
+/* ===== MODULES (interactive) ===== */
+.mod-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:30px;scrollbar-width:none}
+.mod-tabs::-webkit-scrollbar{display:none}
+.mtab{flex:none;display:flex;align-items:center;gap:9px;padding:11px 17px;border-radius:40px;border:1px solid var(--line);background:transparent;color:var(--dim);font-family:var(--sans);font-weight:600;font-size:.86rem;cursor:pointer;transition:.25s;white-space:nowrap}
+.mtab svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8}
+.mtab:hover{color:var(--text);border-color:var(--line2)}
+.mtab.active{background:var(--panel);color:var(--text);border-color:var(--gold);box-shadow:0 6px 20px -10px rgba(200,161,95,.4)}
+.mtab.active svg{stroke:var(--gold)}
+.mod-body{display:grid;grid-template-columns:1fr 300px;gap:clamp(30px,5vw,64px);align-items:center}
+.mod-copy{min-height:340px}
+.mod-copy .mnum{font-family:var(--serif);font-size:.9rem;color:var(--gold);font-weight:600}
+.mod-copy h3{font-family:var(--serif);font-weight:600;font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.05;margin:6px 0 14px;text-wrap:balance}
+.mod-copy p{color:var(--dim);font-size:1.02rem;max-width:52ch;margin-bottom:18px}
+.mod-feats{display:flex;flex-direction:column;gap:10px}
+.mod-feats .mf{display:flex;gap:11px;align-items:flex-start}
+.mod-feats .mf .ck{width:22px;height:22px;border-radius:7px;background:rgba(227,192,136,.14);display:grid;place-items:center;flex:none;margin-top:1px}
+.mod-feats .mf .ck svg{width:13px;height:13px;stroke:var(--gold);fill:none;stroke-width:2.4}
+.mod-feats .mf span{font-size:.94rem;color:var(--text)}
+.mod-feats .mf span small{color:var(--dim);display:block;font-size:.82rem}
+.mod-panel{opacity:0;position:absolute;pointer-events:none;transition:opacity .4s}
+.mod-panel.active{opacity:1;position:static;pointer-events:auto}
+
+/* booking widget */
+.book{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.book h4{font-family:var(--serif);font-size:1.1rem;margin-bottom:12px}
+.book .fld{border:1px solid var(--line2);border-radius:11px;padding:9px 12px;margin-bottom:9px}
+.book .fld label{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);display:block}
+.book .fld select,.book .fld input{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:.92rem;font-weight:600;margin-top:2px}
+.book .fld select option{color:#111}
+.book .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.book .grid2 .fld{margin-bottom:0}
+.book .result{margin-top:10px}
+
+/* pricing */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
+.tier{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px 22px;display:flex;flex-direction:column;position:relative}
+.tier.reco{border:2px solid var(--gold);box-shadow:0 20px 50px -24px rgba(200,161,95,.4)}
+.tier.reco .badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--grad-gold);color:#0a0e20;font-weight:700;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;padding:5px 14px;border-radius:20px;white-space:nowrap}
+.tier .tn{font-family:var(--serif);font-size:1.5rem;font-weight:600}
+.tier .tf{font-size:.82rem;color:var(--dim);margin:4px 0 14px;min-height:2.6em}
+.tier .tp{font-family:var(--serif);font-size:2.3rem;font-weight:600;line-height:1}
+.tier .tp small{font-family:var(--sans);font-size:.78rem;color:var(--dim);font-weight:600;display:block;margin-top:3px}
+.tier ul{list-style:none;margin:16px 0 20px;flex:1}
+.tier li{font-size:.88rem;color:var(--dim);padding:6px 0 6px 24px;position:relative;border-bottom:1px solid var(--line)}
+.tier li::before{content:"";position:absolute;left:0;top:11px;width:14px;height:14px;border-radius:50%;background:rgba(227,192,136,.16);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c8a15f' stroke-width='3'%3E%3Cpath d='M5 12l5 5L20 6'/%3E%3C/svg%3E");background-size:9px;background-repeat:no-repeat;background-position:center}
+.tier li.off{color:var(--faint)}
+.tier li.off::before{background-image:none;content:"–";color:var(--faint);top:5px;background:none;text-align:center;font-weight:700}
+.tier .btn{width:100%;justify-content:center}
+
+/* comparison */
+.compare{width:100%;border-collapse:collapse;margin-top:8px;font-size:.94rem;background:var(--panel);border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.compare th{text-align:right;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:14px 16px;border-bottom:2px solid var(--line2);font-weight:800}
+.compare th.l{text-align:left}
+.compare td{padding:13px 16px;border-bottom:1px solid var(--line)}
+.compare td.l{font-weight:600}
+.compare td.mkt{text-align:right;color:var(--dim);text-decoration:line-through;text-decoration-color:var(--line2);font-variant-numeric:tabular-nums}
+.compare td.lqs{text-align:right;font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums}
+.compare tr:last-child td{border-bottom:none}
+.compare tr.total td{border-top:2px solid var(--line2);font-size:1.05rem}
+.compare tr.total td.lqs{font-size:1.35rem}
+.savings{margin-top:14px;background:linear-gradient(135deg,#166b45,#0d4a2e);color:#eafff2;border-radius:14px;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.savings b{font-family:var(--serif);font-size:1.8rem;color:#fff}
+
+/* journey */
+.journey{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.jstep{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 16px;position:relative}
+.jstep .jn{width:34px;height:34px;border-radius:10px;background:rgba(227,192,136,.14);display:grid;place-items:center;color:var(--gold);font-family:var(--serif);font-weight:600;margin-bottom:10px}
+.jstep .je{font-size:1.4rem;margin-bottom:6px}
+.jstep h4{font-family:var(--serif);font-size:1.02rem;margin-bottom:4px}
+.jstep p{font-size:.8rem;color:var(--dim)}
+
+/* cta band */
+.ctaband{text-align:center;position:relative;overflow:hidden;background:radial-gradient(ellipse 60% 100% at 50% 0%,rgba(227,192,136,.16),transparent 60%)}
+.ctaband h2{font-family:var(--serif);font-weight:600;font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.03;margin-bottom:16px;text-wrap:balance}
+.ctaband p{color:var(--dim);max-width:52ch;margin:0 auto 28px;font-size:1.08rem}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:56px 0 30px}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:34px;margin-bottom:40px}
+.foot-brand p{color:var(--dim);font-size:.9rem;max-width:34ch;margin-top:14px}
+.foot-col h5{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.foot-col a{display:block;color:var(--text);opacity:.82;padding:5px 0;font-size:.92rem;cursor:pointer;transition:.2s}
+.foot-col a:hover{color:var(--gold);opacity:1}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap;color:var(--dim);font-size:.8rem}
+
+/* toast */
+.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);z-index:1200;background:var(--text);color:var(--bg);padding:13px 22px;border-radius:40px;font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translate(-50%,0)}
+
+/* ===== MÁRMOL + ANIMACIONES PREMIUM ===== */
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:
+  radial-gradient(60% 50% at 18% 12%,rgba(201,162,79,.10),transparent 62%),
+  radial-gradient(50% 45% at 85% 18%,rgba(160,130,70,.08),transparent 62%),
+  radial-gradient(55% 55% at 72% 92%,rgba(120,95,40,.07),transparent 62%)}
+.marble{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--marble-op);filter:var(--marble-filter);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='680' height='680'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.010 0.020' numOctaves='5' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -7 3.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");background-size:680px 680px}
+
+/* scroll progress */
+.progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:1200;background:var(--grad-gold);box-shadow:0 0 12px rgba(201,162,79,.55)}
+
+/* intro */
+#intro{position:fixed;inset:0;z-index:2000;background:var(--bg);display:grid;place-items:center;transition:opacity .7s,visibility .7s}
+#intro.hide{opacity:0;visibility:hidden}
+.intro-wrap{text-align:center}
+.intro-mark{width:76px;height:76px;border-radius:21px;margin:0 auto;background:var(--grad-gold);display:grid;place-items:center;box-shadow:0 22px 55px -16px rgba(201,162,79,.6);animation:introPop 1s cubic-bezier(.16,1,.3,1) both}
+.intro-mark svg{width:40px;height:40px;fill:#1b160d}
+.intro-wrap .nm{font-family:var(--serif);font-size:1.6rem;margin-top:16px;opacity:0;animation:fadeUp .6s .35s forwards}
+.intro-wrap .nm span{color:var(--gold)}
+.intro-line{width:0;height:2px;background:var(--grad-gold);margin:14px auto 0;animation:iline .9s .25s forwards}
+@keyframes introPop{from{opacity:0;transform:scale(.68) translateY(10px)}to{opacity:1;transform:none}}
+@keyframes iline{to{width:130px}}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+
+/* hero entrance */
+.hero-copy>*{opacity:0;transform:translateY(24px);animation:heroUp .85s cubic-bezier(.16,1,.3,1) forwards}
+.hero-copy .eyebrow{animation-delay:.12s}.hero-copy h1{animation-delay:.26s}.hero-copy .lead{animation-delay:.4s}
+.hero-copy .hero-cta{animation-delay:.54s}.hero-copy .hero-stats{animation-delay:.66s}
+@keyframes heroUp{to{opacity:1;transform:none}}
+.hero .device{opacity:0;animation:devIn 1s .45s ease forwards, floaty 7s .45s ease-in-out infinite}
+@keyframes devIn{to{opacity:1}}
+@keyframes floaty{0%,100%{transform:rotate(2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-13px)}}
+
+/* gold button shimmer sweep */
+.btn-gold{position:relative;overflow:hidden}
+.btn-gold::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;transform:skewX(-18deg);background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:sweep 4.2s ease-in-out infinite}
+@keyframes sweep{0%{left:-70%}28%,100%{left:150%}}
+
+/* card lifts */
+.tier,.jstep{transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s,border-color .3s}
+.tier:hover,.jstep:hover{transform:translateY(-7px);border-color:var(--line2)}
+.tier.reco:hover{box-shadow:0 28px 60px -26px rgba(201,162,79,.55)}
+.mini-card{transition:transform .3s,border-color .3s}
+.mtab{position:relative;overflow:hidden}
+
+/* eyebrow pip stays; add soft glow to gold logo */
+.brand .logo{position:relative}
+.brand .logo::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 rgba(201,162,79,.5);animation:logoGlow 3.5s ease-in-out infinite}
+@keyframes logoGlow{50%{box-shadow:0 0 22px 2px rgba(201,162,79,.35)}}
+
+/* ===== ESTUDIO / SERVICIOS ===== */
+.studio-hero{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:30px}
+.studio-hero .badge-em{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-style:italic;color:var(--gold);font-size:1.5rem}
+.svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.svc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 20px;transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .4s}
+.svc:hover{transform:translateY(-6px);border-color:var(--line2);box-shadow:var(--shadow)}
+.svc .ic{width:46px;height:46px;border-radius:13px;background:linear-gradient(145deg,rgba(201,162,79,.2),rgba(201,162,79,.05));display:grid;place-items:center;margin-bottom:14px}
+.svc .ic svg{width:23px;height:23px;stroke:var(--gold);fill:none;stroke-width:1.6}
+.svc h4{font-family:var(--serif);font-weight:600;font-size:1.28rem;margin-bottom:6px;line-height:1.05}
+.svc p{color:var(--dim);font-size:.9rem;line-height:1.45}
+@media(max-width:900px){.svcs{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.svcs{grid-template-columns:1fr}}
+
+/* ===== VISTAS / PASO A PASO ===== */
+main#viewport{min-height:100svh}
+.view{display:none}
+.view.active{display:block;animation:viewIn .5s cubic-bezier(.16,1,.3,1)}
+@keyframes viewIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.view>.sec:last-child,.view>.hero{padding-bottom:130px}
+.nav-desk a.navon{color:var(--text)}
+.nav-desk a.navon::after{content:"";display:block;height:2px;margin-top:3px;border-radius:2px;background:var(--grad-gold)}
+/* stepper */
+.stepper{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:900;display:flex;align-items:center;gap:12px;
+  background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--line2);border-radius:40px;padding:7px 9px;box-shadow:var(--shadow)}
+.sbtn{border:none;background:transparent;color:var(--text);font-size:1.15rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--sans);transition:.2s;line-height:1}
+.sbtn:hover{background:rgba(128,128,128,.14)}
+.sbtn:disabled{opacity:.28;cursor:default;background:transparent}
+.sbtn.next{width:auto;padding:0 18px;gap:5px;font-weight:700;font-size:.86rem;background:var(--grad-gold);color:#1b160d;border-radius:30px;height:38px;display:flex;align-items:center}
+.sbtn.next:hover{filter:brightness(1.06)}
+.dots{display:flex;gap:8px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line2);cursor:pointer;transition:.3s cubic-bezier(.16,1,.3,1)}
+.dot.active{background:var(--gold-d,#c0993c);background:var(--grad-gold);width:26px;border-radius:6px}
+@media(max-width:560px){.stepper .dots{display:none}.stepper{gap:8px}}
+
+@media(max-width:900px){
+  .nav-desk{display:none}.burger{display:block}
+  .hero .wrap{grid-template-columns:1fr;text-align:center}
+  .hero p.lead{margin-left:auto;margin-right:auto}.hero-cta,.hero-stats{justify-content:center}
+  .device{margin-top:20px}
+  .mod-body{grid-template-columns:1fr}.mod-copy{min-height:0}
+  .device.mod-device{order:-1;margin:0 auto}
+  .tiers{grid-template-columns:1fr}
+  .journey{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .journey{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr}
+  .compare{font-size:.82rem}.compare td,.compare th{padding:10px 10px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="marble"></div>
+<div id="intro"><div class="intro-wrap">
+  <div class="intro-mark"><svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11h-5v-6h-6v6z"/></svg></div>
+  <div class="nm serif">Aloja <span>by LQS</span></div>
+  <div class="intro-line"></div>
+</div></div>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="brand" onclick="scrollToId('top')">
+    <div class="logo"><svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11h-5v-6h-6v6z"/></svg></div>
+    <div><b>Aloja</b><small>by LQS</small></div>
+  </div>
+  <nav class="nav-desk">
+    <a onclick="scrollToId('modulos')" data-es="Módulos" data-en="Modules">Módulos</a>
+    <a onclick="scrollToId('experiencia')" data-es="Experiencia" data-en="Journey">Experiencia</a>
+    <a onclick="scrollToId('estudio')" data-es="Estudio" data-en="Studio">Estudio</a>
+    <a onclick="scrollToId('precios')" data-es="Precios" data-en="Pricing">Precios</a>
+    <a onclick="scrollToId('comparativa')" data-es="Comparativa" data-en="Compare">Comparativa</a>
+  </nav>
+  <div class="top-actions">
+    <div class="switches">
+      <button class="switch lang" onclick="toggleLang()" aria-label="Idioma"><span id="langLabel">EN</span></button>
+      <button class="switch theme" onclick="toggleTheme()" aria-label="Tema">
+        <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
+        <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+    <button class="btn btn-gold" onclick="reqDemo()" style="padding:11px 20px"><span data-es="Solicitar demo" data-en="Request demo">Solicitar demo</span></button>
+    <button class="burger" id="burger" onclick="toggleMnav()" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<nav class="mnav" id="mnav">
+  <a onclick="mgo('modulos')" data-es="Módulos" data-en="Modules">Módulos</a>
+  <a onclick="mgo('experiencia')" data-es="Experiencia" data-en="Journey">Experiencia</a>
+  <a onclick="mgo('estudio')" data-es="Estudio" data-en="Studio">Estudio</a>
+  <a onclick="mgo('precios')" data-es="Precios" data-en="Pricing">Precios</a>
+  <a onclick="mgo('comparativa')" data-es="Comparativa" data-en="Compare">Comparativa</a>
+</nav>
+
+<span id="top"></span>
+<main id="viewport">
+<div class="view active" id="v-inicio">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"><div class="glow"></div></div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="pip"></span> <span data-es="Plataforma hotelera todo-en-uno" data-en="All-in-one hotel platform">Plataforma hotelera todo-en-uno</span></div>
+      <h1 data-es="El sistema operativo de <em>tu hotel</em>." data-en="The operating system for <em>your hotel</em>.">El sistema operativo de <em>tu hotel</em>.</h1>
+      <p class="lead" data-es="Reservas directas, check-in con QR, llave digital en el celular y canales automatizados — todo bajo una sola marca: la tuya." data-en="Direct bookings, QR check-in, a digital key on the phone and automated channels — all under a single brand: yours.">Reservas directas, check-in con QR, llave digital en el celular y canales automatizados — todo bajo una sola marca: la tuya.</p>
+      <div class="hero-cta">
+        <button class="btn btn-gold btn-lg" onclick="scrollToId('modulos')"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <span data-es="Explorar la plataforma" data-en="Explore the platform">Explorar la plataforma</span></button>
+        <button class="btn btn-ghost btn-lg" onclick="reqDemo()"><span data-es="Agendar demo" data-en="Book a demo">Agendar demo</span></button>
+      </div>
+      <div class="hero-stats">
+        <div class="s"><b data-count="35" data-prefix="+" data-suffix="%">+35%</b><span data-es="Reservas directas" data-en="Direct bookings">Reservas directas</span></div>
+        <div class="s"><b>0%</b><span data-es="Comisión por reserva" data-en="Booking commission">Comisión por reserva</span></div>
+        <div class="s"><b>24/7</b><span data-es="Atención automatizada" data-en="Automated support">Atención automatizada</span></div>
+      </div>
+    </div>
+    <!-- HERO PHONE -->
+    <div class="device">
+      <div class="screen">
+        <div class="screen-page active">
+          <div class="sp-top"><div class="lg"><i></i> Aloja</div><div class="st">9:41</div></div>
+          <div class="sp-h" data-es="Hola, Valentina 👋" data-en="Hi, Valentina 👋">Hola, Valentina 👋</div>
+          <div class="sp-sub" data-es="Tu habitación te espera." data-en="Your room is ready.">Tu habitación te espera.</div>
+          <div class="mini-card">
+            <div class="row"><span data-es="Habitación" data-en="Room">Habitación</span><b>Suite 204</b></div>
+            <div class="row"><span>Check-in</span><b>15:00</b></div>
+            <div class="row"><span data-es="Llave digital" data-en="Digital key">Llave digital</span><span class="pill" data-es="Activa" data-en="Active">Activa</span></div>
+          </div>
+          <div class="keypad" style="margin:6px 0">
+            <div class="key-lock" id="heroLock"><svg id="heroLockIco" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+            <div class="key-status"><b id="heroKeyTxt" data-es="Toca para abrir" data-en="Tap to unlock">Toca para abrir</b><span class="key-room">Suite 204 · Piso 2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos">
+  <div class="wrap">
+    <span class="lbl" data-es="Se conecta con las herramientas que ya usas" data-en="Connects with the tools you already use">Se conecta con las herramientas que ya usas</span>
+    <span class="lb">Booking.com</span><span class="lb">Airbnb</span><span class="lb">Expedia</span><span class="lb">WhatsApp</span><span class="lb">Stripe</span><span class="lb">PMS</span><span class="lb">Google</span>
+  </div>
+</div>
+
+</div>
+<div class="view" id="v-modulos">
+<!-- MODULES -->
+<section class="sec" id="modulos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker" data-es="La plataforma" data-en="The platform">La plataforma</div>
+      <h2 data-es="Una sola herramienta, cada momento del huésped" data-en="One tool, every guest moment">Una sola herramienta, cada momento del huésped</h2>
+      <p data-es="Explora cada módulo. Todo se integra y todo lleva tu marca." data-en="Explore each module. Everything integrates, everything carries your brand.">Explora cada módulo. Todo se integra y todo lleva tu marca.</p>
+    </div>
+
+    <div class="mod-tabs reveal" id="modTabs"></div>
+
+    <div class="mod-body">
+      <div class="mod-copy" id="modCopy"></div>
+      <div class="device mod-device">
+        <div class="screen" id="modScreen"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="view" id="v-experiencia">
+<!-- JOURNEY -->
+<section class="sec" id="experiencia" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="kicker" data-es="La experiencia" data-en="The journey">La experiencia</div>
+      <h2 data-es="Del clic a la habitación, sin fricción" data-en="From click to room, frictionless">Del clic a la habitación, sin fricción</h2>
+      <p data-es="Un recorrido continuo que el huésped siente premium — y tú controlas por completo." data-en="A seamless journey the guest feels as premium — and you fully control.">Un recorrido continuo que el huésped siente premium — y tú controlas por completo.</p>
+    </div>
+    <div class="journey reveal">
+      <div class="jstep"><div class="jn">1</div><div class="je">🔎</div><h4 data-es="Reserva" data-en="Book">Reserva</h4><p data-es="Directo en tu web, sin comisiones." data-en="Direct on your site, no commissions.">Directo en tu web, sin comisiones.</p></div>
+      <div class="jstep"><div class="jn">2</div><div class="je">💬</div><h4 data-es="Confirmación" data-en="Confirmation">Confirmación</h4><p data-es="WhatsApp y correo automáticos." data-en="Automatic WhatsApp and email.">WhatsApp y correo automáticos.</p></div>
+      <div class="jstep"><div class="jn">3</div><div class="je">📱</div><h4 data-es="Check-in QR" data-en="QR check-in">Check-in QR</h4><p data-es="Sin filas en recepción." data-en="No lines at the front desk.">Sin filas en recepción.</p></div>
+      <div class="jstep"><div class="jn">4</div><div class="je">🔑</div><h4 data-es="Llave digital" data-en="Digital key">Llave digital</h4><p data-es="Abre la puerta con el celular." data-en="Open the door with the phone.">Abre la puerta con el celular.</p></div>
+      <div class="jstep"><div class="jn">5</div><div class="je">⭐</div><h4 data-es="Estadía + reseña" data-en="Stay + review">Estadía + reseña</h4><p data-es="Servicios y reseña al salir." data-en="Services and review on checkout.">Servicios y reseña al salir.</p></div>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="view" id="v-estudio">
+<!-- ESTUDIO / AGENCIA -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="kicker" data-es="LQS Studio · La agencia" data-en="LQS Studio · The agency">LQS Studio · La agencia</div>
+      <h2 data-es="Más que software: tu hotel, de la marca a la llave" data-en="More than software: your hotel, from brand to key">Más que software: tu hotel, de la marca a la llave</h2>
+      <p data-es="Aloja es la plataforma. Detrás está LQS, un estudio creativo que diseña toda la identidad y el hábitat de tu hotel — para que cada detalle hable el mismo idioma." data-en="Aloja is the platform. Behind it is LQS, a creative studio that designs your hotel's entire identity and habitat — so every detail speaks the same language.">Aloja es la plataforma. Detrás está LQS, un estudio creativo que diseña toda la identidad y el hábitat de tu hotel — para que cada detalle hable el mismo idioma.</p>
+    </div>
+    <div class="svcs reveal">
+      <div class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 6.1L21 12l-6.6 2.9L12 21l-2.4-6.1L3 12l6.6-2.9z"/></svg></div>
+        <h4 data-es="Branding &amp; Rebranding" data-en="Branding &amp; Rebranding">Branding &amp; Rebranding</h4>
+        <p data-es="Naming, logo, identidad visual y manual de marca. Creamos o renovamos la personalidad de tu hotel desde cero." data-en="Naming, logo, visual identity and brand book. We create or refresh your hotel's personality from scratch.">Naming, logo, identidad visual y manual de marca. Creamos o renovamos la personalidad de tu hotel desde cero.</p>
+      </div>
+      <div class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5M9 11h.01M15 11h.01"/></svg></div>
+        <h4 data-es="Hábitat de marca" data-en="Brand habitat">Hábitat de marca</h4>
+        <p data-es="Señalética, papelería, uniformes, amenities y ambientación: tu marca viva y coherente en cada rincón." data-en="Signage, stationery, uniforms, amenities and ambience: your brand alive and coherent in every corner.">Señalética, papelería, uniformes, amenities y ambientación: tu marca viva y coherente en cada rincón.</p>
+      </div>
+      <div class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 21c0-3.6 3-6 6.5-6s6.5 2.4 6.5 6"/></svg></div>
+        <h4 data-es="Experiencia del huésped" data-en="Guest experience">Experiencia del huésped</h4>
+        <p data-es="Diseñamos el recorrido, el tono de voz y las plantillas de comunicación para una estadía memorable." data-en="We design the journey, tone of voice and communication templates for a memorable stay.">Diseñamos el recorrido, el tono de voz y las plantillas de comunicación para una estadía memorable.</p>
+      </div>
+      <div class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.4"/><path d="M8.5 7l1.3-2h4.4l1.3 2"/></svg></div>
+        <h4 data-es="Dirección de arte &amp; espacios" data-en="Art direction &amp; spaces">Dirección de arte &amp; espacios</h4>
+        <p data-es="Moodboards, fotografía y ambientación que elevan la percepción y el valor de tu hotel." data-en="Moodboards, photography and ambience that elevate your hotel's perception and value.">Moodboards, fotografía y ambientación que elevan la percepción y el valor de tu hotel.</p>
+      </div>
+      <div class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h4 data-es="Digital &amp; contenido" data-en="Digital &amp; content">Digital &amp; contenido</h4>
+        <p data-es="Web, redes, campañas y la plataforma Aloja — todo bajo una sola identidad, sin marcas ajenas." data-en="Web, social, campaigns and the Aloja platform — all under one identity, no third-party brands.">Web, redes, campañas y la plataforma Aloja — todo bajo una sola identidad, sin marcas ajenas.</p>
+      </div>
+      <div class="svc">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/></svg></div>
+        <h4 data-es="Estrategia de marca" data-en="Brand strategy">Estrategia de marca</h4>
+        <p data-es="Posicionamiento, propuesta de valor y consultoría para que tu hotel se diferencie y venda mejor." data-en="Positioning, value proposition and consulting so your hotel stands out and sells better.">Posicionamiento, propuesta de valor y consultoría para que tu hotel se diferencie y venda mejor.</p>
+      </div>
+    </div>
+    <div class="reveal" style="text-align:center;margin-top:28px">
+      <button class="btn btn-gold btn-lg" onclick="reqDemo()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg> <span data-es="Hablar con el estudio" data-en="Talk to the studio">Hablar con el estudio</span></button>
+    </div>
+  </div>
+</section>
+</div>
+<div class="view" id="v-precios">
+<!-- PRICING -->
+<section class="sec" id="precios">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="kicker" data-es="Planes" data-en="Plans">Planes</div>
+      <h2 data-es="Precios honestos, pensados para tu hotel" data-en="Honest pricing, made for your hotel">Precios honestos, pensados para tu hotel</h2>
+      <p data-es="Implementación única + un plan mensual accesible. Sin comisiones por reserva, para siempre." data-en="One-time setup + an affordable monthly plan. No booking commissions, ever.">Implementación única + un plan mensual accesible. Sin comisiones por reserva, para siempre.</p>
+    </div>
+    <div class="tiers reveal">
+      <div class="tier">
+        <div class="tn">Boutique</div>
+        <div class="tf" data-es="Hoteles y hostales pequeños que arrancan su digitalización." data-en="Small hotels and hostels starting to digitalize.">Hoteles y hostales pequeños que arrancan su digitalización.</div>
+        <div class="tp tnum">$1.490.000<small data-es="implementación única" data-en="one-time setup">implementación única</small></div>
+        <div class="tp tnum" style="font-size:1.2rem;color:var(--gold);margin-top:10px">+ $99.000<small data-es="/ mes" data-en="/ month">/ mes</small></div>
+        <ul>
+          <li data-es="Motor de reservas directo" data-en="Direct booking engine">Motor de reservas directo</li>
+          <li data-es="Web con tu marca + QR" data-en="Branded site + QR">Web con tu marca + QR</li>
+          <li data-es="Check-in digital" data-en="Digital check-in">Check-in digital</li>
+          <li data-es="Confirmaciones por WhatsApp" data-en="WhatsApp confirmations">Confirmaciones por WhatsApp</li>
+          <li class="off" data-es="Llave digital / cerraduras" data-en="Digital key / smart locks">Llave digital / cerraduras</li>
+          <li class="off" data-es="Integraciones API (OTAs/PMS)" data-en="API integrations (OTAs/PMS)">Integraciones API (OTAs/PMS)</li>
+        </ul>
+        <button class="btn btn-ghost" onclick="reqDemo()"><span data-es="Elegir Boutique" data-en="Choose Boutique">Elegir Boutique</span></button>
+      </div>
+      <div class="tier reco">
+        <div class="badge" data-es="★ Más elegido" data-en="★ Most chosen">★ Más elegido</div>
+        <div class="tn">Signature</div>
+        <div class="tf" data-es="La experiencia completa: llave digital, canales y personalización." data-en="The full experience: digital key, channels and personalization.">La experiencia completa: llave digital, canales y personalización.</div>
+        <div class="tp tnum">$3.900.000<small data-es="implementación única" data-en="one-time setup">implementación única</small></div>
+        <div class="tp tnum" style="font-size:1.2rem;color:var(--gold);margin-top:10px">+ $249.000<small data-es="/ mes" data-en="/ month">/ mes</small></div>
+        <ul>
+          <li data-es="Todo lo de Boutique, y además:" data-en="Everything in Boutique, plus:">Todo lo de Boutique, y además:</li>
+          <li data-es="Llave digital (PIN / tarjeta / celular)" data-en="Digital key (PIN / card / phone)">Llave digital (PIN / tarjeta / celular)</li>
+          <li data-es="Canales automatizados (bot 24/7)" data-en="Automated channels (24/7 bot)">Canales automatizados (bot 24/7)</li>
+          <li data-es="Integraciones API (OTAs, PMS, pagos)" data-en="API integrations (OTAs, PMS, payments)">Integraciones API (OTAs, PMS, pagos)</li>
+          <li data-es="Personalización del huésped" data-en="Guest personalization">Personalización del huésped</li>
+          <li data-es="Universalización de marca" data-en="Brand universalization">Universalización de marca</li>
+        </ul>
+        <button class="btn btn-gold" onclick="reqDemo()"><span data-es="Elegir Signature" data-en="Choose Signature">Elegir Signature</span></button>
+      </div>
+      <div class="tier">
+        <div class="tn">Collection</div>
+        <div class="tf" data-es="Cadenas y grupos con varias sedes y necesidades a medida." data-en="Chains and groups with multiple properties and custom needs.">Cadenas y grupos con varias sedes y necesidades a medida.</div>
+        <div class="tp serif" style="font-size:2rem" data-es="A medida" data-en="Custom">A medida</div>
+        <div class="tp tnum" style="font-size:1.2rem;color:var(--gold);margin-top:10px">—<small data-es="hablemos" data-en="let's talk">hablemos</small></div>
+        <ul>
+          <li data-es="Todo lo de Signature, y además:" data-en="Everything in Signature, plus:">Todo lo de Signature, y además:</li>
+          <li data-es="Multi-sede y multi-marca" data-en="Multi-property, multi-brand">Multi-sede y multi-marca</li>
+          <li data-es="Hardware de cerraduras a escala" data-en="Smart-lock hardware at scale">Hardware de cerraduras a escala</li>
+          <li data-es="Analíticas e informes avanzados" data-en="Advanced analytics & reports">Analíticas e informes avanzados</li>
+          <li data-es="Soporte prioritario dedicado" data-en="Dedicated priority support">Soporte prioritario dedicado</li>
+          <li data-es="SLA y capacitación del equipo" data-en="SLA and team training">SLA y capacitación del equipo</li>
+        </ul>
+        <button class="btn btn-ghost" onclick="reqDemo()"><span data-es="Hablar con LQS" data-en="Talk to LQS">Hablar con LQS</span></button>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--faint);font-size:.8rem;margin-top:16px" data-es="Valores en COP, sin IVA. Sin comisiones por reserva en ningún plan." data-en="Prices in COP, before tax. No booking commissions on any plan.">Valores en COP, sin IVA. Sin comisiones por reserva en ningún plan.</p>
+  </div>
+</section>
+
+</div>
+<div class="view" id="v-comparativa">
+<!-- COMPARISON -->
+<section class="sec" id="comparativa" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="kicker" data-es="El mercado vs. Aloja" data-en="The market vs. Aloja">El mercado vs. Aloja</div>
+      <h2 data-es="La misma tecnología, sin el precio de siempre" data-en="The same tech, without the usual price">La misma tecnología, sin el precio de siempre</h2>
+      <p data-es="Lo que cobran las plataformas hoteleras tradicionales y las OTAs, frente a Aloja by LQS." data-en="What traditional hotel platforms and OTAs charge, versus Aloja by LQS.">Lo que cobran las plataformas hoteleras tradicionales y las OTAs, frente a Aloja by LQS.</p>
+    </div>
+    <div class="reveal">
+      <table class="compare">
+        <thead><tr><th class="l" data-es="Concepto" data-en="Item">Concepto</th><th data-es="Plataformas / OTAs" data-en="Platforms / OTAs">Plataformas / OTAs</th><th>Aloja by LQS</th></tr></thead>
+        <tbody>
+          <tr><td class="l" data-es="Comisión por reserva (OTA)" data-en="Booking commission (OTA)">Comisión por reserva (OTA)</td><td class="mkt">15% – 25% <span data-es="por reserva" data-en="per booking">por reserva</span></td><td class="lqs">0%</td></tr>
+          <tr><td class="l" data-es="Motor de reservas + web" data-en="Booking engine + site">Motor de reservas + web</td><td class="mkt">$3.000.000 – 7.000.000</td><td class="lqs">$1.490.000</td></tr>
+          <tr><td class="l" data-es="Llave digital + cerraduras" data-en="Digital key + smart locks">Llave digital + cerraduras</td><td class="mkt">$4.000.000 – 12.000.000</td><td class="lqs" style="font-size:.92rem" data-es="Incluido*" data-en="Included*">Incluido*</td></tr>
+          <tr><td class="l" data-es="Canales + automatización" data-en="Channels + automation">Canales + automatización</td><td class="mkt">$1.500.000 – 4.000.000</td><td class="lqs" style="font-size:.92rem" data-es="Incluido" data-en="Included">Incluido</td></tr>
+          <tr class="total"><td class="l" data-es="Puesta en marcha (todo)" data-en="Full setup">Puesta en marcha (todo)</td><td class="mkt">$8.500.000 – 23.000.000</td><td class="lqs tnum">$3.900.000</td></tr>
+        </tbody>
+      </table>
+      <div class="savings">
+        <div><b class="tnum" data-es="hasta 70%" data-en="up to 70%">hasta 70%</b> <span data-es="menos que una implementación tradicional" data-en="less than a traditional setup">menos que una implementación tradicional</span></div>
+        <span style="font-size:.78rem;color:#b9e6c9" data-es="*Hardware de cerraduras según sede; software de llave incluido." data-en="*Lock hardware varies by property; key software included.">*Hardware de cerraduras según sede; software de llave incluido.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec ctaband">
+  <div class="wrap">
+    <div class="kicker reveal" data-es="¿Empezamos?" data-en="Shall we start?">¿Empezamos?</div>
+    <h2 class="reveal" data-es="Tu hotel, reinventado bajo <em>tu propia marca</em>." data-en="Your hotel, reinvented under <em>your own brand</em>.">Tu hotel, reinventado bajo <em>tu propia marca</em>.</h2>
+    <p class="reveal" data-es="Agenda una demo de 20 minutos y te mostramos Aloja funcionando con los datos de tu hotel." data-en="Book a 20-minute demo and we'll show Aloja running with your hotel's data.">Agenda una demo de 20 minutos y te mostramos Aloja funcionando con los datos de tu hotel.</p>
+    <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-gold btn-lg" onclick="reqDemo()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg> <span data-es="Agendar demo por WhatsApp" data-en="Book demo via WhatsApp">Agendar demo por WhatsApp</span></button>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<div class="stepper" id="stepper">
+  <button class="sbtn" id="prevBtn" onclick="prevView()" aria-label="Anterior">‹</button>
+  <div class="dots" id="dots"></div>
+  <button class="sbtn next" id="nextBtn" onclick="nextView()"><span id="nextLbl" data-es="Siguiente" data-en="Next">Siguiente</span> ›</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand"><div class="logo"><svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11h-5v-6h-6v6z"/></svg></div><div><b>Aloja</b><small>by LQS</small></div></div>
+        <p data-es="La plataforma que reúne reservas, check-in, llave digital y marca en una sola experiencia." data-en="The platform that unifies bookings, check-in, digital key and brand into one experience.">La plataforma que reúne reservas, check-in, llave digital y marca en una sola experiencia.</p>
+      </div>
+      <div class="foot-col"><h5 data-es="Producto" data-en="Product">Producto</h5>
+        <a onclick="scrollToId('modulos')" data-es="Módulos" data-en="Modules">Módulos</a>
+        <a onclick="scrollToId('experiencia')" data-es="Experiencia" data-en="Journey">Experiencia</a>
+        <a onclick="scrollToId('precios')" data-es="Precios" data-en="Pricing">Precios</a>
+      </div>
+      <div class="foot-col"><h5 data-es="Módulos" data-en="Modules">Módulos</h5>
+        <a onclick="gotoView('modulos');showMod(0)" data-es="Reservas" data-en="Bookings">Reservas</a>
+        <a onclick="gotoView('modulos');showMod(5)" data-es="Llave digital" data-en="Digital key">Llave digital</a>
+        <a onclick="gotoView('modulos');showMod(2)" data-es="Canales" data-en="Channels">Canales</a>
+      </div>
+      <div class="foot-col"><h5 data-es="Contacto" data-en="Contact">Contacto</h5>
+        <a onclick="reqDemo()">WhatsApp +57 324 768 0413</a>
+        <a href="#" onclick="reqDemo();return false" data-es="Agendar demo" data-en="Book a demo">Agendar demo</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> Aloja · un producto de LQS Estudio Digital · Medellín, Colombia</span>
+      <span data-es="Hecho con ☕ para la hotelería" data-en="Made with ☕ for hospitality">Hecho con ☕ para la hotelería</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+const WA="573332791710"; // WhatsApp LQS
+let LANG=localStorage.getItem('aloja_lang')||'es';
+
+/* ===== MODULE DATA ===== */
+const MODS=[
+ {icon:'<path d="M3 9h18M3 9l1-5h16l1 5M5 9v11h14V9M9 13h6"/>',
+  es:'Motor de Reservas', en:'Booking Engine',
+  dEs:'Recibe reservas directas desde tu propia web, sin pagar comisión a las OTAs. Disponibilidad en tiempo real, pagos en línea y confirmación instantánea.',
+  dEn:'Take direct bookings from your own website, without paying OTA commissions. Real-time availability, online payments and instant confirmation.',
+  fEs:[['Sin comisiones','cada reserva es 100% tuya'],['Pagos en línea','tarjeta, PSE y más'],['Calendario en vivo','tarifas y cupos al instante']],
+  fEn:[['No commissions','every booking is 100% yours'],['Online payments','card, PSE and more'],['Live calendar','rates and availability instantly']],
+  screen:'booking'},
+ {icon:'<path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3M9 12h6M12 9v6"/>',
+  es:'Integraciones API', en:'API Integrations',
+  dEs:'Aloja se conecta con lo que ya usas: Booking, Airbnb, Expedia, tu PMS y pasarelas de pago. Un solo panel, todo sincronizado, cero doble digitación.',
+  dEn:'Aloja connects with what you already use: Booking, Airbnb, Expedia, your PMS and payment gateways. One dashboard, all synced, zero double entry.',
+  fEs:[['Channel manager','OTAs sincronizadas'],['Conexión a tu PMS','datos siempre al día'],['Pagos y facturación','integrados de punta a punta']],
+  fEn:[['Channel manager','OTAs in sync'],['Connect your PMS','always up to date'],['Payments & billing','integrated end to end']],
+  screen:'api'},
+ {icon:'<path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.2-5.2A8.5 8.5 0 1 1 21 11.5z"/>',
+  es:'Canales Automatizados', en:'Automated Channels',
+  dEs:'Responde, confirma y vende solo. WhatsApp, correo y web con mensajes automáticos: reservas, check-in, upselling y reseñas, 24/7 y con tu tono de marca.',
+  dEn:'Reply, confirm and sell on autopilot. WhatsApp, email and web with automated messages: bookings, check-in, upselling and reviews, 24/7 in your brand voice.',
+  fEs:[['Bot 24/7','atiende mientras duermes'],['Flujos automáticos','confirmación y recordatorios'],['Upselling','ofrece servicios extra solo']],
+  fEn:[['24/7 bot','serves while you sleep'],['Automated flows','confirmations and reminders'],['Upselling','offers extra services automatically']],
+  screen:'chat'},
+ {icon:'<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><path d="M13 13h3v3M20 13v.01M13 20h.01M20 20h.01M17 20h.01M20 17h.01"/>',
+  es:'Check-in con QR', en:'QR Check-in',
+  dEs:'El huésped escanea un QR y hace check-in desde el celular: datos, firma y documento, sin filas ni papeleo. Recepción más rápida y una primera impresión impecable.',
+  dEn:'Guests scan a QR and check in from their phone: details, signature and ID, no lines or paperwork. Faster front desk and a flawless first impression.',
+  fEs:[['Sin filas','check-in en 60 segundos'],['Datos y firma digital','cumplimiento legal'],['QR en todo','habitación, menú, servicios']],
+  fEn:[['No lines','check-in in 60 seconds'],['Data & e-signature','legal compliance'],['QR everywhere','room, menu, services']],
+  screen:'qr'},
+ {icon:'<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>',
+  es:'Personalización', en:'Personalization',
+  dEs:'Aloja recuerda a cada huésped: preferencias, ocasiones especiales y su historial. Recíbelo por su nombre, sugiere lo que le gusta y convierte una estadía en una relación.',
+  dEn:'Aloja remembers every guest: preferences, special occasions and history. Greet them by name, suggest what they love and turn a stay into a relationship.',
+  fEs:[['Perfil del huésped','preferencias e historial'],['Detalles automáticos','cumpleaños y aniversarios'],['Ofertas relevantes','lo que de verdad le gusta']],
+  fEn:[['Guest profile','preferences and history'],['Automatic touches','birthdays and anniversaries'],['Relevant offers','what they truly enjoy']],
+  screen:'guest'},
+ {icon:'<circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l2 2M14 9l2 2"/>',
+  es:'Llave Digital', en:'Digital Key',
+  dEs:'La habitación se abre con el celular, un PIN o una tarjeta — tú eliges. Envía la llave antes de la llegada, revócala al salir y olvídate de las tarjetas perdidas.',
+  dEn:'The room opens with the phone, a PIN or a card — your choice. Send the key before arrival, revoke it on checkout and forget about lost cards.',
+  fEs:[['Celular, PIN o tarjeta','acceso flexible'],['Llave remota','envíala antes de llegar'],['Control total','revoca y audita accesos']],
+  fEn:[['Phone, PIN or card','flexible access'],['Remote key','send it before arrival'],['Full control','revoke and audit access']],
+  screen:'key'},
+ {icon:'<path d="M12 2 4 7v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7z"/><path d="M9 12l2 2 4-4"/>',
+  es:'Universalización de Marca', en:'Brand Universalization',
+  dEs:'Tu marca, idéntica en cada punto: web, correos, WhatsApp, QR, llave y pantallas. Colores, logo y voz unificados para que el huésped viva una sola experiencia coherente.',
+  dEn:'Your brand, identical at every touchpoint: web, emails, WhatsApp, QR, key and screens. Unified colors, logo and voice so the guest lives one coherent experience.',
+  fEs:[['Una sola identidad','de la reserva a la llave'],['Todo con tu logo','nada de marcas ajenas'],['Experiencia coherente','premium en cada detalle']],
+  fEn:[['One identity','from booking to key'],['All your logo','no third-party brands'],['Coherent experience','premium in every detail']],
+  screen:'brand'},
+];
+
+/* ===== SCREEN TEMPLATES ===== */
+function screenHTML(kind){
+  const es=LANG==='es';
+  const top=`<div class="sp-top"><div class="lg"><i></i> Aloja</div><div class="st">9:41</div></div>`;
+  if(kind==='booking') return `<div class="screen-page active">${top}
+    <div class="sp-h">${es?'Reserva directa':'Direct booking'}</div><div class="sp-sub">${es?'Suite Deluxe · 2 noches':'Deluxe Suite · 2 nights'}</div>
+    <div class="mini-card"><div class="row"><span>${es?'Entrada':'Check-in'}</span><b>12 ${es?'Ago':'Aug'}</b></div><div class="row"><span>${es?'Salida':'Check-out'}</span><b>14 ${es?'Ago':'Aug'}</b></div><div class="row"><span>${es?'Huéspedes':'Guests'}</span><b>2</b></div></div>
+    <div class="mini-card"><div class="row"><span>${es?'Tarifa':'Rate'}</span><b>$420.000</b></div><div class="row"><span>${es?'Comisión OTA':'OTA commission'}</span><b style="color:var(--aqua)">$0</b></div></div>
+    <button class="sp-btn">${es?'Confirmar y pagar':'Confirm & pay'} <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>`;
+  if(kind==='api') return `<div class="screen-page active">${top}
+    <div class="sp-h">${es?'Todo sincronizado':'All in sync'}</div><div class="sp-sub">${es?'Panel de integraciones':'Integrations panel'}</div>
+    ${['Booking.com','Airbnb','Expedia','PMS','Stripe'].map(n=>`<div class="mini-card" style="padding:9px 12px"><div class="row"><b>${n}</b><span class="pill">${es?'Conectado':'Connected'}</span></div></div>`).join('')}</div>`;
+  if(kind==='chat') return `<div class="screen-page active">${top}
+    <div class="sp-h">WhatsApp</div><div class="sp-sub">${es?'Respuesta automática':'Auto reply'}</div>
+    <div class="chat" id="chatBox"></div></div>`;
+  if(kind==='qr') return `<div class="screen-page active">${top}
+    <div class="sp-h">${es?'Check-in':'Check-in'}</div><div class="sp-sub">${es?'Escanea para registrarte':'Scan to check in'}</div>
+    <div class="qr-wrap qr-scan"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKCAIAAAD0S4FSAAAGQklEQVR4nO3du41lNxBAQY2wpgzloPxDUg4y1r9KYECH20ve86rcwbz/AZ1G8+t5nj+Aoj9PvwBgirwhS96QJW/IkjdkyRuy5A1Z8oYseUOWvCFL3pAlb8iSN2TJG7LkDVnyhix5Q5a8IUvekPVj55//+vufX/U6LvHzv38Xf915v+tHXpt73vUj3/lprH3ab3LN6Q1Z8oYseUOWvCFL3pAlb8iSN2TJG7LkDVlbU2trc5NJO05NgJ163p1H3vnfnU9j7pfT+02uOb0hS96QJW/IkjdkyRuy5A1Z8oYseUOWvCFrcGptbW5S59Rk0qmtZqe2uK3NTdrN6f0mnd6QJW/IkjdkyRuy5A1Z8oYseUOWvCFL3pB1bGrtjXamx+a2ms2Zm4e7c+dZj9MbsuQNWfKGLHlDlrwhS96QJW/IkjdkyRuyTK39JqemuO7casbv4fSGLHlDlrwhS96QJW/IkjdkyRuy5A1Z8oasY1NrvW1bd86H3bmn7c5NbL3fpNMbsuQNWfKGLHlDlrwhS96QJW/IkjdkyRuyBqfW7pzimrMzp7W2M+P1af+79mm/Sac3ZMkbsuQNWfKGLHlDlrwhS96QJW/IkjdkfT3Pc/o1vMbczNPcxFtvxqu3EW2O0xuy5A1Z8oYseUOWvCFL3pAlb8iSN2TJG7K2dq2duudxbo/XnE+btZqbluvN0s115PSGLHlDlrwhS96QJW/IkjdkyRuy5A1Z8oasram1N+7xunOmbc6de9p2HvnOb/DOX47TG7LkDVnyhix5Q5a8IUvekCVvyJI3ZMkbso7tWjs1e9SbarpzdvDUpr05b3xHTm/IkjdkyRuy5A1Z8oYseUOWvCFL3pAlb8j6ep5n6KFPbfnacerO0zlz38Kd02O9V+WGUOAb8oYseUOWvCFL3pAlb8iSN2TJG7LkDVmDu9bm3Hkb487E253vaMepDXBvnCyce81Ob8iSN2TJG7LkDVnyhix5Q5a8IUvekCVvyLp019qOuXmp3ga4U5N2b7xt8xS71oBvyBuy5A1Z8oYseUOWvCFL3pAlb8iSN2QNTq3tODWntWNnxuuN72jOqdnB3m/D6Q1Z8oYseUOWvCFL3pAlb8iSN2TJG7LkDVlbN4SeMrfla+eR52aePm2r2akZr7U7JwvXnN6QJW/IkjdkyRuy5A1Z8oYseUOWvCFL3pC1NbU2d7/kG//3jeYmwHY+yTfeLXvn8zq9IUvekCVvyJI3ZMkbsuQNWfKGLHlDlrwha+uG0FMTYG+8ufLO/XCnpvTeuAFu7c5fu9MbsuQNWfKGLHlDlrwhS96QJW/IkjdkyRuytqbW5pyaxLpz19qpGa87b+rcMfea7/wknd6QJW/IkjdkyRuy5A1Z8oYseUOWvCFL3pC1dUPojrkpn95GtB2f9rxrc9Njd377Tm/IkjdkyRuy5A1Z8oYseUOWvCFL3pAlb8jamlrr3fI598hzU01vnA9bO/Ud7fzvnTNtTm/IkjdkyRuy5A1Z8oYseUOWvCFL3pAlb8i69IbQO526BfLUXZy9ebi1Oz9nN4QC35A3ZMkbsuQNWfKGLHlDlrwhS96QJW/IOrZr7U53bgg79by9T+PUOzq1WdDpDVnyhix5Q5a8IUvekCVvyJI3ZMkbsuQNWVtTa2unJnXW5maP7pzhO3UzaW8+7M7f85rTG7LkDVnyhix5Q5a8IUvekCVvyJI3ZMkbsgan1tbu3BC2duc01Y47P6tTj7zzvHfe8er0hix5Q5a8IUvekCVvyJI3ZMkbsuQNWfKGrGNTa290atfazvPOzVrtmNvE9sbpwLl35PSGLHlDlrwhS96QJW/IkjdkyRuy5A1Z8oYsU2svMDd59sb7Uk/Npd15A+ya0xuy5A1Z8oYseUOWvCFL3pAlb8iSN2TJG7KOTa3duRNrzs7k2Z3zYTvPe2oCbO5Xd+o7WnN6Q5a8IUvekCVvyJI3ZMkbsuQNWfKGLHlD1uDU2ht3U62d2nk2N9O2M8U1NwE2twFu7nl3zH2STm/IkjdkyRuy5A1Z8oYseUOWvCFL3pAlb8j6ep7n9GsARji9IUvekCVvyJI3ZMkbsuQNWfKGLHlDlrwhS96QJW/IkjdkyRuy5A1Z8oYseUOWvCFL3pAlb8j6H07zBq+wQg71AAAAAElFTkSuQmCC" alt="QR"></div>
+    <div class="mini-card"><div class="row"><span>${es?'Habitación':'Room'}</span><b>Suite 204</b></div><div class="row"><span>${es?'Estado':'Status'}</span><span class="pill">${es?'Listo':'Ready'}</span></div></div></div>`;
+  if(kind==='guest') return `<div class="screen-page active">${top}
+    <div class="sp-h">Valentina R.</div><div class="sp-sub">${es?'Huésped recurrente · 4ª visita':'Returning guest · 4th visit'}</div>
+    <div class="mini-card"><div class="row"><span>${es?'Prefiere':'Prefers'}</span><b>${es?'Piso alto':'High floor'}</b></div><div class="row"><span>${es?'Almohada':'Pillow'}</span><b>${es?'Firme':'Firm'}</b></div><div class="row"><span>${es?'Ocasión':'Occasion'}</span><span class="pill gold">🎂 ${es?'Cumpleaños':'Birthday'}</span></div></div>
+    <div class="mini-card"><div class="row"><span>${es?'Detalle enviado':'Touch sent'}</span><b>${es?'Vino + nota':'Wine + note'}</b></div></div></div>`;
+  if(kind==='key') return `<div class="screen-page active">${top}
+    <div class="sp-h">${es?'Llave digital':'Digital key'}</div><div class="sp-sub">Suite 204 · ${es?'Piso 2':'Floor 2'}</div>
+    <div class="keypad"><div class="key-lock" id="modLock"><svg id="modLockIco" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <div class="slide" id="slide"><div class="knob"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><span class="lbl">${es?'Desliza para abrir':'Slide to unlock'}</span></div></div></div>`;
+  if(kind==='brand') return `<div class="screen-page active">${top}
+    <div class="sp-h">${es?'Tu marca, en todo':'Your brand, everywhere'}</div><div class="sp-sub">${es?'Un solo lenguaje visual':'One visual language'}</div>
+    ${[[es?'Sitio web':'Website','🌐'],[es?'Correos':'Emails','✉️'],['WhatsApp','💬'],[es?'Llave & QR':'Key & QR','🔑']].map(x=>`<div class="mini-card" style="padding:9px 12px"><div class="row"><span>${x[1]} &nbsp;${x[0]}</span><span class="pill gold">${es?'Tu logo':'Your logo'}</span></div></div>`).join('')}</div>`;
+  return '';
+}
+
+/* ===== RENDER MODULES ===== */
+let curMod=0;
+function nmz(o,k){return LANG==='es'?o[k+'Es']||o.es:o[k+'En']||o.en;}
+function buildTabs(){
+  document.getElementById('modTabs').innerHTML=MODS.map((m,i)=>
+   `<button class="mtab${i===curMod?' active':''}" onclick="showMod(${i})"><svg viewBox="0 0 24 24">${m.icon}</svg>${LANG==='es'?m.es:m.en}</button>`).join('');
+}
+function showMod(i){
+  curMod=i;
+  document.querySelectorAll('.mtab').forEach((t,x)=>t.classList.toggle('active',x===i));
+  const m=MODS[i], es=LANG==='es';
+  const feats=(es?m.fEs:m.fEn).map(f=>`<div class="mf"><span class="ck"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>${f[0]}<small>${f[1]}</small></span></div>`).join('');
+  document.getElementById('modCopy').innerHTML=`<div class="mnum">${String(i+1).padStart(2,'0')} / 07</div>
+    <h3>${es?m.es:m.en}</h3><p>${es?m.dEs:m.dEn}</p><div class="mod-feats">${feats}</div>`;
+  document.getElementById('modScreen').innerHTML=screenHTML(m.screen);
+  if(m.screen==='chat') runChat();
+  if(m.screen==='key') wireSlide();
+  scrollModIntoView();
+}
+function scrollModIntoView(){}
+
+/* chat animation */
+let chatT=[];
+function runChat(){
+  const es=LANG==='es';
+  const box=document.getElementById('chatBox'); if(!box)return;
+  const msgs=es?[
+   ['in','Hola, ¿tienen suite para el finde? 😊'],['out','¡Hola! Sí ✨ Suite Deluxe disponible 12–14 Ago, $420.000/noche.'],
+   ['in','¿Incluye desayuno?'],['out','Sí, desayuno para 2 incluido. ¿Te reservo? 🥐'],['in','¡Dale!'],['out','Listo ✅ Te envié el link de pago y tu check-in QR.']
+  ]:[
+   ['in','Hi, any suite for the weekend? 😊'],['out','Hi! Yes ✨ Deluxe Suite available Aug 12–14, $420k/night.'],
+   ['in','Breakfast included?'],['out','Yes, breakfast for 2 included. Shall I book it? 🥐'],['in','Go for it!'],['out','Done ✅ I sent the payment link and your QR check-in.']
+  ];
+  box.innerHTML=''; chatT.forEach(clearTimeout); chatT=[];
+  msgs.forEach((m,i)=>chatT.push(setTimeout(()=>{
+    if(!document.getElementById('chatBox'))return;
+    const b=document.createElement('div');b.className='bub '+m[0];b.textContent=m[1];box.appendChild(b);box.scrollTop=box.scrollHeight;
+  }, 500+i*950)));
+}
+
+/* slide to unlock */
+function wireSlide(){
+  const s=document.getElementById('slide'); if(!s)return;
+  const knob=s.querySelector('.knob'); let down=false,startX=0,max=s.offsetWidth-48;
+  const move=x=>{let d=Math.max(0,Math.min(max,x));knob.style.left=(4+d)+'px';if(d>=max-4)unlock();};
+  const unlock=()=>{s.classList.add('done');knob.style.left='';const l=document.getElementById('modLock'),ic=document.getElementById('modLockIco');
+    l.classList.add('open');ic.innerHTML='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0"/>';
+    s.querySelector('.lbl').textContent=LANG==='es'?'¡Abierta! 🔓':'Unlocked! 🔓';toast(LANG==='es'?'Puerta abierta ✅':'Door opened ✅');
+    down=false;};
+  const start=e=>{down=true;startX=(e.touches?e.touches[0].clientX:e.clientX)-(parseFloat(knob.style.left)||4);};
+  const drag=e=>{if(!down)return;move((e.touches?e.touches[0].clientX:e.clientX)-startX-s.getBoundingClientRect().left+ (s.getBoundingClientRect().left));};
+  // simpler: use pointer relative to slide
+  s.onpointerdown=e=>{down=true;s.setPointerCapture(e.pointerId);};
+  s.onpointermove=e=>{if(!down||s.classList.contains('done'))return;move(e.clientX-s.getBoundingClientRect().left-24);};
+  s.onpointerup=()=>{if(s.classList.contains('done'))return;down=false;knob.style.left='';};
+  s.onclick=()=>{if(!s.classList.contains('done'))unlock();}; // fallback tap
+}
+
+/* hero lock tap */
+document.addEventListener('click',e=>{
+  const hl=e.target.closest('#heroLock'); if(!hl)return;
+  const ic=document.getElementById('heroLockIco'),t=document.getElementById('heroKeyTxt');
+  if(hl.classList.contains('open')){hl.classList.remove('open');ic.innerHTML='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>';t.textContent=LANG==='es'?'Toca para abrir':'Tap to unlock';}
+  else{hl.classList.add('open');ic.innerHTML='<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0"/>';t.textContent=LANG==='es'?'¡Bienvenida! 🔓':'Welcome! 🔓';toast(LANG==='es'?'Suite 204 abierta ✅':'Suite 204 unlocked ✅');}
+});
+
+/* ===== LANG / THEME ===== */
+function applyLang(l){LANG=l;localStorage.setItem('aloja_lang',l);document.documentElement.lang=l;
+  document.getElementById('langLabel').textContent=l==='es'?'EN':'ES';
+  document.querySelectorAll('[data-es]').forEach(el=>el.innerHTML=el.getAttribute('data-'+l));
+  buildTabs();showMod(curMod);
+  if(typeof updateStepper==='function')updateStepper();}
+function toggleLang(){applyLang(LANG==='es'?'en':'es');}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('aloja_theme',t);
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',t==='light'?'#f4f6fc':'#0a0e20');}
+function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='light'?'dark':'light');}
+
+/* ===== NAV / VISTAS / MISC ===== */
+function toggleMnav(){const n=document.getElementById('mnav'),b=document.getElementById('burger');const o=n.classList.toggle('open');b.classList.toggle('active',o);document.body.classList.toggle('no-scroll',o);}
+function reqDemo(){const es=LANG==='es';const t=es?'Hola LQS 👋, quiero una demo de Aloja para mi hotel.':'Hi LQS 👋, I want an Aloja demo for my hotel.';window.open(`https://wa.me/${WA}?text=${encodeURIComponent(t)}`,'_blank');}
+let toastT;function toast(m){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1900);}
+
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function countUp(el){
+  const to=+el.dataset.count, pre=el.dataset.prefix||'', suf=el.dataset.suffix||'';
+  if(reduce){el.textContent=pre+to+suf;return;}
+  let t0=null;const dur=1400;
+  const step=t=>{if(!t0)t0=t;const p=Math.min(1,(t-t0)/dur);const v=Math.round((1-Math.pow(1-p,3))*to);el.textContent=pre+v+suf;if(p<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+}
+const VIEWS=['inicio','modulos','experiencia','estudio','precios','comparativa'];
+let curView=0, counted=false;
+function showView(idx,updateHash=true){
+  idx=Math.max(0,Math.min(VIEWS.length-1,idx)); curView=idx;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const el=document.getElementById('v-'+VIEWS[idx]); el.classList.add('active');
+  el.querySelectorAll('.reveal').forEach(r=>r.classList.add('in'));
+  window.scrollTo({top:0,left:0});
+  if(VIEWS[idx]==='inicio' && !counted){counted=true; el.querySelectorAll('[data-count]').forEach(countUp);}
+  updateStepper();
+  if(updateHash){try{history.replaceState(null,'','#'+VIEWS[idx]);}catch(e){}}
+  const n=document.getElementById('mnav'); if(n.classList.contains('open'))toggleMnav();
+}
+function gotoView(id){ if(id==='top'||!id)id='inicio'; const i=VIEWS.indexOf(id); showView(i>=0?i:0); }
+function scrollToId(id){ gotoView(id); }   /* alias de compatibilidad */
+function mgo(id){ toggleMnav(); setTimeout(()=>gotoView(id),260); }
+function nextView(){ if(curView>=VIEWS.length-1){reqDemo();return;} showView(curView+1); }
+function prevView(){ showView(curView-1); }
+function updateStepper(){
+  document.getElementById('dots').innerHTML=VIEWS.map((v,i)=>`<span class="dot${i===curView?' active':''}" onclick="showView(${i})"></span>`).join('');
+  document.getElementById('prevBtn').disabled=curView===0;
+  const last=curView===VIEWS.length-1, nl=document.getElementById('nextLbl');
+  nl.setAttribute('data-es',last?'Solicitar demo':'Siguiente'); nl.setAttribute('data-en',last?'Request demo':'Next');
+  nl.textContent=nl.getAttribute('data-'+LANG);
+  document.querySelectorAll('.nav-desk a').forEach((a,i)=>a.classList.toggle('navon',i+1===curView));
+}
+
+/* ===== INIT ===== */
+document.getElementById('yr').textContent=new Date().getFullYear();
+const header=document.getElementById('header');
+addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>40),{passive:true});
+addEventListener('load',()=>setTimeout(()=>document.getElementById('intro').classList.add('hide'),1600));
+addEventListener('hashchange',()=>{const i=VIEWS.indexOf(location.hash.replace('#',''));if(i>=0&&i!==curView)showView(i,false);});
+applyTheme(localStorage.getItem('aloja_theme')||'light');
+applyLang(LANG);
+showView(Math.max(0,VIEWS.indexOf(location.hash.replace('#',''))),false);
+</script>
+</body>
+</html>
