@@ -434,13 +434,26 @@ h3.disp{font-size:clamp(1.5rem,3vw,2.2rem)}
 .area .lks{margin-top:20px}
 @media(max-width:820px){.area .a-lado{min-height:104px}}
 .area p{font-size:clamp(.92rem,1.2vw,1.06rem);color:var(--dim);line-height:1.6;max-width:34ch}
+/* para quién es el área: la mitad del trabajo del panel. Va pegado a la frase,
+   con la etiqueta en la tipografía de datos para que se lea como un dato y no
+   como otra frase de venta. */
+.area .para{margin-top:11px;font-size:.85rem;color:var(--faint);max-width:34ch;line-height:1.5}
+.area .para span{font-family:var(--tech);font-size:.62rem;font-weight:700;letter-spacing:.15em;
+ text-transform:uppercase;color:var(--ac);margin-right:7px}
 .area .lks{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
 .area .lk{font-family:var(--tech);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
- border:1px solid var(--line2);border-radius:999px;padding:8px 13px;color:var(--dim);cursor:pointer;transition:color var(--dur-fast) ease,border-color var(--dur-fast) ease,background var(--dur-fast) ease;white-space:nowrap}
-.area .lk.pri{border-color:var(--ac);color:var(--ac)}
+ border:1px solid var(--line2);border-radius:999px;padding:8px 13px;color:var(--dim);cursor:pointer;transition:color var(--dur-fast) ease,border-color var(--dur-fast) ease,background var(--dur-fast) ease,transform 90ms var(--ease-out);white-space:nowrap}
+/* el único botón del panel: se nombra entero («Ver la ficha de Express») para
+   que quien lo toca sepa a dónde va antes de tocarlo */
+.area .lk.pri{border-color:var(--ac);color:var(--ac);display:inline-flex;align-items:center;gap:8px;padding:11px 18px;font-size:.72rem}
+.area .lk.pri svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
+ transition:transform var(--dur-fast) var(--ease-out)}
 @media (hover:hover) and (pointer:fine){
  .area .lk:hover{border-color:var(--ac);color:var(--ac)}
- .area .lk.pri:hover{background:var(--ac);color:#06070f}}
+ .area .lk.pri:hover{background:var(--ac);color:#06070f}
+ .area .lk.pri:hover svg{transform:translateX(3px)}}
+.area .lk:active{transform:scale(.96)}
+@media(prefers-reduced-motion:reduce){.area .lk.pri:hover svg{transform:none}}
 /* área sin página todavía: se ve, pero no promete lo que no hay */
 .area.pend{background:rgba(255,255,255,.015)}
 .area.pend h3,.area.pend .tagd{opacity:.55}
@@ -527,6 +540,9 @@ h3.disp{font-size:clamp(1.5rem,3vw,2.2rem)}
  .galf .ir{align-self:start;margin-top:4px}}
 /* formularios */
 .form{display:grid;gap:14px;max-width:560px}
+/* display:grid le gana a [hidden] del navegador: sin esto, el formulario
+   sigue a la vista debajo de su propia confirmación */
+.form[hidden]{display:none}
 .fld label{display:block;font-family:var(--tech);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:7px}
 .inp{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:13px;color:var(--ink);padding:13px 15px;font-size:.94rem;transition:border-color var(--dur-fast) ease,background var(--dur-fast) ease}
 .inp:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.07)}
@@ -538,6 +554,21 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .msg.on{display:block}
 .msg.ok{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.4);color:#a7f3c4}
 .msg.er{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.4);color:#ffb3b3}
+/* la confirmación de la cotización: la única puerta a la propuesta completa */
+#cotOk[hidden]{display:none}
+.eq-ok{font-family:var(--edit);font-style:italic;font-size:clamp(1.15rem,2.4vw,1.75rem);line-height:1.25;color:var(--ink)}
+.ea-ok{margin-top:10px;font-size:.9rem;color:var(--dim);max-width:56ch}
+.propq{display:block;max-width:620px;margin-top:22px;border:1px solid var(--line);border-radius:18px;
+ background:rgba(255,255,255,.045);padding:20px 22px;position:relative;overflow:hidden;
+ transition:border-color var(--dur-fast) ease,transform 90ms var(--ease-out)}
+.propq::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--ac,var(--gold))}
+.propq h4{font-family:var(--disp);font-size:1.35rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:6px}
+.propq p{font-size:.88rem;color:var(--dim);line-height:1.55}
+.propq .ir{display:inline-flex;align-items:center;gap:7px;margin-top:14px;
+ font-family:var(--tech);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ac,var(--gold))}
+@media(hover:hover) and (pointer:fine){.propq:hover{border-color:var(--ac,var(--gold))}}
+.propq:active{transform:scale(.99)}
+.propq-alt{margin-top:18px;font-size:.88rem;color:var(--faint);max-width:56ch;line-height:1.6}
 /* portal */
 .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px}
 .proj{position:relative;isolation:isolate;border:0;background:none;
@@ -615,7 +646,23 @@ footer{border-top:1px solid var(--line);padding:38px 0 48px;position:relative;z-
 #visor.on{opacity:1;visibility:visible;transform:none}
 #visor .vtop{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px var(--pad);
  border-bottom:1px solid var(--line);background:rgba(6,7,15,.94);backdrop-filter:blur(12px)}
-#visor .vt{font-family:var(--tech);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+#visor .vmigas{display:flex;align-items:center;gap:12px;min-width:0}
+#visor .vt{display:flex;align-items:center;gap:8px;min-width:0;
+ font-family:var(--tech);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+#visor .vt>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#visor .vraiz,#visor .vsep{color:var(--faint)}
+#visor .vback{display:inline-flex;align-items:center;gap:7px;flex:none;cursor:pointer;
+ font-family:var(--tech);font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+ color:var(--ink);background:none;border:1px solid var(--line2);border-radius:999px;padding:8px 14px;
+ transition:border-color var(--dur-fast) ease,color var(--dur-fast) ease,transform 90ms var(--ease-out)}
+#visor .vback[hidden]{display:none}
+#visor .vback svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#visor .vback:active{transform:scale(.96)}
+@media(hover:hover) and (pointer:fine){#visor .vback:hover{border-color:var(--gold);color:var(--gold)}}
+@media(max-width:640px){
+ #visor .vback span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ #visor .vback{padding:8px 11px}
+ #visor .vraiz,#visor .vsep{display:none}}
 #visor .vbody{flex:1;position:relative;display:flex}
 #visor iframe{flex:1;width:100%;border:0;background:var(--bg)}
 #visorFall{display:none;position:absolute;inset:0;z-index:2;background:var(--bg);
@@ -993,7 +1040,7 @@ footer{border-top:1px solid var(--line);padding:38px 0 48px;position:relative;z-
        style="right:-8vw;top:6%;width:26vw;height:17vw;background:var(--u1);--o:.18;scale:-1 1"></div>
 <div class="wrap">
   <h2 class="disp" id="servTit">Todo lo que hacemos,<br>en <span class="gold">tres familias</span>.</h2>
-  <p class="body-l" id="servSub" style="margin:16px 0 8px">Marca, Presencia y Producción. Adentro de cada una está cómo trabajamos, qué entregamos y una muestra que puedes tocar. Los precios están al final, cuando quieras verlos.</p>
+  <p class="body-l" id="servSub" style="margin:16px 0 8px">Marca, Presencia y Producción. Aquí cada área dice qué resuelve y para quién, en una frase. Lo que incluye, cuánto vale y una muestra que puedes tocar están adentro de su ficha, a un toque.</p>
  </div>
  <!-- las tres familias, que antes remataban el hero. Aquí sí ordenan algo:
       son el índice de la sección donde viven las áreas. -->
@@ -1035,17 +1082,18 @@ footer{border-top:1px solid var(--line);padding:38px 0 48px;position:relative;z-
   <div class="puente" id="puenteMue"></div>
 
   <!-- ═══ la galería ═══
-       Todo lo navegable del ecosistema en un solo renglonario: las propuestas
-       completas ya filtradas por tipo de negocio, las muestras que se pueden
-       tocar y los documentos. Va sin filtro de cliente a propósito — es el
-       único sitio donde se ve el trabajo entero, incluso lo que la puerta de
-       entrada dejó fuera. -->
+       Muestras, fichas y documentos: todo lo que se puede tocar sin pedir nada.
+       Va sin filtro de cliente a propósito — es el único sitio donde se ve el
+       trabajo entero, incluso lo que la puerta de entrada dejó fuera.
+
+       Las propuestas completas ya no viven aquí: son la capa 3, y esa se
+       entrega cuando pides cotización. -->
   <div class="gal-tit">
-    <h3>Y las propuestas<br>completas.</h3>
-    <p>Cada una es la propuesta que le mandamos a un cliente real, ya filtrada por tipo de negocio: alcance, cronograma, lo que se puede armar aparte y el precio. Se abren aquí mismo. Esta lista no la toca el filtro de arriba: está todo.</p>
+    <h3>Todo lo que<br>se puede tocar.</h3>
+    <p>Las muestras interactivas, las fichas de cada área con sus precios y los documentos del estudio. Se abren aquí mismo. Esta lista no la toca el filtro de arriba: está todo.</p>
   </div>
   <div class="gal" id="galeria"></div>
-  <p class="body-l" style="margin-top:30px;font-size:.9rem">¿Buscabas las fichas de cada área con sus precios? Están en <a data-go="servicios" style="color:var(--gold);cursor:pointer;text-decoration:underline">Servicios</a>.</p>
+  <p class="body-l" style="margin-top:30px;font-size:.9rem">La propuesta completa —alcance, cronograma y precio para tu caso— va aparte: la armamos y te la entregamos cuando <a data-go="cotizar" style="color:var(--gold);cursor:pointer;text-decoration:underline">pides tu cotización</a>.</p>
 </div></section></div>
 
 <!-- ═══════ COTIZAR ═══════ -->
@@ -1078,9 +1126,22 @@ footer{border-top:1px solid var(--line);padding:38px 0 48px;position:relative;z-
       <a href="legal.html#politica" target="_blank" rel="noopener" style="color:var(--gold)">política de datos</a> de LQS.</span>
     </label>
     <div class="msg" id="mSol"></div>
-    <div class="hbtns"><button class="btn gold" type="submit" id="bSol">Enviar solicitud</button>
+    <div class="hbtns"><button class="btn gold" type="submit" id="bSol">Cotizar mi proyecto</button>
     <a class="btn g" href="https://wa.me/573332791710?text=Hola%20LQS%20%F0%9F%91%8B%20quiero%20cotizar%20un%20proyecto." target="_blank" rel="noopener">Prefiero WhatsApp</a></div>
   </form>
+
+  <!-- ═══ la entrega de la capa 3 ═══
+       Aquí, y sólo aquí, aparece la propuesta completa. Se pinta al enviar el
+       formulario, con el ?para= que corresponde a quien acaba de escribir. -->
+  <div id="cotOk" hidden>
+    <p class="eq-ok">Recibido. Te respondemos en menos de <span class="gold">48 horas</span>.</p>
+    <p class="ea-ok" id="cotQuien">Mientras tanto, ya puedes leer la propuesta completa del tipo de negocio que nos contaste.</p>
+    <div id="cotProp"></div>
+    <div class="hbtns" style="margin-top:22px">
+      <a class="btn g" href="https://wa.me/573332791710?text=Hola%20LQS%20%F0%9F%91%8B%20acabo%20de%20enviar%20mi%20cotizaci%C3%B3n%20por%20la%20web." target="_blank" rel="noopener">Escribirnos por WhatsApp</a>
+      <button class="btn g" type="button" id="cotOtra">Enviar otra solicitud</button>
+    </div>
+  </div>
 </div></section></div>
 
 <!-- ═══════ MI CUENTA ═══════ -->
@@ -1234,7 +1295,17 @@ footer{border-top:1px solid var(--line);padding:38px 0 48px;position:relative;z-
 
 <!-- visor interno -->
 <div id="visor">
-  <div class="vtop"><div class="vt" id="visorT">Muestra</div>
+  <!-- La cabecera del visor es el rastro de migas: dice dónde estás y por
+       dónde llegaste. Cuando entras a una muestra desde una ficha aparece el
+       botón de volver a la ficha, para que el único camino de salida no sea
+       cerrarlo todo. -->
+  <div class="vtop">
+    <div class="vmigas">
+      <button class="vback" type="button" id="visorBack" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        <span id="visorBackT">Volver</span></button>
+      <div class="vt"><span class="vraiz">LQS</span><span class="vsep">/</span><span id="visorT">Muestra</span></div>
+    </div>
     <div style="display:flex;gap:8px">
       <a class="btn g" id="visorAbrir" target="_blank" rel="noopener" style="padding:9px 16px;font-size:.7rem">Abrir aparte</a>
       <button class="btn p" id="visorX" style="padding:9px 16px;font-size:.7rem">✕ Cerrar</button>
@@ -1428,29 +1499,67 @@ document.getElementById('proc').innerHTML=[
  ['03','Producción','Trabajamos por entregas parciales: ves avances y ajustas sobre la marcha.'],
  ['04','Lanzamiento','Publicamos, capacitamos a tu equipo y medimos qué está funcionando.']
 ].map(([n,t,d])=>`<div class="card"><div class="un">${n}</div><h3>${t}</h3><p>${d}</p></div>`).join('');
-/* ═══ las áreas y su ficha propia ═══
-   cada una es un enlace real: si el visor interno falla, el href sigue funcionando */
+/* ═══ las áreas y su ficha propia · CAPA 1 ═══
+   Cada panel hace UN trabajo: decir qué resuelve el área, en una frase, y para
+   quién. Nada más. Ni precios, ni lo que incluye, ni la muestra: eso vive en la
+   ficha, un toque más adentro, y por eso el panel tiene un solo botón.
+
+   Antes había tres botones (ver ficha · probar muestra · ↗) y la descripción
+   metía media ficha adentro. El visitante leía dos veces lo mismo y no sabía
+   qué le faltaba por ver.
+
+   Cada fila: [área, subtítulo, qué resuelve, para quién, ficha, muestra, color,
+   familia]. La muestra sigue en la lista porque la usan la galería y los
+   puentes; simplemente ya no se ofrece desde el panel.
+   Cada enlace es real: si el visor interno falla, el href sigue funcionando. */
 const FICHAS=[
- ['Empresas','Marca completa','Identidad, sitio web y atención automática para negocios que necesitan verse serios desde el primer día.','mundos/empresas.html','mundos/empresas-muestras.html','#5b8def','marca'],
- ['Express','Diseño día a día','Piezas sueltas y combos con precio cerrado, listos en 48–72 horas. Sin reuniones, sin cotización previa.','mundos/express.html','mundos/express-muestras.html','#39c07a','produccion'],
- ['Productora','Video y foto','Reels, foto de producto y contenido para redes. Incluye calculadora de rodaje con transporte y viáticos.','mundos/productora.html','mundos/productora-muestras.html','#3fc6d6','produccion'],
- ['Creadores','Marca personal','Identidad de canal, portada, foto de perfil y plantillas editables para publicar sin frenar.','mundos/creadores.html','mundos/creadores-muestras.html','#a97bd6','marca'],
- ['Ropa y merch','foma','Uniformes y merch: diseño aplicado, muestra física antes de producir y entrega en 3–4 semanas.','mundos/foma.html','mundos/marcas-muestras.html','#b6ad98','marca'],
+ ['Empresas','Marca completa',
+  'Tu empresa se ve seria y responde sola: marca, sitio y atención bajo una sola dirección.',
+  'Negocios que ya venden y todavía se ven improvisados.',
+  'mundos/empresas.html','mundos/empresas-muestras.html','#5b8def','marca'],
+ ['Express','Diseño día a día',
+  'Las piezas del día a día salen en 48–72 horas, con precio cerrado y sin reunión previa.',
+  'Quien publica seguido y no quiere cotizar cada pieza.',
+  'mundos/express.html','mundos/express-muestras.html','#39c07a','produccion'],
+ ['Productora','Video y foto',
+  'Tu producto y tu local se ven grabados como se deben ver, no en foto de celular.',
+  'Negocios que necesitan contenido constante para redes.',
+  'mundos/productora.html','mundos/productora-muestras.html','#3fc6d6','produccion'],
+ ['Creadores','Marca personal',
+  'Tu canal se ve reconocible en cada publicación, sin tener que diseñar cada vez.',
+  'Creadores que ya publican y quieren verse profesionales.',
+  'mundos/creadores.html','mundos/creadores-muestras.html','#a97bd6','marca'],
+ ['Ropa y merch','foma',
+  'Uniformes y merch con tu marca aplicada, con muestra física antes de producir el lote.',
+  'Marcas y equipos que quieren vestirse con lo suyo.',
+  'mundos/foma.html','mundos/marcas-muestras.html','#b6ad98','marca'],
  /* la muestra de Automatización es el simulador que ya vive dentro de su
     propia ficha: se entra directo por el ancla en vez de duplicar el bot */
- ['Automatización','WhatsApp y redes','Tu negocio contesta solo: reservas, pedidos, precios y preguntas frecuentes, todos los días del año.','mundos/automatizacion.html','mundos/automatizacion.html#simulador','#3fd0e6','presencia'],
+ ['Automatización','WhatsApp y redes',
+  'Tu negocio contesta solo: reservas, pedidos y precios, todos los días del año.',
+  'Quien pierde ventas por no alcanzar a responder.',
+  'mundos/automatizacion.html','mundos/automatizacion.html#vivo','#3fd0e6','presencia'],
  /* ↓ Restaurantes y Hoteles quedan sin página a propósito.
-    Cuando tengas la definitiva, pon la ruta en el 4º campo (ficha) y,
-    si hay demo, en el 5º (muestra). Ejemplo: 'mundos/carta.html'.
+    Cuando tengas la definitiva, pon la ruta en el 5º campo (ficha) y,
+    si hay demo, en el 6º (muestra). Ejemplo: 'mundos/carta.html'.
     Mientras estén vacíos la tarjeta se muestra igual, pero sin enlaces. */
- ['Restaurantes','Carta','Carta digital, pedidos y reservas desde el celular, con la carta siempre al día.','','','#e0614a','presencia'],
- ['Hoteles','Aloja','Reservas, check-in con QR y llave digital. Plataforma completa para hospedaje.','','','#2fb8a3','presencia'],
+ ['Restaurantes','Carta',
+  'Tu carta está siempre al día y los pedidos entran desde el celular del cliente.',
+  'Restaurantes que hoy mandan la carta en foto por WhatsApp.',
+  '','','#e0614a','presencia'],
+ ['Hoteles','Aloja',
+  'Las reservas entran solas y el huésped llega con su check-in ya hecho.',
+  'Hoteles y hospedajes que llevan la agenda a mano.',
+  '','','#2fb8a3','presencia'],
  /* el configurador de Mercury vive en la misma muestra que foma —son el mismo
     taller de objeto físico—, así que la ficha entra por su ancla */
- ['Joyería','Mercury · pronto','Piezas en plata y acero, y regalos corporativos con tu marca grabada. Línea en preparación.','mundos/mercury.html','mundos/marcas-muestras.html#cfgjoya','#d98aa6','produccion']
+ ['Joyería','Mercury · pronto',
+  'Piezas en plata y acero, y regalos corporativos con tu marca grabada.',
+  'Marcas que regalan y personas que buscan pieza propia.',
+  'mundos/mercury.html','mundos/marcas-muestras.html#cfgjoya','#d98aa6','produccion']
 ];
 /* quinto campo: el color de la familia. Se usa en el remate del hero;
-   la agrupación por el séptimo campo de FICHAS no cambia. */
+   la agrupación por el octavo campo de FICHAS no cambia. */
 const FAMILIAS=[
  ['marca','Marca','Cómo te ven','Identidad, piezas y todo lo que hace que un negocio se vea como lo que es.','#5b8def'],
  ['presencia','Presencia','Que te encuentren y te compren','El sitio, la carta, las reservas y la atención que responde sola.','#3fd0e6'],
@@ -1461,24 +1570,24 @@ const FAMILIAS=[
 const UNI_ACTO={marca:'pulso',presencia:'hielo',produccion:'brasa'};
 /* una familia entera se esconde cuando ninguna de sus áreas le sirve al
    cliente activo: así nunca queda un título de acto con nada debajo. */
-const AREAS_FAM=k=>FICHAS.filter(f=>f[6]===k).map(f=>f[0]);
+const AREAS_FAM=k=>FICHAS.filter(f=>f[7]===k).map(f=>f[0]);
 document.getElementById('areas').innerHTML=FAMILIAS.map(([k,tit,gan,des])=>
  `<div class="tramo" data-universo="${UNI_ACTO[k]||'flujo'}"${attrC(AREAS_FAM(k))}>
   <div class="acto" data-fam="${k}">
    <div class="cresta" data-vel=".42" aria-hidden="true"></div>
    <div class="acto-in">
     <h3>${tit}</h3><p class="acto-gan">${gan}</p><p class="acto-des">${des}</p>
-   </div></div>`+FICHAS.filter(f=>f[6]===k).map(([t,sub,d,ficha,muestra,c],n)=>
+   </div></div>`+FICHAS.filter(f=>f[7]===k).map(([t,sub,d,para,ficha,muestra,c],n)=>
  /* el trío: dominante, subordinada, acento. Cada panel toma una forma distinta
     del léxico según su sitio, y el del medio va volteado. */
  `<div class="area p${n+1}${n===1?' espejo':''}${ficha?'':' pend'}" style="--ac:${c};z-index:${n+1}"${attrC(t)}>
   <div class="a-txt"><span class="tagd">${sub}</span><h3>${t}</h3><p>${d}</p>
-   <div class="lks">${ficha?
-    `<a class="lk pri" href="${ficha}" data-demo="${ficha}" data-titulo="${t} · ${sub}">Ver ficha</a>
-     ${muestra?`<a class="lk" href="${muestra}" data-demo="${muestra}" data-titulo="${t} · muestra">Probar muestra</a>`:''}
-     <a class="lk" href="${ficha}" target="_blank" rel="noopener" title="Abrir en una pestaña nueva">↗</a>`
-    :`<span class="lk mudo">Ficha en camino</span>
-      <a class="lk" data-go="cotizar">Preguntar por esta área</a>`}
+   <p class="para"><span>Para</span> ${para}</p>
+   <div class="lks">${ficha
+    ? `<a class="lk pri" href="${ficha}" data-demo="${ficha}" data-titulo="${t} · ${sub}">Ver la ficha de ${t}
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>`
+    : `<span class="lk mudo">Ficha en camino</span>
+       <a class="lk" data-go="cotizar">Preguntar por esta área</a>`}
    </div></div>
 </div>`).join('')
  +`<div class="guijarro" data-vel="1.16" aria-hidden="true"
@@ -1529,7 +1638,7 @@ document.getElementById('soyM').innerHTML=CLIENTES.map(([k,tit,gan,col])=>
    Se pintan los ocho; el filtro deja visible sólo el del cliente activo, y
    sin filtro ninguno (regla .puente en la hoja de estilo). Los enlaces abren
    la ficha en el visor: nombran lo que quedó fuera sin deshacer el filtro. */
-const FICHA_DE={};FICHAS.forEach(f=>{FICHA_DE[f[0]]=[f[3],f[5],f[1]];});
+const FICHA_DE={};FICHAS.forEach(f=>{FICHA_DE[f[0]]=[f[4],f[6],f[1]];});
 function pintaPuente(nodo,cierre){
  if(!nodo)return;
  nodo.innerHTML=CLIENTES.map(([k])=>{
@@ -1564,11 +1673,18 @@ document.getElementById('demos').innerHTML=DEMOS.map(([tag,t,d,u,c])=>
    <a href="${u}" target="_blank" rel="noopener" title="Abrir en una pestaña nueva" onclick="event.stopPropagation()" style="color:inherit;padding:2px 8px;border:1px solid var(--line2);border-radius:999px">↗</a>
   </div></div>`).join('');
 
-/* ═══ las propuestas ═══
-   La misma fuente para las tres cosas que tienen que quedar conectadas: el
-   botón del cliente elegido en la portada, el menú de la barra y la galería.
-   Cada clave de CLIENTES apunta aquí por su sexta casilla, así que cambiar
-   una ruta en un solo sitio la cambia en los tres.
+/* ═══ las propuestas · CAPA 3 ═══
+   Ya no se navegan: se entregan. Ninguna tarjeta de esta lista se pinta en la
+   portada ni en la galería. El único sitio del sitio donde aparece una
+   propuesta es la pantalla de confirmación de la cotización, y ahí llega con
+   su ?para= ya puesto (ver `mostrarPropuesta`).
+
+   Los archivos siguen existiendo tal cual y siguen siendo enlazables a mano:
+   LQS los manda por WhatsApp cuando quiera. Lo que cambió es que dejaron de
+   estar sueltos en la navegación, compitiendo con la ficha del área.
+
+   La lista sirve aquí para dos cosas: el título y la descripción con que se
+   entrega cada una, y su color.
 
    ¿Por qué la propuesta abre en el visor y no en pestaña nueva? Porque es una
    página larga: si se la lleva a otra pestaña, el visitante pierde el sitio y
@@ -1597,34 +1713,33 @@ const PROPUESTAS=[
   'propuestas/distrito-peru-automatizacion.html','#d98aa6']
 ];
 /* documentos: no son propuestas ni muestras, pero existen y hasta hoy no se
-   llegaba a ellos desde ninguna parte del sitio */
+   llegaba a ellos desde ninguna parte del sitio.
+   El PDF de la propuesta de catálogos salió de aquí: es capa 3, y la capa 3
+   se entrega al cotizar, no se deja suelta en la navegación. */
 const DOCS=[
  ['Guía','Cómo se monta la automatización',
   'El documento técnico: alta de WhatsApp en el sistema oficial paso a paso, plantillas de mensaje listas y los costos reales por mensaje en Colombia.',
-  'automatizacion-guia.html','#3fd0e6',false],
- ['PDF','Catálogos inteligentes · propuesta impresa',
-  'La misma propuesta de catálogos en PDF, para reenviar o imprimir. 497 KB.',
-  'propuestas/catalogos-propuesta.pdf','#39c07a',true]
+  'automatizacion-guia.html','#3fd0e6',false]
 ];
-/* una sola lista con las cuatro fuentes, y sin repetidos: una muestra de DEMOS
-   y una ficha de FICHAS pueden apuntar al mismo archivo (automatización y
-   empresas lo hacen), y dos renglones idénticos leen como un error. Gana el
-   primero, que es el que trae la descripción más específica.
+/* una sola lista con las tres fuentes que la galería sí muestra —muestras,
+   fichas y documentos—, sin repetidos: una muestra de DEMOS y una ficha de
+   FICHAS pueden apuntar al mismo archivo (automatización y empresas lo hacen),
+   y dos renglones idénticos leen como un error. Gana el primero, que es el que
+   trae la descripción más específica.
    Cada fila: [rubro, título, descripción, url, color, verbo, fuera].
-   «fuera» sólo para el PDF: un binario no se muestra dentro del visor. */
+
+   PROPUESTAS ya no entra aquí. Es la capa 3: se entrega al pedir cotización,
+   con su ?para= puesto. Los archivos siguen existiendo y siguen siendo
+   enlazables a mano para mandarlos por WhatsApp. */
 const GAL=[]; const vistos={};
 function galAdd(q,t,d,u,c,verbo,fuera){
- /* la url completa es la clave: dos entradas al mismo archivo con distinto
-    ?para= sí son filas distintas, porque cambian el público y por tanto la
-    propuesta que se ve. */
  if(vistos[u])return; vistos[u]=1;
  GAL.push([q,t,d,u,c,verbo,!!fuera]);
 }
-PROPUESTAS.forEach(([q,t,d,u,c])=>galAdd(q,t,d,u,c,'Abrir'));
 DEMOS.forEach(([tag,t,d,u,c])=>galAdd('Muestra',tag+' · '+t,d,u,c,'Probar'));
 /* las fichas de área también entran: son páginas reales del repo y desde
    Muestras no se llegaba a ninguna */
-FICHAS.filter(f=>f[3]).forEach(([t,sub,d,ficha,muestra,c])=>galAdd('Ficha',t+' · '+sub,d,ficha,c,'Ver'));
+FICHAS.filter(f=>f[4]).forEach(([t,sub,d,para,ficha,muestra,c])=>galAdd('Ficha',t+' · '+sub,d,ficha,c,'Ver'));
 DOCS.forEach(([q,t,d,u,c,fuera])=>galAdd(q,t,d,u,c,fuera?'Descargar':'Abrir',fuera));
 document.getElementById('galeria').innerHTML=GAL.map(([q,t,d,u,c,verbo,fuera])=>
  `<a class="galf" style="--ac:${c}" href="${u}"${fuera
@@ -2088,7 +2203,27 @@ document.addEventListener('click',e=>{
  const el=e.target.closest('[data-go]');if(!el)return;
  e.preventDefault();go(el.dataset.go);
 });
-addEventListener('popstate',()=>go((location.hash||'#inicio').slice(1),false));
+addEventListener('popstate',()=>{
+ /* Atrás con el visor abierto lo cierra y te deja donde estabas. Antes el
+    visor se quedaba encima mientras la vista de abajo retrocedía sola: eso
+    era el laberinto.
+    Si venías de una ficha y estás en su muestra, Atrás hace lo que dice el
+    rastro de migas —te devuelve a la ficha— y sólo cierra cuando ya no hay
+    a dónde volver. */
+ if(visor.classList.contains('on')){
+  if(visorPila.length){
+   const ant=visorPila.pop();
+   try{history.pushState({visor:1,demoUrl:ant.url,demoTit:ant.titulo},'',location.href);}catch(e){}
+   abrirDemo(ant.url,ant.titulo,null,true);
+   return;
+  }
+  cerrarVisor();return;
+ }
+ /* Adelante hacia una entrada de visor: se vuelve a abrir sin apilar otra */
+ const st=history.state;
+ if(st&&st.visor&&st.demoUrl){abrirDemo(st.demoUrl,st.demoTit,null,true);return;}
+ go((location.hash||'#inicio').slice(1),false);
+});
 
 /* ═══ catálogo ═══ */
 let UNIS=[],PAKS=[],uniSel='todos';
@@ -2285,21 +2420,78 @@ async function cargarPortal(){
  box.innerHTML=html;
 }
 
-/* ═══ solicitud ═══ */
+/* ═══════════════════════════════════════════════════════════════════════
+   SOLICITUD — Y LA ENTREGA DE LA CAPA 3
+
+   El formulario es la única puerta a `propuestas/*.html` dentro del sitio.
+   Al enviarlo, el visitante recibe el enlace a la propuesta que le
+   corresponde, con su `?para=` ya puesto.
+
+   ¿De dónde sale «la que le corresponde»? En este orden:
+     1. el filtro que él mismo eligió en la portada (?soy=),
+     2. el área que marcó en el formulario,
+   y si ninguna de las dos apunta a una propuesta armada, se lo decimos: la
+   suya se escribe a la medida y llega por WhatsApp o correo.
+   ═══════════════════════════════════════════════════════════════════════ */
+/* el universo del catálogo → la propuesta que ya está escrita para él */
+const PROP_UNI={
+ carta:'propuestas/automatizacion.html?para=restaurante',
+ aloja:'propuestas/automatizacion.html?para=hotel',
+ empresas:'propuestas/automatizacion.html?para=empresa',
+ foma:'propuestas/catalogos.html?para=ropa'
+};
+/* título y descripción de una propuesta ya armada, para no mandar a nadie a
+   un enlace mudo */
+function datosProp(url){
+ const p=PROPUESTAS.find(x=>x[3]===url);
+ return p?{tit:p[0]+' · '+p[1],des:p[2],col:p[4]}
+         :{tit:'Tu propuesta completa',des:'Alcance, cronograma y precio cerrado.',col:'#e6c877'};
+}
+function propuestaTras(uni){
+ const porCliente=propuestaDe(CLIENTE);
+ if(porCliente)return porCliente;
+ const u=PROP_UNI[uni];
+ if(u&&u.indexOf('catalogos.html')>-1&&CAT_OK===false)return null;
+ return u||null;
+}
+function mostrarPropuesta(uni){
+ const box=document.getElementById('cotProp'),url=propuestaTras(uni);
+ const quien=document.getElementById('cotQuien');
+ if(!url){
+  quien.textContent='Tu propuesta se escribe a la medida: no hay una ya armada para lo que nos contaste. Te la mandamos por WhatsApp o correo con alcance, cronograma y precio cerrado.';
+  box.innerHTML='';return;
+ }
+ const d=datosProp(url);
+ quien.textContent='Mientras tanto, aquí tienes la propuesta completa para tu tipo de negocio: alcance, cronograma, lo que se puede armar aparte y el precio.';
+ box.innerHTML=`<a class="propq" style="--ac:${d.col}" href="${url}" data-demo="${url}" data-titulo="Propuesta · ${d.tit}">
+   <h4>${d.tit}</h4><p>${d.des}</p><span class="ir">Abrir mi propuesta →</span></a>
+  <p class="propq-alt">Se abre aquí mismo. Si la quieres en pestaña aparte para guardarla,
+   <a href="${url}" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">ábrela así</a>.</p>`;
+}
+document.getElementById('cotOtra').onclick=()=>{
+ document.getElementById('cotOk').hidden=true;
+ document.getElementById('fSol').hidden=false;
+ document.getElementById('mSol').className='msg';
+ document.getElementById('fSol').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
+};
 document.getElementById('fSol').onsubmit=async e=>{
  e.preventDefault();
  const f=e.target,b=document.getElementById('bSol');
+ const uni=f.universo_id.value||'';
  b.disabled=true;b.innerHTML='<span class="load"></span>';
  try{
   const row={nombre:f.nombre.value.trim(),email:f.email.value.trim()||null,telefono:f.telefono.value.trim()||null,
-   universo_id:f.universo_id.value||null,detalle:f.detalle.value.trim(),
+   universo_id:uni||null,detalle:f.detalle.value.trim(),
    presupuesto:f.presupuesto.value?Number(f.presupuesto.value):null,
    cliente_id:sesion?sesion.id:null,origen:'web'};
   await API.crear('solicitudes',row);
-  aviso('mSol','¡Recibido! Te respondemos en menos de 48 horas. Si tienes afán, escríbenos por WhatsApp.',true);
   f.reset();
+  mostrarPropuesta(uni);
+  f.hidden=true;
+  document.getElementById('cotOk').hidden=false;
+  document.getElementById('cotOk').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
  }catch(err){aviso('mSol','No se pudo enviar: '+(err.message||'error')+'. Escríbenos por WhatsApp.',false);}
- finally{b.disabled=false;b.textContent='Enviar solicitud';}
+ finally{b.disabled=false;b.textContent='Cotizar mi proyecto';}
 };
 
 /* ═══ suscripción ═══ */
@@ -2372,26 +2564,72 @@ function verPromo(){
 
 /* ═══ visor interno ═══ */
 const visor=document.getElementById('visor');
-function abrirDemo(url,titulo){
+/* quién abrió el visor: al cerrar, el foco vuelve exactamente ahí */
+let visorOrigen=null;
+
+/* El iframe no puede acumular historial propio.
+   Asignar `f.src` mete una entrada en el historial de la pestaña, así que
+   Atrás retrocedía DENTRO del visor y sacaba la muestra anterior — eso era
+   «se abren los mundos anteriores». `location.replace` sustituye la entrada
+   en vez de añadirla. Si el documento no se deja tocar, se cambia el iframe
+   entero, que también parte sin historial. */
+function cargarEnVisor(url,alCargar){
+ const f=document.getElementById('visorF');
+ try{
+  f.onload=()=>alCargar(f);
+  f.contentWindow.location.replace(url);
+  return f;
+ }catch(e){
+  const n=document.createElement('iframe');
+  n.id='visorF';n.title='Muestra';
+  f.replaceWith(n);
+  n.onload=()=>alCargar(n);
+  try{n.contentWindow.location.replace(url);}catch(e2){n.src=url;}
+  return n;
+ }
+}
+
+/* ═══ el rastro de migas del visor ═══
+   Una pila de lo que se ha ido abriendo dentro del visor sin cerrarlo: hoy
+   sólo pasa en un salto (ficha → su muestra), pero la pila lo aguanta hondo.
+   Mientras haya algo en la pila, la cabecera muestra a dónde vuelves. */
+let visorPila=[];
+function pintarMigas(){
+ const b=document.getElementById('visorBack');
+ const ant=visorPila[visorPila.length-1];
+ b.hidden=!ant;
+ if(ant)document.getElementById('visorBackT').textContent='Volver a '+ant.titulo;
+}
+document.getElementById('visorBack').onclick=()=>{
+ const ant=visorPila.pop();if(!ant)return;
+ abrirDemo(ant.url,ant.titulo,null,true);
+};
+
+function abrirDemo(url,titulo,origen,sinHistorial,apilar){
+ const yaAbierto=visor.classList.contains('on');
+ if(apilar&&yaAbierto){
+  const act=document.getElementById('visorAbrir').getAttribute('href');
+  const actT=document.getElementById('visorT').textContent;
+  if(act&&act!==url)visorPila.push({url:act,titulo:actT});
+ }
+ if(!yaAbierto)visorPila=[];
  document.getElementById('visorT').textContent=titulo||'Muestra';
  document.getElementById('visorAbrir').href=url;
+ pintarMigas();
+ if(!yaAbierto){
+  visorOrigen=origen||(document.activeElement instanceof HTMLElement?document.activeElement:null);
+  /* Una entrada de historial por «visor abierto», con la MISMA url: el filtro
+     ?soy= y la vista quedan intactos, y Atrás aterriza en el popstate de abajo,
+     que cierra el visor sin navegar la vista de atrás. */
+  if(!sinHistorial)try{
+   history.pushState({visor:1,demoUrl:url,demoTit:titulo||''},'',location.href);
+  }catch(e){}
+ }
  visor.classList.add('on');document.body.style.overflow='hidden';
- const f=document.getElementById('visorF');
- // mostrar primero y cargar después: así las animaciones de la muestra sí arrancan
  const fb=document.getElementById('visorFall');
  fb.classList.remove('on');fb.querySelector('a').href=url;
  let ok=false;
- requestAnimationFrame(()=>{f.src=url;});
- // si el visor no logra cargar (abierto con doble clic, bloqueo del navegador),
- // no dejamos pantalla en negro: mostramos el enlace directo.
- // ojo: una muestra lenta no es una muestra rota — solo avisamos si no llegó nada.
- clearTimeout(abrirDemo._t);
- abrirDemo._t=setTimeout(()=>{
-  if(ok)return;
-  let vacio=true;
-  try{const d=f.contentDocument;vacio=!d||!d.body||d.body.children.length===0;}catch(e){vacio=false;}
-  if(vacio)fb.classList.add('on');},5000);
- f.onload=()=>{
+ const alCargar=f=>{
   ok=true;fb.classList.remove('on');
   try{
    const d=f.contentDocument;if(!d)return;
@@ -2401,17 +2639,93 @@ function abrirDemo(url,titulo){
     f.contentWindow.dispatchEvent(new Event('scroll'));},350);
   }catch(e){}
  };
+ // mostrar primero y cargar después: así las animaciones de la muestra sí arrancan
+ requestAnimationFrame(()=>{cargarEnVisor(url,alCargar);});
+ // si el visor no logra cargar (abierto con doble clic, bloqueo del navegador),
+ // no dejamos pantalla en negro: mostramos el enlace directo.
+ // ojo: una muestra lenta no es una muestra rota — solo avisamos si no llegó nada.
+ clearTimeout(abrirDemo._t);
+ abrirDemo._t=setTimeout(()=>{
+  if(ok)return;
+  let vacio=true;
+  try{const d=document.getElementById('visorF').contentDocument;
+   vacio=!d||!d.body||d.body.children.length===0;}catch(e){vacio=false;}
+  if(vacio)fb.classList.add('on');},5000);
+ // teclado: el foco entra al visor, no se queda detrás
+ try{document.getElementById('visorX').focus({preventScroll:true});}catch(e){}
 }
-function cerrarDemo(){clearTimeout(abrirDemo._t);document.getElementById('visorFall').classList.remove('on');
- visor.classList.remove('on');document.getElementById('visorF').src='about:blank';document.body.style.overflow='';}
+
+/* cierre real: no toca el historial */
+function cerrarVisor(){
+ if(!visor.classList.contains('on'))return;
+ visorPila=[];pintarMigas();
+ clearTimeout(abrirDemo._t);
+ document.getElementById('visorFall').classList.remove('on');
+ visor.classList.remove('on');
+ document.body.style.overflow='';
+ cargarEnVisor('about:blank',()=>{});
+ const o=visorOrigen;visorOrigen=null;
+ if(o&&document.contains(o))try{o.focus({preventScroll:true});}catch(e){}
+}
+/* cierre pedido por el usuario (✕ o Escape): consume la entrada de historial
+   que abrió el visor, para que Atrás no tenga que pulsarse dos veces */
+function cerrarDemo(){
+ if(history.state&&history.state.visor)history.back();
+ else cerrarVisor();
+}
 document.getElementById('visorX').onclick=cerrarDemo;
 document.addEventListener('click',e=>{
  const el=e.target.closest('[data-demo]');if(!el)return;
  // ctrl/cmd/shift o clic en el ↗: que el navegador haga lo suyo (pestaña nueva)
  if(e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0)return;
- e.preventDefault();abrirDemo(el.dataset.demo,el.dataset.titulo);
+ e.preventDefault();abrirDemo(el.dataset.demo,el.dataset.titulo,el);
 });
 addEventListener('keydown',e=>{if(e.key==='Escape'&&visor.classList.contains('on'))cerrarDemo();});
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LO QUE LA PÁGINA DE ADENTRO LE PIDE AL SITIO
+
+   Antes, el «← Volver al sitio» de una ficha llevaba target="_top": desde el
+   visor recargaba index.html entero y se perdían el filtro ?soy= y la vista
+   donde estabas. Ése era el laberinto por dentro.
+
+   Ahora la ficha avisa y el sitio responde sin recargar nada:
+     cerrar  → cierra el visor y te deja donde estabas
+     ir      → cierra el visor y cambia de vista (la ficha pide «cotizar»)
+     abrir   → abre otra página dentro del visor y apila la miga de vuelta
+     volver  → deshace ese salto: la muestra regresa a su ficha
+   Fuera del visor los mismos enlaces siguen siendo href normales.
+   ═══════════════════════════════════════════════════════════════════════ */
+addEventListener('message',e=>{
+ if(e.origin!==location.origin)return;
+ const d=e.data;if(!d||typeof d!=='object'||d.lqs!==1)return;
+ const f=document.getElementById('visorF');
+ if(!f||e.source!==f.contentWindow)return;
+ if(d.hacer==='cerrar'){cerrarDemo();return;}
+ /* «ir» cierra sin consumir la entrada de historial del visor a propósito:
+    así, Atrás desde la cotización te devuelve a la ficha que estabas leyendo
+    en vez de sacarte del recorrido. */
+ if(d.hacer==='ir'){
+  cerrarVisor();go(String(d.vista||'inicio'));
+  /* la ficha sabe de qué área venías: el formulario llega con ella puesta y
+     el visitante no tiene que volver a decirla */
+  if(d.area){const s=document.getElementById('solUni');
+   if(s&&[].some.call(s.options,o=>o.value===d.area))s.value=d.area;}
+  return;
+ }
+ if((d.hacer==='abrir'||d.hacer==='volver')&&typeof d.url==='string'&&!/^[a-z]+:/i.test(d.url)){
+  /* la url llega relativa a mundos/: se resuelve contra la que ya está puesta */
+  const base=new URL(document.getElementById('visorAbrir').getAttribute('href')||'',location.href);
+  const rel=new URL(d.url,base).href.replace(location.origin+'/','');
+  if(d.hacer==='volver'){
+   /* la muestra vuelve a su ficha: si esa ficha es de donde vino, se consume
+      la miga en vez de apilar otra, para que el rastro no crezca en círculos */
+   const ant=visorPila[visorPila.length-1];
+   if(ant&&ant.url.split('#')[0]===rel.split('#')[0])visorPila.pop();
+   abrirDemo(rel,String(d.titulo||'Ficha'),null,true);
+  }else abrirDemo(rel,String(d.titulo||'Muestra'),null,true,true);
+ }
+});
 
 /* ═══ contenido WhatsApp ═══ */
 document.getElementById('fases').innerHTML=[
@@ -2657,21 +2971,19 @@ function pintarElegido(){
    : SUB_BASE;
  }
  if(!c){box.innerHTML='';return;}
- const prop=propuestaDe(CLIENTE);
+ /* La propuesta completa ya no se ofrece aquí. Antes esta pantalla era la
+    puerta trasera a `propuestas/*.html`: el visitante entraba por «soy
+    restaurante» y caía en un documento de 3.700 líneas antes de haber visto
+    una sola ficha. Ahora la puerta sólo hace su trabajo —decir qué quedó a la
+    vista— y la propuesta se entrega al cotizar. */
  box.innerHTML=`<p class="eq">Listo: el sitio quedó armado para <span class="gold">${c[1].toLowerCase()}</span>.</p>
-  <p class="ea">Te dejamos ${c[4].length} áreas a la vista — ${c[4].join(' · ')} — con sus muestras y sus precios. El resto sigue ahí, a un toque de la barra de arriba.</p>
+  <p class="ea">Te dejamos ${c[4].length} áreas a la vista — ${c[4].join(' · ')} —, cada una con su ficha: qué incluye, cuánto vale y una muestra que puedes tocar. El resto sigue ahí, a un toque de la barra de arriba.</p>
   <div class="hbtns">
    <a class="btn gold" data-go="servicios">Ver mis áreas <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-   ${prop
-    /* abre en el visor, no en pestaña nueva: la propuesta es larga y quien se
-       la lleva a otra pestaña rara vez vuelve al sitio. El href real sigue
-       puesto, así que ctrl/cmd+clic y el ↗ de al lado la sacan igual. */
-    ?`<a class="btn g" href="${prop}" data-demo="${prop}" data-titulo="Propuesta · ${c[1]}">Ver mi propuesta</a>
-      <a class="btn g" href="${prop}" target="_blank" rel="noopener" title="Abrir la propuesta en una pestaña nueva" style="padding-left:14px;padding-right:14px">↗</a>`
-    :`<a class="btn g" data-go="cotizar">Pedir mi propuesta</a>`}
+   <a class="btn g" data-go="cotizar">Pedir mi cotización</a>
    <a class="btn g" data-soy="">Ver todo</a>
   </div>
-  ${prop?'':`<p class="ea" style="margin-top:10px;font-size:.86rem;color:var(--faint)">Todavía no tenemos una propuesta armada para ${c[1].toLowerCase()}: la tuya se cotiza a la medida. Mientras tanto, las de los demás se pueden husmear en <a data-go="muestras" style="color:var(--gold);cursor:pointer;text-decoration:underline">Muestras</a>.</p>`}`;
+  <p class="ea" style="margin-top:10px;font-size:.86rem;color:var(--faint)">La propuesta completa —alcance, cronograma y precio para ${c[1].toLowerCase()}— te llega al pedir la cotización. Antes de eso, mira las áreas y toca las muestras.</p>`;
 }
 
 function pintarBarra(){
